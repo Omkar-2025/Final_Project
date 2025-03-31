@@ -1,0 +1,32 @@
+<p-toast></p-toast>
+<ng-container>
+    <form [formGroup]="registerForm" (ngSubmit)="register()"> 
+        <p-toast></p-toast>
+        <div> 
+            <div class="card flex justify-center">
+                <label> Username : </label>
+                <input type="text" pInputText formControlName="name" />
+            </div>
+            <div class="card flex justify-center">
+                <label> Email : </label>
+                <input type="text" pInputText formControlName="email" />
+            </div>
+            <div class="card flex justify-center">
+                <label> Password : </label>
+                <input type="password" pInputText formControlName="password" />
+            </div>
+            <div class="card flex justify-center">
+                <label> Confirm Password : </label>
+                <input type="password" pInputText formControlName="confirmPassowrd" />
+            </div>
+            <div class="card flex justify-center">
+                <label> Phone : </label>
+                <input type="text" pInputText formControlName="phone" />
+            </div>
+        </div>
+        <p-button label="Register" type="submit" pRipple />
+    </form>
+
+</ng-container>
+
+<router-outlet></router-outlet>

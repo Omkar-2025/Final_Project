@@ -1,0 +1,61 @@
+.account_menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.account-container {
+    margin-top: 5vh;
+    margin-left: 5vw;
+    box-sizing: border-box;
+}
+
+.account-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero {
+    background-color: #007bff; 
+    color: white;
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.hero-button {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.hero-button:hover {
+    background-color: #003f7f;
+}   
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

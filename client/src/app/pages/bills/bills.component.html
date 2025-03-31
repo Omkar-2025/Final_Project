@@ -1,0 +1,62 @@
+<p-toast></p-toast>
+<ng-container *ngIf="bills">
+    <div class="bills-container">
+    <ng-container *ngFor="let item of bills" >
+        <app-bill-card [bill]="item" class="bill-card" (isBillUpdated)="isBillUpdatedParent($event)"  (isBillDeleted)="isBillDeletedParent($event)" ></app-bill-card>
+    </ng-container>
+</div>
+</ng-container>
+
+
+<ng-container>
+    <p-button label="Create the New Bill" (click)="showDialog()" class="create-bill-button">
+    </p-button>
+    <div class="card flex justify-center align-center ">
+        <p-dialog header="Bills " [modal]="true" [(visible)]="visible" [style]="{ width: '100vw' , height: '100vh'}">
+            <form  [formGroup]="createBillForm">
+                <span class="p-text-secondary block mb-8">  Create the New Bill </span>
+            <div class="flex items-center gap-4 mb-4">
+                <label for="name" class="font-semibold w- 24">Bill Name </label>
+                <input pInputText id="name" class="flex-auto  " autocomplete="off" formControlName="billName"  />
+            </div>
+            <div class="flex items-center gap-4 mb-8">
+                <label for="amount" class="font-semibold w-24">Amount</label>
+                <input pInputText id="amount" class="flex-auto" autocomplete="off" formControlName="amount" />
+            </div>
+            <div class="flex items-center gap-4 mb-8 ">
+                <label for="amount" class="font-semibold w-24">frequency</label>
+                <p-select [options]="frequency_arr"  optionLabel="name" placeholder="Select a frequency" formControlName="frequency" class="w-full md:w-56" />
+            </div>
+            
+            </form>
+            
+            <div class="card flex justify-center mb-8">
+                <label for="">Select An Account </label>
+                <p-select [options]="accounts" (onChange)="selectAccount()"  optionLabel="account_number" placeholder="Select a account" class="w-full md:w-80"  [(ngModel)]="selectedAccounts" />
+            </div>
+
+                <ng-container *ngIf="isSelectAccount ">
+                    <p> Account Name :  {{selectedAccounts.name}} </p> 
+                     <p> Amount :   {{selectedAccounts.balance}} </p>
+                     <p> Account Type :  {{selectedAccounts.account_type}}</p>
+                   </ng-container>
+            <div class="flex justify-end gap-2 mt-4">
+                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+                <p-button label="Save" (click)="createBill()" />
+            </div>
+        </p-dialog>
+    </div>
+</ng-container>
+
+
+<ng-container>
+    <ng-container *ngIf="bills">
+        <div class="bills-container">
+            <ng-container *ngFor="let item of billsTranscation">
+               <app-payment [transcations]="item"  ></app-payment>
+            </ng-container>
+        </div>
+    </ng-container>
+</ng-container>
+
+

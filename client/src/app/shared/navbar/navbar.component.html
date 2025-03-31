@@ -1,0 +1,15 @@
+<div class="navbar">
+    <div class="navbar_heading">
+        Easy Bank 
+    </div>
+
+    <div class="navbar_links">
+        <a routerLink="createaccount"  *ngIf="isloggedIn" >Account Create</a>
+        <a routerLink="bills" *ngIf="isloggedIn" >Bills</a>
+        <a routerLink="support" *ngIf="isloggedIn">Support</a>
+        <a routerLink="login" *ngIf="!isloggedIn">Login</a>
+        <a routerLink="register" *ngIf="!isloggedIn">register</a>
+    </div>
+
+
+</div>

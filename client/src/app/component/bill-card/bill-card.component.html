@@ -1,0 +1,89 @@
+<p-toast></p-toast>
+<ng-container class="bill-template" *ngIf="bill">
+    <div class="bill-card">
+        <h3 class="bill-title">{{ bill.billName }}</h3>
+        <p class="bill-amount">Amount: {{ bill.amount }}</p>
+        <p class="bill-due-date">next Payment Date : {{bill.nextPaymentDate | date}}</p>
+        <p class="bill-frequency">Frequency: {{ bill.frequency }}</p>
+        <p class="bill-frequency">Account Number: {{ bill.account.account_type }}</p>
+        <p class="bill-frequency">Account Type: {{ bill.account.account_number }}</p>
+        <!-- {{bill | json}} -->
+        <!-- {{bill | json}} -->
+        <!-- <button class="pay-button" (click)="payBill()">Pay</button> -->
+        <p-button (click)="showDialog('payBills')" label="Pay bills" />
+        <i class="pi pi-pencil" style="font-size: 1rem" (click)="showDialog('isupdateBill')"></i>
+        <p-toast />
+        <p-confirmdialog />
+        <p-button (click)="confirm2($event)" label="Delete" severity="danger" [outlined]="true" />
+    </div>
+</ng-container>
+
+<!-- <div class="card flex justify-center gap-2">
+    <p-toast />
+    <p-confirmdialog /> -->
+    <!-- <p-button (click)="confirm1($event)" label="Save" [outlined]="true" /> -->
+    <!-- <p-button (click)="confirm2($event)" label="Delete" severity="danger" [outlined]="true" />
+</div> -->
+
+
+
+<div class="card flex justify-center">
+    <!-- <p-button (click)="showDialog()" label="Show" /> -->
+    <p-dialog header="Pay bills" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem', height:'35rem' }">
+        <span class="p-text-secondary block mb-8">Select the Account .</span>
+
+        <div class="flex items-center gap-4 mb-8">
+            <div class="card flex justify-center">
+                <p-select [options]="accounts" (onChange)="selectAccount()"  [(ngModel)]="selectedAccounts" optionLabel="account_number" placeholder="Select a account" class="w-full md:w-56" />
+            </div>
+        </div>
+
+        <!-- <p>{{accounts | json }}</p> -->
+        
+        <ng-container *ngIf="isSelectAccount ">
+            <p> Account Name :  {{selectedAccounts.name}} </p> 
+             <p> Amount :   {{selectedAccounts.balance}} </p>
+             <p> Account Type :  {{selectedAccounts.account_type}}</p>
+           </ng-container>
+           <div class="spinner" *ngIf="isbillPayed">
+            <!-- <p-progress-spinner ariaLabel="loading" /> -->
+        </div>
+        
+    
+        <ng-container *ngIf="!isSelectAccount ">
+            <span>Default Account </span>
+            <p> Account Name :  {{bill?.account.name}} </p> 
+             <p> Amount :   {{bill?.account.balance}} </p>
+             <p> Account Type :  {{bill?.account.account_type}}</p>
+           </ng-container>
+           <div class="spinner" *ngIf="isbillPayed">
+            <!-- <p-progress-spinner ariaLabel="loading" /> -->
+        </div>
+
+
+        <div *ngIf="dialogtype == 'isupdateBill'">
+            <label for="">Bil Name</label>
+            <input type="text" pInputText [(ngModel)]="billName" />
+            <label for="">Amount</label>
+            <input type="text" pInputText [(ngModel)]="amount" />
+            <div class="flex items-center gap-4 mb-8 ">
+                <label for="amount" class="font-semibold w-24">frequency</label>
+                <p-select [options]="frequency_arr"  optionLabel="name" placeholder="Select a frequency" [(ngModel)]="frequency" class="w-full md:w-56" />
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+            <p-button label="Save" (click)="payBill($event)" *ngIf="dialogtype !=='isupdateBill'"  />
+            <p-button label="Update" (click)="updateBill($event)" *ngIf="dialogtype == 'isupdateBill'" />
+        </div>
+
+    </p-dialog>
+</div>
+
+
+
+
+
+
+<!-- {{accounts | json}} -->

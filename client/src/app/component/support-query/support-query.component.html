@@ -1,0 +1,15 @@
+
+
+<div class="transcations" >
+
+    <ul>
+        <li >
+            <p><strong>Subject : </strong> {{supportQuery.subject}}</p>
+            <p><strong> Status  :</strong> {{supportQuery.description}}</p>
+            <p><strong>Description : </strong> {{supportQuery.status | titlecase }}</p>
+            <i class="pi pi-pencil" style="font-size: 1rem" (click)="showDialog()" *ngIf="supportQuery.status== 'pending' "   ></i>
+            <p-toast />
+            <p-confirmdialog />
+            <p-button (click)="confirm2($event)" label="Delete" severity="danger" [outlined]="true"  />
+         </li>
+    </ul>

@@ -1,0 +1,31 @@
+<ng-container> 
+    <p-toast></p-toast>
+    <p-button label="Create the New Query " (click)="showDialog()" class="create-bill-button">
+    </p-button>
+    <div class="card flex justify-center align-center ">
+        <p-dialog header="Bills " [modal]="true" [(visible)]="visible" [style]="{ width: '100vw' , height: '100vh'}">
+             <form  [formGroup]="supportForm">
+                <span class="p-text-secondary block mb-8">  Create the query  </span>
+            <div class="flex items-center gap-4 mb-4">
+                <label for="name" class="font-semibold w- 24">Query Name </label>
+                <input pInputText id="name" class="flex-auto" autocomplete="off" formControlName="subject" />
+            </div>
+            <div class="flex items-center gap-4 mb-8">
+                <label for="amount" class="font-semibold w-24">Description</label>
+                <input pInputText id="amount" class="flex-auto" autocomplete="off" formControlName="description" />
+            </div> 
+            </form>
+             <div class="flex justify-end gap-2 mt-4">
+                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+                <p-button label="Save" (click)="createSupport()" />
+            </div>
+        </p-dialog>
+    </div>
+</ng-container>
+
+
+<div class="support">
+    <ng-container *ngFor="let supportQuery of allSupportQuery " >
+        <app-support-query [supportQuery]="supportQuery" (issupportQueryDeleted)="supportQueryDeleted($event)" (issupportQueryUpdated)="supportQueryDeleted($event)" ></app-support-query>
+    </ng-container>
+</div> 

@@ -1,0 +1,25 @@
+<p-toast></p-toast>
+<form [formGroup]="createAccountForm" (ngSubmit)="createAccount()">
+    <div class="form-container">
+        <div class="form-group">
+            <label for="name">Account Name</label>
+            <input type="text" pInputText formControlName="name" id="name" class="input-field" />
+            <p-message *ngIf="createAccountForm.get('name')?.invalid && createAccountForm.get('name')?.touched" severity="error" text="Name is required"></p-message>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" pInputText formControlName="amount" id="amount" class="input-field" />
+            <p-message *ngIf="createAccountForm.get('amount')?.invalid && createAccountForm.get('amount')?.touched" severity="error" text="Amount is required"></p-message>
+        </div>
+
+        <div class="form-group">
+            <label for="accountType">Account Type</label>
+            <p-dropdown [options]="accountTypes" formControlName="accountType" id="accountType" placeholder="Select An Account Type"></p-dropdown>
+        </div>
+
+        <div class="button-container">
+            <p-button label="Create Account" type="submit"pRipple></p-button>
+        </div>
+    </div>
+</form>

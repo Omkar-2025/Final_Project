@@ -1,0 +1,26 @@
+<p-toast />
+<ng-container *ngFor="let supportQuery of allQueries">
+    <div class="transcations" >
+        <ul>
+            <li >
+                <p><strong>Subject : </strong> {{supportQuery.subject}}</p>
+                <p><strong> Status  :</strong> {{supportQuery.description}}</p>
+                <p><strong>Description : </strong> {{supportQuery.status | titlecase }}</p>
+                <i class="pi pi-pencil" style="font-size: 1rem" (click)="showDialog(supportQuery)"></i>
+                <!-- <p-confirmdialog /> -->
+             </li>
+        </ul>
+    </div>
+</ng-container>
+
+<p-dialog header="Resolve Query" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8">Update The information.</span>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="username" class="font-semibold w-24">Reply</label>
+        <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="reply" />
+    </div>
+    <div class="flex justify-end gap-2">
+        <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+        <p-button label="Save" (click)="resolveQuery()" />
+    </div>
+</p-dialog>

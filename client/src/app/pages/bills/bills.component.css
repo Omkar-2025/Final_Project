@@ -1,0 +1,39 @@
+
+input[pInputText] {
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    padding: 8px; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+
+p-select {
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    padding: 8px; 
+    width: 100%;
+    box-sizing: border-box; 
+}
+
+
+input[pInputText]:hover,
+p-select:hover {
+    border-color: #007bff;
+}
+
+
+input[pInputText]:focus,
+p-select:focus {
+    border-color: #007bff; 
+    outline: none; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+
+.bills-container{
+    display: flex;
+    gap: 0.5em; 
+    padding: 20px;
+    flex-wrap: wrap;
+}

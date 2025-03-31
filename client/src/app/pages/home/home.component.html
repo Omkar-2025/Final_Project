@@ -1,0 +1,33 @@
+<p-toast></p-toast>
+<app-navbar></app-navbar>
+<div class="hero">
+    <div class="hero-content">
+        <h1>Welcome to Your Trusted Bank</h1>
+        <p>Experience seamless banking with our secure and user-friendly platform.</p>
+        <button class="hero-button">Get Started</button>
+    </div>
+</div>
+<ng-container class="account_menu" *ngIf="!accounts; then spinnerTemplate else accountsTemplate">
+</ng-container>
+
+<ng-template #spinnerTemplate >
+    <div class="spinner-container">
+        <p-progress-spinner ariaLabel="loading"></p-progress-spinner>
+    </div></ng-template>
+
+<ng-template #accountsTemplate>
+    <div class="account_menu">
+        <ng-container *ngFor="let item of accounts[0].accounts">
+            <div class="account-container">
+                <app-card [account]="item" class="account-card"></app-card>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
+
+
+
+
+
+
+

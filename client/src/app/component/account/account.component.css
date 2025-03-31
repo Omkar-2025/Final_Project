@@ -1,0 +1,90 @@
+
+.account-detail {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.account-detail h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.account-info p {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.transactions {
+    margin-top: 20px;
+}
+
+.transactions h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #007bff;
+}
+
+.transactions ul {
+    list-style: none;
+    padding: 0;
+}
+
+.transactions li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.transactions li p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.spinner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.account-actions{
+    gap: 10px;
+    display: flex;
+}
+
+input[pInputText] {
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    padding: 8px; 
+    width: 100%;
+    box-sizing: border-box; 
+    font-size: 14px; 
+    background-color: #f9f9f9;
+}
+
+
+input[pInputText]:hover {
+    border-color: #007bff;
+}
+
+
+input[pInputText]:focus {
+    border-color: #007bff; 
+    outline: none; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.flex.items-center.gap-4.mb-4 {
+    margin-bottom: 16px; 
+}

@@ -1,0 +1,39 @@
+.support{
+    display: flex;
+    gap: 20px;
+    
+}
+
+input[pInputText] {
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 8px; /* Add padding for better spacing */
+    width: 100%; /* Ensure the input takes full width */
+    box-sizing: border-box; /* Include padding and border in width */
+    font-size: 14px; /* Adjust font size */
+    background-color: #f9f9f9; /* Light background for better visibility */
+}
+
+/* Add hover effect for inputs */
+input[pInputText]:hover {
+    border-color: #007bff; /* Change border color on hover */
+}
+
+/* Add focus effect for inputs */
+input[pInputText]:focus {
+    border-color: #007bff; /* Blue border on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a subtle shadow */
+}
+
+/* Label styling */
+label {
+    font-weight: bold;
+    margin-bottom: 4px;
+    display: block;
+}
+
+/* Add spacing between form elements */
+.flex.items-center.gap-4.mb-4 {
+    margin-bottom: 16px; /* Add spacing between rows */
+}

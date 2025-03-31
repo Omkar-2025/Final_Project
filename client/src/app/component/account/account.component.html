@@ -1,0 +1,83 @@
+<p-toast></p-toast>
+<ng-container *ngIf="!account" class="spinner">
+    <p-progress-spinner ariaLabel="loading"></p-progress-spinner>
+</ng-container>
+
+<ng-container *ngIf="account">
+    <div class="account-detail">
+        <h2>Account Details</h2>
+        <div class="account-info">
+            <p><strong>Name:</strong> {{account.name}}</p>
+            <p><strong>Balance:</strong> {{account.balance}}</p>
+            <p><strong>Account Type:</strong> {{account.account_type}}</p>
+            <p><strong>Account Number:</strong> {{account.account_number}}</p>
+        </div>
+
+        <div class="account-actions">  
+        <p-button (click)="showDialog('deposit')" label="Deposit" *ngIf="transcations" />
+        <p-button label="WithDraw" severity="warn" (click)="showDialog('withdraw')"  />
+        <p-button label="Transfer Money " severity="help" (click)="showDialog('transfer')"  />
+        </div>
+      
+        </div>
+</ng-container>
+
+
+
+
+<div class="transactions" *ngIf="transcations">
+    <h3>Transactions</h3>
+    <ul>
+        <li *ngFor="let transaction of transcations">
+            <p><strong>Date:</strong> {{transaction.createdAt | date:'medium'}}</p>
+            <p><strong>Amount:</strong> {{transaction.amount}}</p>
+            <p><strong>Description:</strong> {{transaction.transactionType}}</p>
+            <!-- <p><strong>Account_Number:</strong> {{transaction.fromAccount.account_number}}</p> -->
+            <p><strong>Account_Number:</strong> {{transaction.toAccount.account_number}}</p>
+        </li>
+    </ul>
+
+    <!-- <h3>Transactions To</h3>
+    <ul>
+        <li *ngFor="let transaction of transcations.transactionsTo">
+            <p><strong>Date:</strong> {{transaction.createdAt | date:'full'}}</p>
+            <p><strong>Amount:</strong> {{transaction.amount}}</p>
+            <p><strong>Description:</strong> {{transaction.transactionType}}</p>
+        </li>
+    </ul> -->
+</div>
+
+
+<div class="card flex justify-center">
+   
+    <p-dialog header="Transactions" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+
+        <ng-container *ngIf="type == 'transfer'">
+            <span class="p-text-secondary block mb-8">Account Number</span>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="username" class="font-semibold w-24">Account No</label>
+            <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="account_number" />
+        </div>
+        </ng-container>
+        <!-- <span class="p-text-secondary block mb-8">Add Amount.</span> -->
+        <div class="flex items-center gap-4 mb-4">
+            <label for="username" class="font-semibold w-24">Amount</label>
+            <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="amount" />
+        </div>
+
+        <ng-container *ngIf="type == 'transfer'">
+        <div class="flex items-center gap-4 mb-4">
+            <label for="username" class="font-semibold w-24">Description</label>
+            <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="transactionType"  />
+        </div>
+        </ng-container>
+
+        <div class="flex justify-end gap-2">
+            <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+            <p-button label="Deposit" (click)="DepositAmount()" *ngIf="type =='deposit'" />
+            <p-button label="withdraw" severity="warn" (click)="withdrawAmount()"  *ngIf="type == 'withdraw'"/>
+            <p-button label="Transfer" severity="help" (click)="transferAmount()"  *ngIf="type == 'transfer'"/>
+            
+        </div>
+    </p-dialog>
+</div>
