@@ -12,7 +12,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CardComponent } from '../../component/card/card.component';
-
+import { HomeModule } from '../home/home.module';
 
 
 @NgModule({
@@ -30,7 +30,8 @@ import { CardComponent } from '../../component/card/card.component';
     ProgressSpinnerModule,
     ConfirmDialogModule,
     FormsModule,
-    DialogModule
+    DialogModule,
+    HomeModule,
   ],
   exports: [
     CreateAccountComponent,

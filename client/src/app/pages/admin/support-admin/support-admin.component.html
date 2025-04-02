@@ -1,0 +1,7 @@
+
+
+<div class="support">
+    <ng-container *ngFor="let supportQuery of supportQueries " >
+        <app-support-query [supportQuery]="supportQuery" (issupportQueryDeleted)="supportQueryDeleted($event)" (issupportQueryUpdated)="supportQueryDeleted($event)" ></app-support-query>
+    </ng-container>
+</div> 

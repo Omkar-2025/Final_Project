@@ -7,11 +7,14 @@ import 'dotenv/config';
 import otpGenerator from 'otp-generator';
 import { mailerSender } from "../utils/mailerSender";
 import { otpTemplate } from "../utils/authTemplate";
-import { UserType } from "../types/userType";
+import { UserType } from "../types/interfaces/userType";
 
 const userRepository = AppDataSource.getRepository(User);
 
 export class UserService {
+
+
+
     static async createUserBLL(data:UserType) {
         try {
             const { name, email, password, phone,role} = data;
@@ -39,7 +42,7 @@ export class UserService {
             if (user) {
                 if(await bcryptjs.compare(password,user.password)){  
                     const token = jwt.sign({id:user.id,email:email,role:user.role},process.env.JWT_SECRET!);
-                    return ({msg:"Login successfull",token:token,status:200});
+                    return ({msg:"Login successfull",role:user.role,token:token,status:200});
                 }
                 else{
                 return({msg:"Invalid password",status:400});
@@ -47,6 +50,7 @@ export class UserService {
             }
                return({ message: "User not found",status:404 });
         } catch (error) {
+            console.log(error)
             return ({msg:"Internal server error",status:500});
         }
     }

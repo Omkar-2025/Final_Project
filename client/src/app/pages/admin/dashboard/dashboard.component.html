@@ -1,26 +1,20 @@
-<p-toast />
-<ng-container *ngFor="let supportQuery of allQueries">
-    <div class="transcations" >
-        <ul>
-            <li >
-                <p><strong>Subject : </strong> {{supportQuery.subject}}</p>
-                <p><strong> Status  :</strong> {{supportQuery.description}}</p>
-                <p><strong>Description : </strong> {{supportQuery.status | titlecase }}</p>
-                <i class="pi pi-pencil" style="font-size: 1rem" (click)="showDialog(supportQuery)"></i>
-                <!-- <p-confirmdialog /> -->
-             </li>
-        </ul>
-    </div>
-</ng-container>
 
-<p-dialog header="Resolve Query" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
-    <span class="p-text-secondary block mb-8">Update The information.</span>
-    <div class="flex items-center gap-4 mb-4">
-        <label for="username" class="font-semibold w-24">Reply</label>
-        <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="reply" />
+<p-toast></p-toast>
+<div class="dashboard">
+    <h2>All Users</h2>
+    <div *ngFor="let user of allUsers" class="user-card">
+      <div class="user-info"  (click)="selectUser(user)">
+        <p><strong>Name:</strong> {{ user.name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Phone:</strong> {{ user.phone }}</p>
+        <p><strong>Role:</strong> {{ user.role }}</p>
+        <p><strong>Verified:</strong> {{ user.isVerified ? 'Yes' : 'No' }}</p>
+        <p><strong>Created At:</strong> {{ user.createdAt | date: 'medium' }}</p>
+      </div>
+      <div *ngIf="user.accounts.length === 0" class="no-accounts">
+        <p>No accounts available for this user.</p>
+      </div>
     </div>
-    <div class="flex justify-end gap-2">
-        <p-button label="Cancel" severity="secondary" (click)="visible = false" />
-        <p-button label="Save" (click)="resolveQuery()" />
-    </div>
-</p-dialog>
+  </div>
+
+

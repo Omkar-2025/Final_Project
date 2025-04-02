@@ -8,7 +8,8 @@ import { AccountComponent } from './component/account/account.component';
 import { CreateAccountComponent } from './pages/create-account/create-account.component';
 import { BillsComponent } from './pages/bills/bills.component';
 import { SupportComponent } from './pages/support/support.component';
-import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
+import { DashboardComponent  } from './pages/admin/dashboard/dashboard.component';
+import { AdminRoutingModule } from './pages/admin/admin-routing.module';
 
 const routes: Routes = [
   {path:'login',component:LoginComponent},
@@ -24,7 +25,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes),
+    AdminRoutingModule
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

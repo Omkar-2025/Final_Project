@@ -4,7 +4,11 @@
         <p class="account-balance">Balance: {{ account.balance }}</p>
         <p class="account-type">Type: {{ account.account_type }}</p>
         <p class="account-number">Account Number: {{ account.account_number }}</p>
-        <button class="show-button" (click)="viewFullaccountInfo(account.id)">Show</button>
+        <p class="account-number" *ngIf="role == 'user' " >{{account.isVerified ? '' : 'Wait for the Admin Apporval to Verify the Account' }}</p>
+    <button class="show-button" (click)="viewFullaccountInfo(account.id)" *ngIf="role === 'user' && account.isVerified ">Show</button>
+        <button class="Verified-account" *ngIf="!account.isVerified  && role == 'Admin'  " >
+            <p-button label="Verify" severity="success" (click)="verifyAccount(account.id)" />
+        </button>
     </div>
 </ng-container>
 

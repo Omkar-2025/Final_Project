@@ -14,6 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Account_service_1 = __importDefault(require("../services/Account.service"));
 class UserController {
+    /**
+     * This method is used to create the Bank account of the User
+     * @param req
+     * @param res
+     * @returns
+     */
     createBankAccount(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -30,6 +36,12 @@ class UserController {
             }
         });
     }
+    /**
+     * This method is used to get the bank account of the user
+     * @param req
+     * @param res
+     * @returns
+     */
     getAccount(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

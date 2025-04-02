@@ -12,8 +12,6 @@ import { MessageModule } from 'primeng/message';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-
-
 import { MessageService, ConfirmationService } from 'primeng/api';
 
 @NgModule({
@@ -41,6 +39,8 @@ import { MessageService, ConfirmationService } from 'primeng/api';
   ],
   exports: [
     HomeComponent, 
+    CardComponent,
+    NavbarComponent,
   ],
 })
 export class HomeModule {}

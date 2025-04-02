@@ -10,5 +10,5 @@ exports.userSchema = zod_1.z.object({
 });
 exports.loginSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
-    passowrd: zod_1.z.string().min(6).max(12)
+    password: zod_1.z.string().min(6).max(12)
 });

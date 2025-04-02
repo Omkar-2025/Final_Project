@@ -27,6 +27,7 @@ import { AdminModule } from './pages/admin/admin.module';
     BillsModule,
     AuthModule,
     SupportModule,
+    AdminModule,
   ], providers: [
     provideAnimationsAsync(),
     providePrimeNG({

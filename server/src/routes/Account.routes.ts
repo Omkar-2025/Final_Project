@@ -1,5 +1,5 @@
 import express from 'express'
-import AccountController from '../controllers/Account.controller';
+import AccountController from '../controllers/account.controller';
 import { verifyJwt } from '../middlewares/verifyJwt';
 
 const router= express.Router(); 

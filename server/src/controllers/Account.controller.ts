@@ -3,6 +3,14 @@ import AccountService from '../services/Account.service';
 
 class UserController{
 
+
+    /**
+     * This method is used to create the Bank account of the User
+     * @param req 
+     * @param res 
+     * @returns 
+     */
+
     async createBankAccount(req:Request,res:Response){
         try {
             const data = req.body;
@@ -16,6 +24,14 @@ class UserController{
             res.status(500).json({msg:"Internal server error"});
         }
     }
+
+    /**
+     * This method is used to get the bank account of the user
+     * @param req 
+     * @param res 
+     * @returns 
+     */
+
 
     async getAccount(req:Request,res:Response){
         try {

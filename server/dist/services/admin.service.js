@@ -30,6 +30,7 @@ class AdminService {
             try {
                 const { email, password } = data;
                 const admin = yield userRepo.findOne({ where: { email: email } });
+                console.log(admin);
                 if (!admin) {
                     return { msg: "Admin not found", status: 404 };
                 }
@@ -49,7 +50,7 @@ class AdminService {
     static getAllUsersBLL() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const users = yield userRepo.find({ where: { role: "user" } });
+                const users = yield userRepo.find({ where: { role: "user" }, relations: ["accounts"] });
                 return { msg: users, status: 200 };
             }
             catch (error) {
@@ -65,6 +66,7 @@ class AdminService {
                     return { msg: "Account not found", status: 404 };
                 }
                 account.isVerified = true;
+                yield (0, mailerSender_1.mailerSender)({ email: account.user.email, title: "Account Verified", body: `Your account with account number ${account.account_number} has been verified successfully` });
                 yield accountRepo.save(account);
                 return { msg: "Account verified successfully", status: 200 };
             }
@@ -96,18 +98,6 @@ class AdminService {
             }
         });
     }
-    static getAllSupportBLL() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const support = yield supportRepo.find({ relations: ["user"] });
-                return { msg: support, status: 200 };
-            }
-            catch (error) {
-                console.log(error);
-                return { msg: "Internal server error", status: 500 };
-            }
-        });
-    }
     static resolveQueryBLL(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -130,6 +120,53 @@ class AdminService {
             }
             catch (error) {
                 console.log(error);
+                return { msg: "Internal server error", status: 500 };
+            }
+        });
+    }
+    static getAccountsBLL(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // Fetch the user by ID
+                const user = yield userRepo.findOne({ where: { id: id } });
+                if (!user) {
+                    return { msg: "User not found", status: 404 };
+                }
+                const accounts = yield accountRepo.find({ where: { user: user } });
+                if (!accounts || accounts.length === 0) {
+                    return { msg: "No accounts found for this user", status: 404 };
+                }
+                return { msg: accounts, status: 200 };
+            }
+            catch (error) {
+                console.log(error);
+                return { msg: "Internal server error", status: 500 };
+            }
+        });
+    }
+    static getAllSupportBLL(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield userRepo.findOne({ where: { id: id } });
+                console.log(user);
+                if (!user) {
+                    return { msg: "User not found", status: 404 };
+                }
+                const support = yield supportRepo.find({ where: { user: user }, });
+                return { msg: support, status: 200 };
+            }
+            catch (error) {
+                return { msg: "Internal server error", status: 500 };
+            }
+        });
+    }
+    static getSupportBLL() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const support = yield supportRepo.find({ relations: ["user"] });
+                return { msg: support, status: 200 };
+            }
+            catch (error) {
                 return { msg: "Internal server error", status: 500 };
             }
         });

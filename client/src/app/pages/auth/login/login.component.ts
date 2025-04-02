@@ -25,6 +25,7 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe((res:any)=>{
       this.messageService.add({severity:'success',summary:'Success',detail:res.msg});
       localStorage.setItem('token',JSON.stringify(true));
+      localStorage.setItem('role',res.role);
       this.authService.isloggedInSubject.next(true);
     },
     (error)=>{

@@ -12,6 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const admin_service_1 = require("../services/admin.service");
 class AdminController {
+    /**
+     * This controller is used to login the admin
+     * @param req
+     * @param res
+     * @returns
+     */
     static login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -25,6 +31,11 @@ class AdminController {
             }
         });
     }
+    /**
+     * This controller is used to verify the account of the user
+     * @param req
+     * @param res
+     */
     static verifyAccount(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -38,6 +49,11 @@ class AdminController {
             }
         });
     }
+    /**
+     * This controller is used to Resolve the Query
+     * @param req
+     * @param res
+     */
     static resolveSupport(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -54,10 +70,75 @@ class AdminController {
             }
         });
     }
+    /**
+     * This controller is used to get the All queries of the user
+     * @param req
+     * @param res
+     */
     static getAllSupport(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield admin_service_1.AdminService.getAllSupportBLL();
+                const result = yield admin_service_1.AdminService.getSupportBLL();
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    /**
+     * This controller is used to get the All Accounts of the user
+     * @param req
+     * @param res
+     */
+    static getAllAccounts(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield admin_service_1.AdminService.getAllAccountsBLL();
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    /**
+     * This controller is used to get the All Users of the user
+     * @param req
+     * @param res
+     */
+    static getAllUsers(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield admin_service_1.AdminService.getAllUsersBLL();
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    static getAccountByUserId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = parseInt(req.params.id);
+                const result = yield admin_service_1.AdminService.getAccountsBLL(id);
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    static getQueryById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = parseInt(req.params.id);
+                const result = yield admin_service_1.AdminService.getAllSupportBLL(id);
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {

@@ -18,6 +18,8 @@ export class AdminService{
         try {
             const {email,password} = data;
             const admin = await userRepo.findOne({where:{email:email}});
+            console.log(admin);
+            
             if(!admin){
                 return {msg:"Admin not found",status:404};
             }
@@ -35,7 +37,7 @@ export class AdminService{
 
     static async getAllUsersBLL(){
         try {
-            const users = await userRepo.find({where:{role:"user"}});
+            const users = await userRepo.find({where:{role:"user"},relations:["accounts"]});
             return {msg:users,status:200};
         } catch (error) {
             return {msg:"Internal server error",status:500};
@@ -49,6 +51,7 @@ export class AdminService{
                 return {msg:"Account not found",status:404};
             }
             account.isVerified=true;
+            await mailerSender({email:account.user.email,title:"Account Verified",body:`Your account with account number ${account.account_number} has been verified successfully`});
             await accountRepo.save(account);
             return {msg:"Account verified successfully",status:200};
         } catch (error) {
@@ -76,15 +79,6 @@ export class AdminService{
     }
 
 
-    static async getAllSupportBLL(){
-        try {
-            const support = await supportRepo.find({relations:["user"]});
-            return {msg:support,status:200};
-        } catch (error) {
-            console.log(error);
-            return {msg:"Internal server error",status:500};
-        }
-    }
 
     static  async resolveQueryBLL(data:any){
         try{
@@ -111,5 +105,47 @@ export class AdminService{
         }
     }
 
+
+    static async getAccountsBLL(id: number) {
+        try {
+            // Fetch the user by ID
+            const user = await userRepo.findOne({ where: { id: id } });
+            if (!user) {
+                return { msg: "User not found", status: 404 };
+            }
+            const accounts = await accountRepo.find({ where: { user: user } });
+            if (!accounts || accounts.length === 0) {
+                return { msg: "No accounts found for this user", status: 404 };
+            }
+    
+            return { msg: accounts, status: 200 };
+        } catch (error) {
+            console.log(error);
+            return { msg: "Internal server error", status: 500 };
+        }
+    }
+
+    static async getAllSupportBLL(id:number){
+            try {
+                const user= await userRepo.findOne({where:{id:id}});
+                console.log(user);
+                if(!user){
+                    return {msg:"User not found",status:404};
+                }
+                const support = await supportRepo.find({where:{user:user},});
+                return {msg:support,status:200};
+            } catch (error) {
+                return {msg:"Internal server error",status:500};
+            }
+        }
+
+     static async getSupportBLL(){
+        try {
+            const support = await supportRepo.find({relations:["user"]});
+            return {msg:support,status:200};
+        } catch (error) {
+            return {msg:"Internal server error",status:500};
+        }
+    }   
 }
 

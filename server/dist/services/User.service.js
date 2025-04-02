@@ -53,7 +53,7 @@ class UserService {
                 if (user) {
                     if (yield bcryptjs_1.default.compare(password, user.password)) {
                         const token = jsonwebtoken_1.default.sign({ id: user.id, email: email, role: user.role }, process.env.JWT_SECRET);
-                        return ({ msg: "Login successfull", token: token, status: 200 });
+                        return ({ msg: "Login successfull", role: user.role, token: token, status: 200 });
                     }
                     else {
                         return ({ msg: "Invalid password", status: 400 });
@@ -62,6 +62,7 @@ class UserService {
                 return ({ message: "User not found", status: 404 });
             }
             catch (error) {
+                console.log(error);
                 return ({ msg: "Internal server error", status: 500 });
             }
         });

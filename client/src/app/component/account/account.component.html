@@ -13,7 +13,7 @@
             <p><strong>Account Number:</strong> {{account.account_number}}</p>
         </div>
 
-        <div class="account-actions">  
+        <div class="account-actions" >  
         <p-button (click)="showDialog('deposit')" label="Deposit" *ngIf="transcations" />
         <p-button label="WithDraw" severity="warn" (click)="showDialog('withdraw')"  />
         <p-button label="Transfer Money " severity="help" (click)="showDialog('transfer')"  />

@@ -7,9 +7,28 @@
             <p><strong>Subject : </strong> {{supportQuery.subject}}</p>
             <p><strong> Status  :</strong> {{supportQuery.description}}</p>
             <p><strong>Description : </strong> {{supportQuery.status | titlecase }}</p>
-            <i class="pi pi-pencil" style="font-size: 1rem" (click)="showDialog()" *ngIf="supportQuery.status== 'pending' "   ></i>
+            <p *ngIf="supportQuery.resolved"><strong>Query resolved : </strong> {{supportQuery?.resolve | titlecase }}</p>
             <p-toast />
             <p-confirmdialog />
-            <p-button (click)="confirm2($event)" label="Delete" severity="danger" [outlined]="true"  />
+            <i class="pi pi-pencil" style="font-size: 1rem" (click)="showDialog()" *ngIf="supportQuery.status== 'pending' "   ></i>
+            <i class="pi pi-pencil" style="font-size: 1rem" (click)="showDialog()" *ngIf="role === 'admin' && supportQuery.resolve =='' "></i>
+            <p-button (click)="confirm2($event)" label="Delete" severity="danger" [outlined]="true" *ngIf="role !== 'admin'  "  />
          </li>
     </ul>
+
+
+<ng-container *ngIf=" visible && role == 'admin' ">
+
+    <p-button (click)="showDialog()" label="Show" />
+<p-dialog header="Edit the Support-Query" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8">Update your Query.</span>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="username" class="font-semibold w-24">Reply</label>
+        <input pInputText id="reply" class="flex-auto" autocomplete="off"  [(ngModel)]="reply"  />
+    </div>
+    <div class="flex justify-end gap-2">
+        <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+        <p-button label="Save" (click)="sendResponse()" />
+    </div>
+</p-dialog>
+</ng-container>

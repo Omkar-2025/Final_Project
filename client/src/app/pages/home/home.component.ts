@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AccountService } from '../../Services/account.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -9,15 +10,24 @@ import { AccountService } from '../../Services/account.service';
 })
 export class HomeComponent {
 
-  constructor(private accountService:AccountService){}
+  constructor(private accountService:AccountService,private router:Router){}
 
-    accounts:any;
+    accounts:any=[];
 
-  ngOnInit(){
+  ngOnInit(){ 
+   this.fetchUserAccounts();
+  }
+
+  fetchUserAccounts(){
     this.accountService.getAllaccounts().subscribe((result:any)=>{
       this.accounts=result;
-      
+    },(err:any)=>{
+      console.log(err.error.msg);
     })
+  }
+
+  getStartedbtn(){
+    this.router.navigate(['/createaccount']);
   }
 
 }
