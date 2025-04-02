@@ -12,28 +12,31 @@ import { MessageService } from 'primeng/api';
 export class SupportComponent {
 
 
+  allSupportQuery:any=[]; 
+
+  visible: boolean = false;
 
   constructor(private supportService:SupportService, private messageService:MessageService){}
 
   supportForm:FormGroup= new FormGroup({
-    subject:new FormControl('',[Validators.required]),
-    description:new FormControl('',[Validators.required]),
+    subject:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+    description:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
   })
 
+  
+
   ngOnInit(){
+
     this.fetchingAllQuery();
+
   }
 
-  allSupportQuery:any=[]; 
 
 
   fetchingAllQuery(){
     this.supportService.getSupportRequests().subscribe((result:any)=>{
-      console.log(result);
-      // this.supportQuery=result[0].support;
       this.allSupportQuery=result.msg;
     },(err:any)=>{
-      console.log(err);
       this.messageService.add({severity:'error', summary:'Error', detail:'Failed to fetch support requests'});
     })
   }
@@ -43,22 +46,22 @@ export class SupportComponent {
     if (this.supportForm.valid) {
       const subject = this.supportForm.get('subject')?.value;
       const description = this.supportForm.get('description')?.value;
-     // console.log(subject, description);
       this.supportService.sendSupportRequest(subject,description).subscribe((result:any)=>{
         this.messageService.add({severity:'success', summary:'Success', detail:'Support request sent successfully'});
         this.supportForm.reset();
         this.visible=false;
         this.fetchingAllQuery()
-
       },(error:any)=>{
         console.log(error);
         this.messageService.add({severity:'error', summary:'Error', detail:'Failed to send support request'});
       })
     } else {
       console.log('Form is invalid');
+      this.messageService.add({severity:'error',summary:'Error',detail:'Form is Invalid'})
     }
   }
-  visible: any;
+ 
+
   showDialog() {
     this.visible = true;
   }

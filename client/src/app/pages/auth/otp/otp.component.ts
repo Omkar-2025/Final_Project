@@ -13,23 +13,23 @@ export class OtpComponent {
 
   value : string = '';
 
-  constructor(private messageService:MessageService,private authService:AuthService,private router:Router){
-
-  }
+  constructor(private messageService:MessageService,private authService:AuthService,private router:Router){}
 
   validateOtp(){
     // if(this.value.length!=4){
     //   this.messageService.add({severity:'error',summary:'Error',detail:'Please enter a valid OTP'})
     //   return;
     // } 
-    console.log(this.value);
+
     this.authService.verifyUser({otp:this.value}).subscribe((data:any)=>{
-      console.log(data);
+
       this.messageService.add({severity:'success',summary:'Success',detail:data.msg});
       this.router.navigate(['/login']);
+
     },(error)=>{
-      console.log(error);
+
       this.messageService.add({severity:'error',summary:'Error',detail:error});
+
     })
   }
 

@@ -10,10 +10,20 @@
                 <label for="name" class="font-semibold w- 24">Query Name </label>
                 <input pInputText id="name" class="flex-auto" autocomplete="off" formControlName="subject" />
             </div>
+            <span class="form-groupd-err"
+            *ngIf="!supportForm.controls['subject']?.valid && (supportForm.controls['subject']?.dirty
+            ||supportForm.controls['subject'].touched)">
+                <p-message severity="error" text="Bill Name is required"></p-message>
+            </span> 
             <div class="flex items-center gap-4 mb-8">
                 <label for="amount" class="font-semibold w-24">Description</label>
                 <input pInputText id="amount" class="flex-auto" autocomplete="off" formControlName="description" />
             </div> 
+            <span class="form-groupd-err"
+            *ngIf="!supportForm.controls['description']?.valid && (supportForm.controls['description']?.dirty
+            ||supportForm.controls['description'].touched)">
+                <p-message severity="error" text="Bill Name is required"></p-message>
+            </span> 
             </form>
              <div class="flex justify-end gap-2 mt-4">
                 <p-button label="Cancel" severity="secondary" (click)="visible = false" />

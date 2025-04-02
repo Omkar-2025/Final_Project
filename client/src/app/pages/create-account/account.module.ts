@@ -13,6 +13,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CardComponent } from '../../component/card/card.component';
 import { HomeModule } from '../home/home.module';
+import { SelectModule } from 'primeng/select';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { HomeModule } from '../home/home.module';
     FormsModule,
     DialogModule,
     HomeModule,
+    SelectModule
   ],
   exports: [
     CreateAccountComponent,

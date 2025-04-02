@@ -19,14 +19,30 @@
                 <label for="name" class="font-semibold w- 24">Bill Name </label>
                 <input pInputText id="name" class="flex-auto  " autocomplete="off" formControlName="billName"  />
             </div>
+            <span class="form-groupd-err"
+            *ngIf="!createBillForm.controls['billName']?.valid && (createBillForm.controls['billName']?.dirty
+            ||createBillForm.controls['billName'].touched)">
+                <p-message severity="error" text="Bill Name is required"></p-message>
+            </span>   
             <div class="flex items-center gap-4 mb-8">
                 <label for="amount" class="font-semibold w-24">Amount</label>
                 <input pInputText id="amount" class="flex-auto" autocomplete="off" formControlName="amount" />
             </div>
+            <span class="form-groupd-err"
+            *ngIf="!createBillForm.controls['amount']?.valid && (createBillForm.controls['amount']?.dirty
+            ||createBillForm.controls['amount'].touched)">
+                <p-message severity="error" text="Amount is required"></p-message>
+            </span> 
             <div class="flex items-center gap-4 mb-8 ">
                 <label for="amount" class="font-semibold w-24">frequency</label>
-                <p-select [options]="frequency_arr"  optionLabel="name" placeholder="Select a frequency" formControlName="frequency" class="w-full md:w-56" />
+                <p-select [options]="billFrequencies"  optionLabel="name" placeholder="Select a frequency" formControlName="frequency" class="w-full md:w-56" />
             </div>
+            <span class="form-groupd-err"
+            *ngIf="!createBillForm.controls['frequency']?.valid && (createBillForm.controls['frequency']?.dirty
+            ||createBillForm.controls['frequency'].touched)">
+                <p-message severity="error" text=" frequency is required"></p-message>
+            </span> 
+
             
             </form>
             

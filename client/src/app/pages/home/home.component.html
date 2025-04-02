@@ -17,7 +17,7 @@
 
 <ng-template #accountsTemplate>
     <div class="account_menu">
-        <ng-container *ngFor="let item of accounts[0].accounts">
+        <ng-container *ngFor="let item of accounts[0]?.accounts">
             <div class="account-container">
                 <app-card [account]="item" class="account-card"></app-card>
             </div>

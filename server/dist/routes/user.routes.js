@@ -11,4 +11,5 @@ router.route('/createuser').post(user_controller_1.default.createUser);
 router.route('/login').post(user_controller_1.default.Login);
 router.route('/getAllAccounts').get(verifyJwt_1.verifyJwt, user_controller_1.default.getAllAccounts);
 router.route('/verifyUser').post(user_controller_1.default.verifyUser);
+router.route('/logout').get(user_controller_1.default.logout);
 exports.default = router;

@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } f
 import { Account } from "./Account.entity";
 import { Support } from "./support_query.entity";
 import { Bills } from "./Bills.entity";
+import { role } from "../types/enums/role.enum";
 
 @Entity({ name: 'Online_Bank_User_1997' })
 export class User {
@@ -21,7 +22,7 @@ export class User {
     phone: string;
 
     @Column({
-        enum:['admin','user'],
+        enum:role,
         default:'user'
     })
     role:string;

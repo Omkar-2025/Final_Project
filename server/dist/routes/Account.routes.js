@@ -14,4 +14,8 @@ router.route('/getTransactions/:id').get(account_controller_1.default.getTransac
 router.route('/getTransactions/:id').get(account_controller_1.default.getTransactionsById);
 router.route('/deposit').post(verifyJwt_1.verifyJwt, account_controller_1.default.deposit);
 router.route('/withdraw').post(verifyJwt_1.verifyJwt, account_controller_1.default.withdraw);
+router.route('/allAccounts').get(verifyJwt_1.verifyJwt, account_controller_1.default.getAllAccounts);
+router.route('/getMonthExpense/:id').get(verifyJwt_1.verifyJwt, account_controller_1.default.getMonthlyExpenses);
+router.route('/getMonthlyTranscations/:id').get(verifyJwt_1.verifyJwt, account_controller_1.default.getMonthlyTranscations);
+router.route('/getMonthlyAllExpenses/:id').get(verifyJwt_1.verifyJwt, account_controller_1.default.getMonthlyAllExpenses);
 exports.default = router;

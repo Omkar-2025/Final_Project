@@ -35,16 +35,20 @@ export class BillCardComponent {
 
   selectAccount() {
     this.isSelectAccount = true;
+    // console.log(this.selectedAccounts);
   }
 
   showDialog(type: string) {
     this.dialogtype = type;
-    console.log(type, this.dialogtype);
+    // console.log(type, this.dialogtype);
     this.visible = true;
     this.visible = true;
     this.accountService.getAllaccounts().subscribe((result: any) => {
       //console.log(result[0].accounts); 
+      // if(result[0].accounts.isVerified){
       this.accounts = result[0].accounts;
+      // }
+      
     }, (error) => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching accounts' });
     })
@@ -60,6 +64,7 @@ export class BillCardComponent {
     if (this.selectedAccounts == undefined) {
         this.selectedAccounts = this.bill.account; 
     }
+    console.log(this.selectedAccounts);
     this.visible = true;
     this.billService.paybills(this.bill.id, this.selectedAccounts.id).subscribe((result: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill paid successfully' });
@@ -107,7 +112,7 @@ export class BillCardComponent {
         severity: 'danger',
       },
       accept: () => {
-        console.log(this.bill.id);
+        // console.log(this.bill.id);
         this.billService.deleteBill(this.bill.id).subscribe((result: any) => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill deleted successfully' });
           this.visible = false;

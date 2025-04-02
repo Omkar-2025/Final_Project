@@ -16,20 +16,24 @@ export class SignupComponent {
   registerForm:FormGroup;
 
   constructor(private authService:AuthService,private messageService:MessageService,private router:Router){
+
     this.registerForm=new FormGroup({
-      email:new FormControl('',[Validators.required,Validators.email]),
-      password:new FormControl('',[Validators.required]),
-      name:new FormControl('',[Validators.required]),
-      confirmPassowrd:new FormControl('',[Validators.required]),
-      phone:new FormControl('',[Validators.required])
+      email:new FormControl('',[Validators.required,Validators.email,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      password:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      name:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      confirmPassowrd:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      phone:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)])
     })
+
   }
 
   register(){
+
     if(this.registerForm.value.password!=this.registerForm.value.confirmPassowrd){
       this.messageService.add({severity:'error',summary:'Error',detail:'Password and Confirm Password should be same'})
       return;
     }
+
     this.authService.signup(this.registerForm.value).subscribe((data:any)=>{
       this.messageService.add({severity:'success',summary:'Success',detail:data.msg});
       this.authService.userAuthSubject.next(this.registerForm.value.email);
@@ -38,6 +42,7 @@ export class SignupComponent {
       console.log(error);
       this.messageService.add({severity:'success',summary:'Success',detail:error});
     })
+    
   }
 
 

@@ -9,6 +9,7 @@ router.route('/createuser').post(userController.createUser);
 router.route('/login').post(userController.Login);
 router.route('/getAllAccounts').get(verifyJwt,userController.getAllAccounts);
 router.route('/verifyUser').post(userController.verifyUser);
+router.route('/logout').get(userController.logout)
 
 
 export default router;

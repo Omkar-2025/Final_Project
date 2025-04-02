@@ -13,6 +13,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { AppRoutingModule } from '../../app-routing.module';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
     DropdownModule,
     ConfirmDialogModule,
     DialogModule,
+    AppRoutingModule
   ],
   providers: [
     MessageService,

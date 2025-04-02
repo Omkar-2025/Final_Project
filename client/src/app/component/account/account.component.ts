@@ -20,6 +20,15 @@ export class AccountComponent {
   type:string='';
   account_number='';
   transactionType='';
+  accounts: { name: string, balance: number, account_type: string, id: number, account_number: string }[] = [];
+  isSelectAccount: any = false;
+  selectedAccounts:any=''
+
+  selectAccount() {
+    this.isSelectAccount = true;
+  }
+
+
   ngOnInit(){
       this.router.params.subscribe((params)=>{
         this.id=params['id'];
@@ -39,6 +48,16 @@ export class AccountComponent {
   showDialog(type:string) {
     this.type = type;
     this.visible = true;
+
+    this.accountService.getAllBankAccounts().subscribe((result:any)=>{
+      this.accounts = result;
+      // console.log(result);
+      // console.log(this.accounts);
+      this.isSelectAccount = true;
+    },(error)=>{
+      this.messageService.add({severity:'error', summary:'Error', detail:'Error fetching accounts'});
+    })
+
   }
 
   DepositAmount(){
@@ -93,6 +112,7 @@ export class AccountComponent {
     })
     this.visible = false;
 
+   
   }
 
   }

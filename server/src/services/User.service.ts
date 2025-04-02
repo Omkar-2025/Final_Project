@@ -7,12 +7,11 @@ import 'dotenv/config';
 import otpGenerator from 'otp-generator';
 import { mailerSender } from "../utils/mailerSender";
 import { otpTemplate } from "../utils/authTemplate";
-import { UserType } from "../types/interfaces/userType";
+import { LoginType, UserType, VerifyType } from "../types/interfaces/userType";
 
 const userRepository = AppDataSource.getRepository(User);
 
 export class UserService {
-
 
 
     static async createUserBLL(data:UserType) {
@@ -35,7 +34,7 @@ export class UserService {
         }
     }
 
-    static async loginBLL(data:{email:string,password:string}) {
+    static async loginBLL(data:LoginType) {
         try {
             const { email, password } = data;
             const user = await userRepository.findOne({ where:{email:email}});
@@ -64,7 +63,7 @@ export class UserService {
         }
     }
 
-    static async verifyUserBLL(data:any){
+    static async verifyUserBLL(data:VerifyType){
         try {
             const {email,otp} = data;
             const user = await userRepository.findOne({where:{email:email}});
@@ -85,8 +84,7 @@ export class UserService {
         }
     }
 
-
-    
+   
 
 
 }

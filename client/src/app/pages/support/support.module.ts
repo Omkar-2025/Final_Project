@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { AdminRoutingModule } from '../admin/admin-routing.module';
+import { MessageModule } from 'primeng/message';
 @NgModule({
   declarations: [
     SupportComponent,
@@ -24,8 +25,8 @@ import { AdminRoutingModule } from '../admin/admin-routing.module';
     ConfirmDialogModule ,
     FormsModule,
     InputTextModule,
-    AdminRoutingModule
-
+    AdminRoutingModule,
+    MessageModule
   ],
   providers:[
       MessageService,

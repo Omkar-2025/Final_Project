@@ -4,12 +4,16 @@
     </div>
 
     <div class="navbar_links">
-        <a routerLink="createaccount"  *ngIf="isloggedIn" >Account Create</a>
-        <a routerLink="bills" *ngIf="isloggedIn" >Bills</a>
-        <a routerLink="support" *ngIf="isloggedIn">Support</a>
-        <a routerLink="login" *ngIf="!isloggedIn">Login</a>
-        <a routerLink="register" *ngIf="!isloggedIn">register</a>
+        <a routerLink="/createaccount"  *ngIf="isloggedIn" >Account Create</a>
+        <a routerLink="/bills" *ngIf="isloggedIn" >Bills</a>
+        <a routerLink="/support" *ngIf="isloggedIn">Support</a>
+        <a routerLink="/login" *ngIf="!isloggedIn">Login</a>
+        <a routerLink="/register" *ngIf="!isloggedIn">register</a>
+        <!-- <a routerLink = "logout" *ngIf="isloggedIn"> logout </a> -->
+         <p-button (click)="logOutUser()" *ngIf="isloggedIn" >LogOut</p-button>
     </div>
 
 
 </div>
+
+<router-outlet></router-outlet>

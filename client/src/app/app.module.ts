@@ -14,6 +14,8 @@ import { BillsModule } from './pages/bills/bills.module';
 import { AuthModule } from './pages/auth/auth.module';
 import { SupportModule } from './pages/support/support.module';
 import { AdminModule } from './pages/admin/admin.module';
+import { SharedModule } from './shared/shared.module';
+import { ProfileModule } from './pages/profile/profile.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +30,8 @@ import { AdminModule } from './pages/admin/admin.module';
     AuthModule,
     SupportModule,
     AdminModule,
+    SharedModule,
+    ProfileModule
   ], providers: [
     provideAnimationsAsync(),
     providePrimeNG({

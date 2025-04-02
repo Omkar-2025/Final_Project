@@ -104,5 +104,17 @@ class UserController {
             }
         });
     }
+    /**
+     *
+     */
+    logout(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
 }
 exports.default = new UserController();

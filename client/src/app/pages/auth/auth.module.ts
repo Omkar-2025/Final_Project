@@ -15,6 +15,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { InputOtpModule } from 'primeng/inputotp'; 
 import { FormsModule } from '@angular/forms';
+import { HomeModule } from "../home/home.module";
 
 @NgModule({
   declarations: [
@@ -34,8 +35,9 @@ import { FormsModule } from '@angular/forms';
     DropdownModule,
     ProgressSpinnerModule,
     RouterModule,
-    InputOtpModule 
-  ],
+    InputOtpModule,
+    HomeModule
+],
   exports: [
     LoginComponent,
     SignupComponent,

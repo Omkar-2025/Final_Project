@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Account_entity_1 = require("./Account.entity");
 const support_query_entity_1 = require("./support_query.entity");
 const Bills_entity_1 = require("./Bills.entity");
+const role_enum_1 = require("../types/enums/role.enum");
 let User = class User {
 };
 exports.User = User;
@@ -39,7 +40,7 @@ __decorate([
 ], User.prototype, "phone", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        enum: ['admin', 'user'],
+        enum: role_enum_1.role,
         default: 'user'
     }),
     __metadata("design:type", String)

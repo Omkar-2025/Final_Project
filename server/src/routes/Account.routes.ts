@@ -12,5 +12,11 @@ router.route('/getTransactions/:id').get(AccountController.getTransactions);
 router.route('/getTransactions/:id').get(AccountController.getTransactionsById);
 router.route('/deposit').post(verifyJwt,AccountController.deposit);
 router.route('/withdraw').post(verifyJwt,AccountController.withdraw);
+router.route('/allAccounts').get(verifyJwt,AccountController.getAllAccounts);
+router.route('/getMonthExpense/:id').get(verifyJwt,AccountController.getMonthlyExpenses);
+router.route('/getMonthlyTranscations/:id').get(verifyJwt,AccountController.getMonthlyTranscations);
+router.route('/getMonthlyAllExpenses/:id').get(verifyJwt,AccountController.getMonthlyAllExpenses);
+
+
 
 export default router;

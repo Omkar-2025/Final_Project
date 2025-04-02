@@ -21,8 +21,8 @@ export class CreateAccountComponent {
 
   constructor(private accountService:AccountService, private messageService:MessageService , private router:Router) {
       this.createAccountForm = new FormGroup({
-          name: new FormControl('',[Validators.required]),
-          amount:new FormControl(500,[Validators.required]),
+          name: new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+          amount:new FormControl(500,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
           accountType:new FormControl('Current Account',[Validators.required]),
       });
   }

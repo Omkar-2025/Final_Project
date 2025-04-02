@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <p-toast></p-toast>
 <form action="" [formGroup]="loginForm" (ngSubmit)="login()">
   <div class="form-container">
@@ -5,11 +6,21 @@
       <label for="email">Email:</label>
       <input type="text" pInputText formControlName="email" id="email" class="input-field" />
     </div>
+    <span class="form-groupd-err"
+    *ngIf="!loginForm.controls['email']?.valid && (loginForm.controls['email']?.dirty
+    ||loginForm.controls['email'].touched)">
+        <p-message severity="error" text=" email is required"></p-message>
+    </span> 
   
     <div class="form-group">
       <label for="password">Password:</label>
       <p-password formControlName="password" [toggleMask]="true"  [feedback]="false" />
     </div>
+    <span class="form-groupd-err"
+    *ngIf="!loginForm.controls['password']?.valid && (loginForm.controls['password']?.dirty
+    ||loginForm.controls['password'].touched)">
+        <p-message severity="error" text="Password is required"></p-message>
+    </span> 
 
     <div class="button-container">
       <p-button label="Login" severity="success" type="submit" pRipple></p-button>

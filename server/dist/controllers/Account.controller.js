@@ -118,5 +118,63 @@ class UserController {
             }
         });
     }
+    getAllAccounts(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // const id = req.body.user.id;
+                const result = yield Account_service_1.default.getAllAccounts();
+                res.status(result.status).json(result.msg);
+            }
+            catch (error) {
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    getMonthlyExpenses(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
+                const currentYear = new Date().getFullYear();
+                const id = parseInt(req.params.id);
+                const result = yield Account_service_1.default.getMonthlyTransactionsBLL({ currentMonth, currentYear, id });
+                res.status(result.status).json(result.msg);
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    getMonthlyTranscations(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = parseInt(req.params.id);
+                const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
+                const currentYear = new Date().getFullYear();
+                const result = yield Account_service_1.default.getMonthlyTransactionsBLL({ currentMonth, currentYear, id });
+                res.status(result.status).json(result.msg);
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    getMonthlyAllExpenses(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = parseInt(req.params.id);
+                // const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
+                const currentYear = new Date().getFullYear();
+                const currentDate = new Date().getDate(); // Assuming currentDate refers to the day of the month
+                const result = yield Account_service_1.default.getAllMonthlyExpenses({ currentDate, currentYear, id });
+                res.status(result.status).json(result.msg);
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
 }
 exports.default = new UserController();

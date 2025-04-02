@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import AccountService from '../services/Account.service';
+import { UserResponseType } from '../types/interfaces/userType';
 
 class UserController{
 
@@ -96,6 +97,61 @@ class UserController{
             res.status(500).json({msg:"Internal server error"});
         }
     }
+
+    async getAllAccounts(req:Request,res:Response){
+        try {
+            // const id = req.body.user.id;
+            const result:UserResponseType = await AccountService.getAllAccounts();
+            res.status(result.status).json(result.msg);
+        } catch (error) {
+            res.status(500).json({msg:"Internal server error"});
+        }
+    }    
+
+    async getMonthlyExpenses(req:Request,res:Response){
+        try {
+            const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
+            const currentYear = new Date().getFullYear();
+            const id = parseInt(req.params.id);
+            const result = await AccountService.getMonthlyTransactionsBLL({currentMonth,currentYear,id});
+
+            res.status(result.status).json(result.msg);
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({msg:"Internal server error"});   
+        }
+    }
+
+   async getMonthlyTranscations(req:Request,res:Response){
+    try {
+        
+        const id = parseInt(req.params.id);
+        const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
+        const currentYear = new Date().getFullYear();
+        const result = await AccountService.getMonthlyTransactionsBLL({currentMonth,currentYear,id});
+        res.status(result.status).json(result.msg);
+
+    } catch (error) {
+        console.log(error);
+         res.status(500).json({msg:"Internal server error"});
+    }
+   } 
+
+   async getMonthlyAllExpenses(req:Request,res:Response){
+    try {
+        const id = parseInt(req.params.id);
+        // const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
+        const currentYear = new Date().getFullYear();
+        const currentDate = new Date().getDate(); // Assuming currentDate refers to the day of the month
+        const result = await AccountService.getAllMonthlyExpenses({currentDate, currentYear, id});
+        res.status(result.status).json(result.msg);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal server error"});
+    }
+   }
+
 
 }
 

@@ -7,22 +7,57 @@
                 <label> Username : </label>
                 <input type="text" pInputText formControlName="name" />
             </div>
+
+            <span class="form-groupd-err"
+            *ngIf="!registerForm.controls['name']?.valid && (registerForm.controls['name']?.dirty
+            ||registerForm.controls['name'].touched)">
+                <p-message severity="error" text=" Name is required"></p-message>
+            </span> 
+
             <div class="card flex justify-center">
                 <label> Email : </label>
                 <input type="text" pInputText formControlName="email" />
             </div>
+
+            <span class="form-groupd-err"
+            *ngIf="!registerForm.controls['email']?.valid && (registerForm.controls['email']?.dirty
+            ||registerForm.controls['email'].touched)">
+                <p-message severity="error" text=" Email is required"></p-message>
+            </span> 
+
             <div class="card flex justify-center">
                 <label> Password : </label>
                 <input type="password" pInputText formControlName="password" />
             </div>
+
+            <span class="form-groupd-err"
+            *ngIf="!registerForm.controls['password']?.valid && (registerForm.controls['password']?.dirty
+            ||registerForm.controls['password'].touched)">
+                <p-message severity="error" text=" Password is required"></p-message>
+            </span> 
+
             <div class="card flex justify-center">
                 <label> Confirm Password : </label>
                 <input type="password" pInputText formControlName="confirmPassowrd" />
             </div>
+ 
+            <span class="form-groupd-err"
+            *ngIf="!registerForm.controls['confirmPassowrd']?.valid && (registerForm.controls['confirmPassowrd']?.dirty
+            ||registerForm.controls['confirmPassowrd'].touched)">
+                <p-message severity="error" text=" confirmPassowrd is required"></p-message>
+            </span> 
+
             <div class="card flex justify-center">
                 <label> Phone : </label>
                 <input type="text" pInputText formControlName="phone" />
             </div>
+
+            <span class="form-groupd-err"
+            *ngIf="!registerForm.controls['phone']?.valid && (registerForm.controls['phone']?.dirty
+            ||registerForm.controls['phone'].touched)">
+                <p-message severity="error" text=" Phone is required"></p-message>
+            </span> 
+
         </div>
         <p-button label="Register" type="submit" pRipple />
     </form>
