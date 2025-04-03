@@ -19,7 +19,7 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
-app.use('/api/user',rateLimiter,userRouter);
+app.use('/api/user',userRouter);
 
 app.use('/api/account',AccountRouter);
 app.use(verifyJwt);

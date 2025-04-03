@@ -84,7 +84,54 @@ export class UserService {
         }
     }
 
-   
+    static async getUsers(id:number){
+        try {
+            const user = await userRepository.findOne({where:{id:id}});
+            if(!user){
+                return {msg:"User not found",status:404};
+            }
+            user.password="";
+            user.otp="";
+            return {msg:user,status:200};
+        } catch (error) {
+            return {msg:"Internal server error",status:500};
+        }
+    }
 
+    static async updateUser(id:number,data:UserType){
+        try {
+            const user = await userRepository.findOne({where:{id:id}});
+            if(!user){
+                return {msg:"User not found",status:404};
+            }
+            const {name,email,phone} = data;
+            user.name=name;
+            user.email=email;
+            user.phone=phone;
+            await userRepository.save(user);
+            return {msg:"User updated successfully",status:200};
+        } catch (error) {
+            return {msg:"Internal server error",status:500};
+        }
+    }
+   
+    static async updatePassword(id:number,data:any){
+        try {
+            const user = await userRepository.findOne({where:{id:id}});
+            if(!user){
+                return {msg:"User not found",status:404};
+            }
+            const {oldPassword,newPassword} = data;
+            if(await bcryptjs.compare(oldPassword,user.password)){
+                const hashpassowrd = await bcryptjs.hash(newPassword,10);
+                user.password=hashpassowrd;
+                await userRepository.save(user);
+                return {msg:"Password updated successfully",status:200};
+            }
+            return {msg:"Invalid password",status:400};
+        } catch (error) {
+            return {msg:"Internal server error",status:500};
+        }
+    }
 
 }

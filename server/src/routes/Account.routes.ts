@@ -15,7 +15,7 @@ router.route('/withdraw').post(verifyJwt,AccountController.withdraw);
 router.route('/allAccounts').get(verifyJwt,AccountController.getAllAccounts);
 router.route('/getMonthExpense/:id').get(verifyJwt,AccountController.getMonthlyExpenses);
 router.route('/getMonthlyTranscations/:id').get(verifyJwt,AccountController.getMonthlyTranscations);
-router.route('/getMonthlyAllExpenses/:id').get(verifyJwt,AccountController.getMonthlyAllExpenses);
+router.route('/getMonthlyAllExpenses').post(verifyJwt,AccountController.getMonthlyAllExpenses);
 
 
 

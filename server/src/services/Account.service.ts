@@ -300,6 +300,8 @@ export class AccountService{
         // Group transactions by month and categorize them by transactionType
         const groupedTransactions = transactions.reduce((acc, transaction) => {
             const key = `${transaction.year}-${transaction.month}`;
+            // console.log(key);
+            
             if (!acc[key]) {
                 acc[key] = {
                     year: transaction.year,
@@ -308,21 +310,27 @@ export class AccountService{
                     withdrawals: 0,
                     billPayments: 0,
                     totalTransactions: 0,
+                    transferAmount: 0,
                 };
             }
-
+            // console.log();
+                // console.log(transaction.transactionType);
+            
             if (transaction.transactionType === "Deposit") {
                 acc[key].deposits += parseFloat(transaction.totalAmount);
-            } else if (transaction.transactionType === "Withdraw") {
+            } else if (transaction.transactionType === "withDraw") {
                 acc[key].withdrawals += parseFloat(transaction.totalAmount);
-            } else if (transaction.transactionType === "Bill Payment") {
+            } else if (transaction.transactionType.trim().startsWith("Bill Payment")) {
                 acc[key].billPayments += parseFloat(transaction.totalAmount);
             }
-
+            else{
+                // console.log(transaction);
+                acc[key].transferAmount += parseFloat(transaction.totalAmount);
+            }
             acc[key].totalTransactions += parseInt(transaction.transactionCount, 10);
             return acc;
         }, {});
-
+        // console.log(groupedTransactions);
         return { status: 200, msg: Object.values(groupedTransactions) };
         } catch (error) {
             console.error("Error fetching monthly expenses and transactions:", error);

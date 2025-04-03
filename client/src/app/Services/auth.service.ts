@@ -29,4 +29,15 @@ export class AuthService {
     return this.http.post('http://localhost:4000/api/user/verifyUser', data,{withCredentials:true});
   }
 
+  getUser(){
+    return this.http.get('http://localhost:4000/api/user/getUser',{withCredentials:true});
+  }
+
+  updateUser(data:any){
+    return this.http.post('http://localhost:4000/api/user/updateUser',data,{withCredentials:true});
+  }
+  updatePassword(data:any){
+    return this.http.post('http://localhost:4000/api/user/updatePassword',data,{withCredentials:true});
+  }
+
 }

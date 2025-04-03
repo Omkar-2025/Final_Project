@@ -109,6 +109,68 @@ class UserController{
         }
     }
 
+    async getUser(req:Request,res:Response){
+        try {
+
+            const id = req.body.user.id;
+            const result = await UserService.getUsers(id);
+            if(result.status==404){
+                res.status(404).json({msg:result.msg});
+                return;
+            }
+            res.status(200).json({msg:result.msg});
+        } catch (error) {
+             res.status(500).json({msg:"Internal server error"});
+             return;
+        }
+    }
+
+    async updateUser(req:Request,res:Response){
+        try {
+
+            const id = req.body.user.id;
+            const data = req.body;
+            const isvalidUser = userSchema.safeParse(data);
+            if(!isvalidUser.success){
+                res.status(400).json({msg:"please enter valid data"});
+                return;
+            }
+            const result = await UserService.updateUser(id,data);
+            if(result.status==404){
+                res.status(404).json({msg:result.msg});
+                return;
+            }
+            res.status(200).json({msg:result.msg});
+            return;
+        } catch (error) {
+             res.status(500).json({msg:"Internal server error"});
+             return;
+        }
+    }
+
+    async updatePassword(req:Request,res:Response){
+        try {
+            const id = req.body.user.id;
+            const data = req.body;
+            const isvalidUser = userSchema.safeParse(data);
+            // if(!isvalidUser.success){
+            //     res.status(400).json({msg:"please enter valid data"});
+            //     return;
+            // }
+            const result = await UserService.updatePassword(id,data);
+            if(result.status==404){
+                res.status(404).json({msg:result.msg});
+                return;
+            }
+            res.status(200).json({msg:result.msg});
+            return;
+        } catch (error) {
+             res.status(500).json({msg:"Internal server error"});
+             return;
+        }
+    }
+
+
 }
 
 export default new UserController();

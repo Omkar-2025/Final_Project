@@ -1,5 +1,18 @@
-<p>barchart works!</p>
+<p>Monthly Expenses</p>
+<div class="card flex justify-center">
+    <!-- <p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"  placeholder="Select a City" class="w-full md:w-56" /> -->
 
+    <div class="flex items-center gap-4 mb-8 ">
+        <label for="amount" class="font-semibold w-24">Select The Month </label>
+        <p-select [options]="monthFrequencies"  optionLabel="name" placeholder="Select a Month" class="w-full md:w-56" [(ngModel)]="selectedMonth" (onChange)="selectedMonthOption()"   />
+    </div>
+
+    <div class="flex items-center gap-4 mb-8 ">
+        <label for="amount" class="font-semibold w-24">Select The Month </label>
+        <p-select [options]="accounts"  optionLabel="name" placeholder="Select a Account" class="w-full md:w-56" [(ngModel)]="selectedAccount" (onChange)="selectedMonthOption()"   />
+    </div>
+
+</div>
 
 <div class="card flex justify-center">
     <p-chart type="pie" [data]="data" [options]="options" class="w-full md:w-[30rem]" />

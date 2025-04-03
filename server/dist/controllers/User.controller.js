@@ -116,5 +116,70 @@ class UserController {
             }
         });
     }
+    getUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.body.user.id;
+                const result = yield User_service_1.UserService.getUsers(id);
+                if (result.status == 404) {
+                    res.status(404).json({ msg: result.msg });
+                    return;
+                }
+                res.status(200).json({ msg: result.msg });
+            }
+            catch (error) {
+                res.status(500).json({ msg: "Internal server error" });
+                return;
+            }
+        });
+    }
+    updateUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.body.user.id;
+                const data = req.body;
+                const isvalidUser = user_schema_1.userSchema.safeParse(data);
+                if (!isvalidUser.success) {
+                    res.status(400).json({ msg: "please enter valid data" });
+                    return;
+                }
+                const result = yield User_service_1.UserService.updateUser(id, data);
+                if (result.status == 404) {
+                    res.status(404).json({ msg: result.msg });
+                    return;
+                }
+                res.status(200).json({ msg: result.msg });
+                return;
+            }
+            catch (error) {
+                res.status(500).json({ msg: "Internal server error" });
+                return;
+            }
+        });
+    }
+    updatePassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.body.user.id;
+                const data = req.body;
+                const isvalidUser = user_schema_1.userSchema.safeParse(data);
+                // if(!isvalidUser.success){
+                //     res.status(400).json({msg:"please enter valid data"});
+                //     return;
+                // }
+                const result = yield User_service_1.UserService.updatePassword(id, data);
+                if (result.status == 404) {
+                    res.status(404).json({ msg: result.msg });
+                    return;
+                }
+                res.status(200).json({ msg: result.msg });
+                return;
+            }
+            catch (error) {
+                res.status(500).json({ msg: "Internal server error" });
+                return;
+            }
+        });
+    }
 }
 exports.default = new UserController();

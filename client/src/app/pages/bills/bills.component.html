@@ -11,11 +11,11 @@
 <ng-container>
     <p-button label="Create the New Bill" (click)="showDialog()" class="create-bill-button">
     </p-button>
-    <div class="card flex justify-center align-center ">
+    <div class="">
         <p-dialog header="Bills " [modal]="true" [(visible)]="visible" [style]="{ width: '100vw' , height: '100vh'}">
             <form  [formGroup]="createBillForm">
                 <span class="p-text-secondary block mb-8">  Create the New Bill </span>
-            <div class="flex items-center gap-4 mb-4">
+            <div class="">
                 <label for="name" class="font-semibold w- 24">Bill Name </label>
                 <input pInputText id="name" class="flex-auto  " autocomplete="off" formControlName="billName"  />
             </div>
@@ -24,7 +24,7 @@
             ||createBillForm.controls['billName'].touched)">
                 <p-message severity="error" text="Bill Name is required"></p-message>
             </span>   
-            <div class="flex items-center gap-4 mb-8">
+            <div class="">
                 <label for="amount" class="font-semibold w-24">Amount</label>
                 <input pInputText id="amount" class="flex-auto" autocomplete="off" formControlName="amount" />
             </div>
@@ -33,7 +33,7 @@
             ||createBillForm.controls['amount'].touched)">
                 <p-message severity="error" text="Amount is required"></p-message>
             </span> 
-            <div class="flex items-center gap-4 mb-8 ">
+            <div class="">
                 <label for="amount" class="font-semibold w-24">frequency</label>
                 <p-select [options]="billFrequencies"  optionLabel="name" placeholder="Select a frequency" formControlName="frequency" class="w-full md:w-56" />
             </div>
@@ -46,7 +46,7 @@
             
             </form>
             
-            <div class="card flex justify-center mb-8">
+            <div class="">
                 <label for="">Select An Account </label>
                 <p-select [options]="accounts" (onChange)="selectAccount()"  optionLabel="account_number" placeholder="Select a account" class="w-full md:w-80"  [(ngModel)]="selectedAccounts" />
             </div>

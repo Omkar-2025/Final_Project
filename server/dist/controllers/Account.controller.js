@@ -163,7 +163,8 @@ class UserController {
     getMonthlyAllExpenses(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const id = parseInt(req.params.id);
+                // const id = parseInt(req.params.id);
+                const id = parseInt(req.body.id);
                 // const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
                 const currentYear = new Date().getFullYear();
                 const currentDate = new Date().getDate(); // Assuming currentDate refers to the day of the month

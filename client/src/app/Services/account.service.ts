@@ -45,7 +45,7 @@ export class AccountService {
 
 
     getAllMonthlyExpense(id:number){
-      return this.http.get(`http://localhost:4000/api/account/getMonthlyAllExpenses/${id}`,{withCredentials:true});
+      return this.http.post(`http://localhost:4000/api/account/getMonthlyAllExpenses/`,{id},{withCredentials:true});
     }
 
 
