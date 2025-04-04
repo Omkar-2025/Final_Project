@@ -144,6 +144,7 @@ class UserService {
                     return { msg: "User not found", status: 404 };
                 }
                 const { oldPassword, newPassword } = data;
+                // console.log(oldPassword,newPassword);
                 if (yield bcryptjs_1.default.compare(oldPassword, user.password)) {
                     const hashpassowrd = yield bcryptjs_1.default.hash(newPassword, 10);
                     user.password = hashpassowrd;
@@ -153,6 +154,7 @@ class UserService {
                 return { msg: "Invalid password", status: 400 };
             }
             catch (error) {
+                console.log(error);
                 return { msg: "Internal server error", status: 500 };
             }
         });

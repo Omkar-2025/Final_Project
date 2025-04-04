@@ -115,13 +115,14 @@ export class UserService {
         }
     }
    
-    static async updatePassword(id:number,data:any){
+    static async updatePassword(id:any,data:any){
         try {
             const user = await userRepository.findOne({where:{id:id}});
             if(!user){
                 return {msg:"User not found",status:404};
             }
             const {oldPassword,newPassword} = data;
+            // console.log(oldPassword,newPassword);
             if(await bcryptjs.compare(oldPassword,user.password)){
                 const hashpassowrd = await bcryptjs.hash(newPassword,10);
                 user.password=hashpassowrd;
@@ -130,8 +131,11 @@ export class UserService {
             }
             return {msg:"Invalid password",status:400};
         } catch (error) {
+            console.log(error); 
             return {msg:"Internal server error",status:500};
         }
     }
+
+   
 
 }

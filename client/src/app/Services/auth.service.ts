@@ -40,4 +40,8 @@ export class AuthService {
     return this.http.post('http://localhost:4000/api/user/updatePassword',data,{withCredentials:true});
   }
 
+  updateUserPassword({oldPassword,newPassword}:{oldPassword:string,newPassword:string}){
+    return this.http.post('http://localhost:4000/api/user/updatePassword',{oldPassword,newPassword}, {withCredentials:true});
+  }
+
 }

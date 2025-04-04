@@ -25,6 +25,7 @@ userData:any={};
 
 
 updateUserInfoForm!: FormGroup;
+updateUserPasswordForm:FormGroup;
 
 constructor(private authService:AuthService , private messageService:MessageService){
   // this.updateUserInfoForm =  
@@ -34,8 +35,15 @@ constructor(private authService:AuthService , private messageService:MessageServ
     phone:new FormControl(this.userData.phone,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
     // password:new FormControl('',[Validators.required]),
     // confirmPassword:new FormControl('',[Validators.required]),
-    address:new FormControl('',[Validators.required])
+    address:new FormControl('',[Validators.required ,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
   })
+
+  this.updateUserPasswordForm = new FormGroup({
+    oldPassword:new FormControl('',[Validators.required]),
+    newPassword:new FormControl('',[Validators.required]),
+    confirmPassword:new FormControl('',[Validators.required]),
+  })
+
 }
     
 
@@ -64,9 +72,15 @@ constructor(private authService:AuthService , private messageService:MessageServ
     this.visible=true;
   }
 
-  updateUserInfo(){
+  updatePasswordVisible:boolean=false;
+  updatePasswordDialog(){
+    this.updatePasswordVisible=true;
+  }
 
+  updateUserInfo(){
+  
     if(!this.updateUserInfoForm.valid){
+      console.log('Form is invalid');
       this.messageService.add({severity:'error',summary:'Error',detail:'Form is Invalid'})
       return;
     }
@@ -80,5 +94,25 @@ constructor(private authService:AuthService , private messageService:MessageServ
     })
   }
 
+
+  updatePassword()
+  {
+    if(!this.updateUserPasswordForm.valid){
+      console.log('Form is invalid');
+      this.messageService.add({severity:'error',summary:'Error',detail:'Form is Invalid'})
+      return;
+    }
+    if(this.updateUserPasswordForm.value.newPassword != this.updateUserPasswordForm.value.confirmPassword){
+      this.messageService.add({severity:'error',summary:'Error',detail:'New Password and Confirm Password do not match'})
+      return;
+    }
+    this.authService.updateUserPassword(this.updateUserPasswordForm.value).subscribe((result:any)=>{
+      this.messageService.add({severity:'success',summary:'Success',detail:result.msg})
+      this.updatePasswordVisible=false;
+    },(error:any)=>{
+      console.log(error);
+      this.messageService.add({severity:'error',summary:'Error',detail:error.error.msg})
+    })
+  }
 
 }

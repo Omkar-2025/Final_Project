@@ -131,10 +131,10 @@ class UserController{
             const id = req.body.user.id;
             const data = req.body;
             const isvalidUser = userSchema.safeParse(data);
-            if(!isvalidUser.success){
-                res.status(400).json({msg:"please enter valid data"});
-                return;
-            }
+            // if(!isvalidUser.success){
+            //     res.status(400).json({msg:"please enter valid data"});
+            //     return;
+            // }
             const result = await UserService.updateUser(id,data);
             if(result.status==404){
                 res.status(404).json({msg:result.msg});
@@ -152,6 +152,8 @@ class UserController{
         try {
             const id = req.body.user.id;
             const data = req.body;
+            console.log(id);
+            
             const isvalidUser = userSchema.safeParse(data);
             // if(!isvalidUser.success){
             //     res.status(400).json({msg:"please enter valid data"});

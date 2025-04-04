@@ -19,6 +19,7 @@ export class SupportQueryComponent {
   visible: any;
 
   role: string =  '';
+  reply:string = '';
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private supportService: SupportService,
     private adminService:AdminService
@@ -26,7 +27,10 @@ export class SupportQueryComponent {
 
   showDialog() {
     this.visible = true;
+    // console.log(this.role);
     console.log("this.supportQuery", this.supportQuery);
+    // console.log(this.visible);
+    
   }
 
   ngOnInit() {
@@ -34,11 +38,10 @@ export class SupportQueryComponent {
   }
 
 
-  reply:string = '';
-  onHide() {
-    this.visible = false;
-    this.reply = '';
-  }
+  // onHide() {
+  //   this.visible = false;
+  //   this.reply = '';
+  // }
 
 
   confirm2(event: any) {

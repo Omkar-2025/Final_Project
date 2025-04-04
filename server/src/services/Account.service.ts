@@ -7,6 +7,12 @@ import accountCreationTemplate from "../utils/accountTemplate";
 import transcationVerfication from "../utils/transcationVerfication";
 import { accountSchema, depositWithDrawSchema, transactionSchema } from "../types/schema/account.scehma";
 import { getRepository } from "typeorm";
+import { object } from "zod";
+// import { html } from "./expense";
+const pdf = require('pdf-creator-node')
+import fs from 'fs';
+const html = fs.readFileSync('src/services/expense.html','utf-8')
+
 
 const userRepository = AppDataSource.getRepository(User);
 const accountRepository = AppDataSource.getRepository(Account);
@@ -330,14 +336,53 @@ export class AccountService{
             acc[key].totalTransactions += parseInt(transaction.transactionCount, 10);
             return acc;
         }, {});
-        // console.log(groupedTransactions);
+        console.log(groupedTransactions);
+
+        
+
+        let options = {
+            format: "A3",
+            orientation: "portrait",
+            border: "10mm",
+            header: {
+                height: "45mm",
+                contents: '<div style="text-align: center;">Author: Shyam Hajare</div>'
+            },
+            footer: {
+                height: "28mm",
+                contents: {
+                    first: 'Cover page',
+                    2: 'Second page', // Any page number is working. 1-based index
+                    default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+                    last: 'Last Page'
+                }
+            }
+        };
+
+        let document = {
+            html:html , 
+            data: {
+              users: groupedTransactions,
+            },
+            path: "./output.pdf",
+            type: " ",
+          };
+
+          pdf.create(document,options).then((res:any)=>{
+                console.log(res);
+          })
+          .catch((error:any)=>{
+            console.error(error);
+          })
+
         return { status: 200, msg: Object.values(groupedTransactions) };
         } catch (error) {
             console.error("Error fetching monthly expenses and transactions:", error);
             return { status: 500, msg: "Internal server error" };
         }
     }
-    
+
+   
 }
 
 export default new AccountService();

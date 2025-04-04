@@ -9,6 +9,8 @@ import { Select } from 'primeng/select';
 import { DialogModule } from "primeng/dialog";
 import { ButtonModule } from "primeng/button";
 import { ReactiveFormsModule } from "@angular/forms";
+import { ToastModule } from "primeng/toast";
+import { MessageModule } from "primeng/message";
 
 
 
@@ -23,7 +25,9 @@ import { ReactiveFormsModule } from "@angular/forms";
     SelectModule,
     FormsModule,
     ButtonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToastModule,
+    MessageModule
 ],
     exports: [
         ProfileComponent

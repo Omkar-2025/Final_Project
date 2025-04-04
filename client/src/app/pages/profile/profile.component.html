@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 
 <div class="">
     <h1>Welcome  {{userData.name}}</h1>
@@ -5,37 +7,50 @@
     <p> Email : {{userData.email}}  </p> 
     <p> Phone : {{userData.phone}} </p>
     <p-button severity="success" label="Update the Profile" (click)="updateProfileDialog()" ></p-button>
-
+    <p-button severity="warn" label="Update the Password " (click)="updatePasswordDialog()" ></p-button>
 </div>
 
-<form [formGroup]="updateUserInfoForm">
+<form [formGroup]="updateUserInfoForm" >
     <p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '45rem', height:'40rem' }">
         <span class="p-text-secondary block mb-8">Update your information.</span>
         <div class="flex items-center gap-4 mb-4">
             <label for="username" class="font-semibold w-24">Username</label>
             <input pInputText id="username" class="flex-auto" autocomplete="off" formControlName="name" />
         </div>
+        <!-- <span class="form-groupd-err"
+            *ngIf="!updateUserInfoForm.controls['name']?.valid && (updateUserInfoForm.controls['name']?.dirty || updateUserInfoForm.controls['name'].touched)">
+            <p-message severity="error" text="Username is required"></p-message>
+        </span> -->
         <div class="flex items-center gap-4 mb-8">
             <label for="email" class="font-semibold w-24">Email</label>
             <input pInputText id="email" class="flex-auto" autocomplete="off" formControlName="email"  />
         </div>
+
+        <!-- <span class="form-groupd-err"
+            *ngIf="!updateUserInfoForm.controls['email']?.valid && (updateUserInfoForm.controls['email']?.dirty || updateUserInfoForm.controls['email'].touched)">
+            <p-message severity="error" text="Email is required"></p-message>
+        </span> -->
+
         <div class="flex items-center gap-4 mb-8">
             <label for="email" class="font-semibold w-24">Phone </label>
             <input pInputText id="email" class="flex-auto" autocomplete="off" formControlName="phone" />
         </div>
-        <!-- <div class="flex items-center gap-4 mb-8">
-            <label for="email" class="font-semibold w-24">Password</label>
-            <input pInputText id="email" class="flex-auto" autocomplete="off" formControlName="password"  />
-        </div>
-        <div class="flex items-center gap-4 mb-8">
-            <label for="email" class="font-semibold w-24"> confirm  Password</label>
-            <input pInputText id="email" class="flex-auto" autocomplete="off" formControlName="confirmPassword"  />
-        </div> -->
+<!-- 
+        <span class="form-groupd-err"
+            *ngIf="!updateUserInfoForm.controls['phone']?.valid && (updateUserInfoForm.controls['phone']?.dirty || updateUserInfoForm.controls['phone'].touched)">
+            <p-message severity="error" text="Phone is required"></p-message>
+        </span> -->
 
+      
         <div class="flex items-center gap-4 mb-8">
             <label for="email" class="font-semibold w-24"> Address </label>
             <input pInputText id="email" class="flex-auto" autocomplete="off" formControlName="address"  />
         </div>
+
+        <!-- <span class="form-groupd-err"
+            *ngIf="!updateUserInfoForm.controls['address']?.valid && (updateUserInfoForm.controls['address']?.dirty || updateUserInfoForm.controls['address'].touched)">
+            <p-message severity="error" text="Address is required"></p-message>
+        </span> -->
 
         <div class="flex justify-end gap-2">
             <p-button label="Cancel" severity="secondary" (click)="visible = false" />
@@ -45,4 +60,31 @@
 </form>
 
 
-<!-- <app-barchart></app-barchart> -->
+<form [formGroup]="updateUserPasswordForm" >
+    <div class="card flex justify-center">
+        <!-- <p-button (click)="showDialog()" label="Show" /> -->
+     <p-dialog header="Edit Profile" [modal]="true" [(visible)]="updatePasswordVisible" [style]="{ width: '25rem' }">
+         <span class="p-text-secondary block mb-8">Update your Password.</span>
+         <div class="flex items-center gap-4 mb-4">
+             <label for="username" class="font-semibold w-24">Old Password</label>
+             <input pInputText id="username" class="flex-auto" autocomplete="off" formControlName="oldPassword"  />
+         </div>
+         <div class="flex items-center gap-4 mb-8">
+             <label for="email" class="font-semibold w-24">Email</label>
+             <input pInputText id="email" class="flex-auto" autocomplete="off" formControlName="newPassword"  />
+         </div>
+         
+         <div class="flex items-center gap-4 mb-8">
+            <label for="email" class="font-semibold w-24">Email</label>
+            <input pInputText id="email" class="flex-auto" autocomplete="off" formControlName="confirmPassword"  />
+        </div>
+         <div class="flex justify-end gap-2">
+             <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+             <p-button label="Save" (click)="updatePassword()" />
+         </div>
+     </p-dialog>
+ </div>
+</form>
+
+
+<app-barchart></app-barchart>

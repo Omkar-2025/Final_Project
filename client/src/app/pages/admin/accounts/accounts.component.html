@@ -2,7 +2,7 @@
 
 <p-toast></p-toast>
 
-<h1>{{allaccounts[0].name}} All Accounts </h1>
+<h1>{{allaccounts[0]?.name}} All Accounts </h1>
 <div class="account_div">
     <ng-container *ngFor="let account of allaccounts">
         <app-card [account]="account" class="account-card" (accountVerified)="accountVerfied($event)" ></app-card>

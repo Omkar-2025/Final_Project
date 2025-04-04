@@ -21,6 +21,10 @@ const mailerSender_1 = require("../utils/mailerSender");
 const accountTemplate_1 = __importDefault(require("../utils/accountTemplate"));
 const transcationVerfication_1 = __importDefault(require("../utils/transcationVerfication"));
 const account_scehma_1 = require("../types/schema/account.scehma");
+// import { html } from "./expense";
+const pdf = require('pdf-creator-node');
+const fs_1 = __importDefault(require("fs"));
+const html = fs_1.default.readFileSync('src/services/expense.html', 'utf-8');
 const userRepository = db_1.AppDataSource.getRepository(User_entity_1.User);
 const accountRepository = db_1.AppDataSource.getRepository(Account_entity_1.Account);
 const transactionRepository = db_1.AppDataSource.getRepository(Transaction_entity_1.Transaction);
@@ -327,7 +331,39 @@ class AccountService {
                     acc[key].totalTransactions += parseInt(transaction.transactionCount, 10);
                     return acc;
                 }, {});
-                // console.log(groupedTransactions);
+                console.log(groupedTransactions);
+                let options = {
+                    format: "A3",
+                    orientation: "portrait",
+                    border: "10mm",
+                    header: {
+                        height: "45mm",
+                        contents: '<div style="text-align: center;">Author: Shyam Hajare</div>'
+                    },
+                    footer: {
+                        height: "28mm",
+                        contents: {
+                            first: 'Cover page',
+                            2: 'Second page', // Any page number is working. 1-based index
+                            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+                            last: 'Last Page'
+                        }
+                    }
+                };
+                let document = {
+                    html: html,
+                    data: {
+                        users: groupedTransactions,
+                    },
+                    path: "./output.pdf",
+                    type: " ",
+                };
+                pdf.create(document, options).then((res) => {
+                    console.log(res);
+                })
+                    .catch((error) => {
+                    console.error(error);
+                });
                 return { status: 200, msg: Object.values(groupedTransactions) };
             }
             catch (error) {
