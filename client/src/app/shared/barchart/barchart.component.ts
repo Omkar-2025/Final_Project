@@ -47,13 +47,15 @@ export class BarchartComponent {
 
    selectMonthId:any=null;
 
+   isSelectAccount:boolean = false;
+
 
 
    selectedMonthOption(){
       // console.log(this.selectedMonth);
       // console.log(this.selectedAccount);
 
-
+      this.isSelectAccount = true;
       if(this.selectedAccount){
         this.selectMonthId=this.selectedMonth.val;
         this.fetchData(this.selectedAccount.id);

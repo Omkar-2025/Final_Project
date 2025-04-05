@@ -9,18 +9,18 @@ import { Injectable } from "@angular/core";
 export class SupportService {
     constructor(private http:HttpClient) { }
 
-
+     supportEndpoint:string = 'http://localhost:4000/api/support/';
    
     sendSupportRequest(subject: string, description: string) {
-      return this.http.post('http://localhost:4000/api/support/query', {subject, description}, {withCredentials:true})}
+      return this.http.post(`${this.supportEndpoint}/query`, {subject, description}, {withCredentials:true})}
 
         
     getSupportRequests() {
-      return this.http.get('http://localhost:4000/api/support/query/all', {withCredentials:true})  
+      return this.http.get(`${this.supportEndpoint}/query/all`, {withCredentials:true})  
     }
 
     deleteSupportRequest(id: string) {
-      return this.http.delete(`http://localhost:4000/api/support/query/${id}`, {withCredentials:true})  
+      return this.http.delete(`${this.supportEndpoint}/query/${id}`, {withCredentials:true})  
     } 
      
       

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../Services/auth.service';
 import { Router } from '@angular/router';
+import { loginInterface } from '../../../types/user';
 
 @Component({
   selector: 'app-login',

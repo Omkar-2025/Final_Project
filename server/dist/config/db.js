@@ -17,14 +17,17 @@ const Transaction_entity_1 = require("../entitiy/Transaction.entity");
 const support_query_entity_1 = require("../entitiy/support_query.entity");
 const Account_entity_1 = require("../entitiy/Account.entity");
 const Bills_entity_1 = require("../entitiy/Bills.entity");
+/**
+ * * This is the database connection file
+ */
 exports.AppDataSource = new typeorm_1.DataSource({
-    type: 'mssql',
-    host: 'dev.c5owyuw64shd.ap-south-1.rds.amazonaws.com',
-    port: 1982,
-    username: 'j2',
-    password: '123456',
-    database: 'JIBE_Main_Training',
-    synchronize: true,
+    type: process.env.DB_TYPE,
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    synchronize: false,
     entities: [
         User_entity_1.User,
         Account_entity_1.Account,

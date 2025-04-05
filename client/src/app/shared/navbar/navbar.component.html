@@ -1,5 +1,5 @@
 <div class="navbar">
-    <div class="navbar_heading">
+    <div class="navbar_heading" >
         Easy Bank 
     </div>
 
@@ -10,6 +10,7 @@
         <a routerLink="/login" *ngIf="!isloggedIn">Login</a>
         <a routerLink="/register" *ngIf="!isloggedIn">register</a>
         <!-- <a routerLink = "logout" *ngIf="isloggedIn"> logout </a> -->
+         <a routerLink="/profile">Profile</a>
          <p-button (click)="logOutUser()" *ngIf="isloggedIn" >LogOut</p-button>
     </div>
 

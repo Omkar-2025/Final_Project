@@ -121,6 +121,11 @@ class AdminController {
             }
         });
     }
+    /**
+     * This controller is used to get the All Accounts of the user by user id
+     * @param req
+     * @param res
+     */
     static getAccountByUserId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -134,6 +139,11 @@ class AdminController {
             }
         });
     }
+    /**
+     * This controller is used to get the All Queries of the user by user id
+     * @param req
+     * @param res
+     */
     static getQueryById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

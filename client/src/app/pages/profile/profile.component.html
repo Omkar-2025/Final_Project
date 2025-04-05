@@ -1,14 +1,28 @@
+
+
+<app-navbar></app-navbar>
+
 <p-toast></p-toast>
 
 
-<div class="">
-    <h1>Welcome  {{userData.name}}</h1>
-    <p>Name : {{userData.name}}</p>
-    <p> Email : {{userData.email}}  </p> 
-    <p> Phone : {{userData.phone}} </p>
-    <p-button severity="success" label="Update the Profile" (click)="updateProfileDialog()" ></p-button>
-    <p-button severity="warn" label="Update the Password " (click)="updatePasswordDialog()" ></p-button>
+<div class="profile-info" >
+    <div>
+        <h1>Welcome  {{userData.name}}</h1>
+        <p>Name : {{userData.name}}</p>
+        <p> Email : {{userData.email}}  </p> 
+        <p> Phone : {{userData.phone}} </p>
+        <p   > Address : {{userData.address}} </p>
+        <p-button severity="success" label="Update  Profile" (click)="updateProfileDialog()" ></p-button>
+        <p-button severity="warn" label="Update  Password " (click)="updatePasswordDialog()" ></p-button>
+        <a href="http://localhost:4000/api/account/getExpensepdf">Download Expense Pdf </a>
+    </div>
+    
+   <div class="chart-container">
+    <app-barchart></app-barchart>
+   </div>
+    
 </div>
+
 
 <form [formGroup]="updateUserInfoForm" >
     <p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '45rem', height:'40rem' }">
@@ -60,6 +74,9 @@
 </form>
 
 
+
+
+
 <form [formGroup]="updateUserPasswordForm" >
     <div class="card flex justify-center">
         <!-- <p-button (click)="showDialog()" label="Show" /> -->
@@ -85,6 +102,5 @@
      </p-dialog>
  </div>
 </form>
-
-
-<app-barchart></app-barchart>
+ 
+<!-- (click)="downloadExpense()" -->

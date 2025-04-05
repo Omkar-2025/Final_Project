@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import AccountService from '../services/Account.service';
 import { UserResponseType } from '../types/interfaces/userType';
 
+
 class UserController{
 
 
@@ -44,6 +45,13 @@ class UserController{
         }
     }
 
+    /**
+     * This method is used to create a transaction
+     * @param req 
+     * @param res 
+     * @returns 
+     */
+
     async createTransaction(req:Request,res:Response){
         try {
             const data = req.body;     
@@ -56,6 +64,12 @@ class UserController{
         }
     }
 
+    /**
+     * This method is used to get the transactions of the user
+     * @param req 
+     * @param res 
+     */
+
     async getTransactions(req:Request,res:Response){
         try {
             const id = req.params.id;
@@ -65,6 +79,13 @@ class UserController{
             res.status(500).json({msg:"Internal server error"});
         }
     }
+
+    /**
+     * This method is used to get the transactions of the user by id
+     * @param req 
+     * @param res 
+     */
+
 
     async getTransactionsById(req:Request,res:Response){
         try {
@@ -77,6 +98,16 @@ class UserController{
         }
     }
 
+
+
+    /**
+     * This method is used to withdraw the amount from the account
+     * @param req 
+     * @param res 
+     * @returns 
+     */
+
+
     async withdraw(req:Request,res:Response){
         try {
             const data = req.body;
@@ -86,6 +117,14 @@ class UserController{
             res.status(500).json({msg:"Internal server error"});
         }
     }
+
+
+    /**
+     * This method is used to deposit the amount in the account
+     * @param req 
+     * @param res 
+     */
+
 
     async deposit(req:Request,res:Response){
         try {  
@@ -98,6 +137,12 @@ class UserController{
         }
     }
 
+    /**
+     * This method is used to get all the accounts of the user
+     * @param req 
+     * @param res 
+     */
+
     async getAllAccounts(req:Request,res:Response){
         try {
             // const id = req.body.user.id;
@@ -107,6 +152,14 @@ class UserController{
             res.status(500).json({msg:"Internal server error"});
         }
     }    
+
+
+    /**
+     * This method is used to get all the bank accounts of the user
+     * @param req 
+     * @param res 
+     */
+
 
     async getMonthlyExpenses(req:Request,res:Response){
         try {
@@ -152,6 +205,29 @@ class UserController{
         res.status(500).json({msg:"Internal server error"});
     }
    }
+
+
+
+     async getExpensePdf(req:Request,res:Response){
+    try {
+    
+        // const pdf = fs.readFileSync('output.pdf');
+        // if(!pdf) {
+        //      res.status(404).json({msg:"Pdf not found"});
+        //      return;
+        // }
+        // res.setHeader('Content-Type', 'application/pdf');
+        // res.setHeader('Content-Disposition', 'attachment; filename=expense.pdf');
+        const pdf = 'C:/Users/OmkarBagalINDev/Desktop/Final_Project/server\output.pdf'
+        res.download(pdf);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal server error"});
+    }
+   }
+
+
 
 
 }

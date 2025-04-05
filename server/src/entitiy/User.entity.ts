@@ -44,4 +44,8 @@ export class User {
 
     @OneToMany(()=>Bills,(bills)=>bills.user,{cascade:true})
     bills:Bills[];
+
+    @Column({default:null})
+    address:string;
+
 }

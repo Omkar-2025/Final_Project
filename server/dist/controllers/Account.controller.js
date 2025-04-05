@@ -54,6 +54,12 @@ class UserController {
             }
         });
     }
+    /**
+     * This method is used to create a transaction
+     * @param req
+     * @param res
+     * @returns
+     */
     createTransaction(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -68,6 +74,11 @@ class UserController {
             }
         });
     }
+    /**
+     * This method is used to get the transactions of the user
+     * @param req
+     * @param res
+     */
     getTransactions(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -80,6 +91,11 @@ class UserController {
             }
         });
     }
+    /**
+     * This method is used to get the transactions of the user by id
+     * @param req
+     * @param res
+     */
     getTransactionsById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -93,6 +109,12 @@ class UserController {
             }
         });
     }
+    /**
+     * This method is used to withdraw the amount from the account
+     * @param req
+     * @param res
+     * @returns
+     */
     withdraw(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -105,6 +127,11 @@ class UserController {
             }
         });
     }
+    /**
+     * This method is used to deposit the amount in the account
+     * @param req
+     * @param res
+     */
     deposit(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -118,6 +145,11 @@ class UserController {
             }
         });
     }
+    /**
+     * This method is used to get all the accounts of the user
+     * @param req
+     * @param res
+     */
     getAllAccounts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -130,6 +162,11 @@ class UserController {
             }
         });
     }
+    /**
+     * This method is used to get all the bank accounts of the user
+     * @param req
+     * @param res
+     */
     getMonthlyExpenses(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -170,6 +207,25 @@ class UserController {
                 const currentDate = new Date().getDate(); // Assuming currentDate refers to the day of the month
                 const result = yield Account_service_1.default.getAllMonthlyExpenses({ currentDate, currentYear, id });
                 res.status(result.status).json(result.msg);
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    getExpensePdf(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // const pdf = fs.readFileSync('output.pdf');
+                // if(!pdf) {
+                //      res.status(404).json({msg:"Pdf not found"});
+                //      return;
+                // }
+                // res.setHeader('Content-Type', 'application/pdf');
+                // res.setHeader('Content-Disposition', 'attachment; filename=expense.pdf');
+                const pdf = 'C:/Users/OmkarBagalINDev/Desktop/Final_Project/server\output.pdf';
+                res.download(pdf);
             }
             catch (error) {
                 console.log(error);

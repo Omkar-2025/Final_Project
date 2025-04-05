@@ -8,10 +8,15 @@
     <h1>Expense List</h1>
     <ul>
       {{#each users}}
+      <li> Year :{{this.year}} </li>
+      <li>Month : {{this.month}}</li>
       <li>Deposits: {{this.deposits}}</li>
-      <li>withdrawals: {{this.withdrawals}}</li>
+      <li>withdrawals: {{this.billPayments}}</li>
+      <li>TransferAmount : {{this.totalTransactions}}</li>
+      <li>TotalTransactions : {{this.transferAmount}}</li>
       <br />
       {{/each}}
     </ul>
+    <img src="https://static.wixstatic.com/media/a0cf08_015d3eddecf040bcb4b4b2b5cfb1ae20~mv2_d_4113_1732_s_2.jpg/v1/fit/w_2500,h_1330,al_c/a0cf08_015d3eddecf040bcb4b4b2b5cfb1ae20~mv2_d_4113_1732_s_2.jpg" alt="" width="100px" height="100px" />
   </body>
 </html>

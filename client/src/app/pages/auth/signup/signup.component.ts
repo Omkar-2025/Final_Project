@@ -29,6 +29,17 @@ export class SignupComponent {
 
   register(){
 
+    if(this.registerForm.invalid){
+      this.registerForm.controls['email'].markAsDirty();
+      this.registerForm.controls['confirmPassowrd'].markAsDirty();
+      this.registerForm.controls['phone'].markAsDirty();
+      this.registerForm.controls['password'].markAsDirty();
+      this.registerForm.controls['name'].markAsDirty();
+      this.messageService.add({severity:'error',summary:'Error',detail:'Please fill all the fields'})
+      return;
+    }
+
+
     if(this.registerForm.value.password!=this.registerForm.value.confirmPassowrd){
       this.messageService.add({severity:'error',summary:'Error',detail:'Password and Confirm Password should be same'})
       return;

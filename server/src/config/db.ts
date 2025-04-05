@@ -6,15 +6,20 @@ import { Support } from "../entitiy/support_query.entity";
 import { Account } from "../entitiy/Account.entity";
 import { Bills } from "../entitiy/Bills.entity";
 
+
+/**
+ * * This is the database connection file
+ */
+
  
 export const AppDataSource = new DataSource({
-    type:'mssql',
-    host:'dev.c5owyuw64shd.ap-south-1.rds.amazonaws.com',
-    port:1982,
-    username:'j2',
-    password:'123456',
-    database:'JIBE_Main_Training',
-    synchronize:true,
+    type:process.env.DB_TYPE as any ,
+    host:process.env.DB_HOST,
+    port:parseInt(process.env.DB_PORT!) ,
+    username:process.env.DB_USERNAME,
+    password:process.env.DB_PASSWORD,
+    database:process.env.DB_DATABASE,
+    synchronize:false,
     entities:[
         User,
        Account,

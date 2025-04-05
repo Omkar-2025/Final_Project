@@ -1,9 +1,11 @@
 <p-toast></p-toast>
-<ng-container>
-    <form [formGroup]="registerForm" (ngSubmit)="register()"> 
+
+
+
+    <form [formGroup]="registerForm" (ngSubmit)="register()" > 
         <p-toast></p-toast>
-        <div> 
-            <div class="card flex justify-center">
+        <div class="form-container"> 
+            <div class="form-group">
                 <label> Username : </label>
                 <input type="text" pInputText formControlName="name" />
             </div>
@@ -14,7 +16,7 @@
                 <p-message severity="error" text=" Name is required"></p-message>
             </span> 
 
-            <div class="card flex justify-center">
+            <div class="form-group">
                 <label> Email : </label>
                 <input type="text" pInputText formControlName="email" />
             </div>
@@ -25,7 +27,7 @@
                 <p-message severity="error" text=" Email is required"></p-message>
             </span> 
 
-            <div class="card flex justify-center">
+            <div class="form-group">
                 <label> Password : </label>
                 <input type="password" pInputText formControlName="password" />
             </div>
@@ -36,7 +38,7 @@
                 <p-message severity="error" text=" Password is required"></p-message>
             </span> 
 
-            <div class="card flex justify-center">
+            <div class="form-group">
                 <label> Confirm Password : </label>
                 <input type="password" pInputText formControlName="confirmPassowrd" />
             </div>
@@ -47,7 +49,7 @@
                 <p-message severity="error" text=" confirmPassowrd is required"></p-message>
             </span> 
 
-            <div class="card flex justify-center">
+            <div class="form-group">
                 <label> Phone : </label>
                 <input type="text" pInputText formControlName="phone" />
             </div>
@@ -59,9 +61,10 @@
             </span> 
 
         </div>
-        <p-button label="Register" type="submit" pRipple />
+        <div class="button-container">
+            <p-button label="Register" type="submit" pRipple />
+        </div>
     </form>
 
-</ng-container>
 
 <router-outlet></router-outlet>

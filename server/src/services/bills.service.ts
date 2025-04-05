@@ -28,14 +28,13 @@ export class BillsService {
 
         
         
-       // console.log(billName, amount, dueDate, accountId, frequency.name);
+    //    console.log(billName, amount, dueDate, accountId, frequency.name);
         
-        // const validFrequencies = ["daily", "weekly", "monthly"];
-        // if (!validFrequencies.includes(frequency)) {
-        //     return { msg: "Invalid frequency value", status: 400 };
-        // }
+        const validFrequencies = ["daily", "weekly", "monthly"];
+        if (!validFrequencies.includes(frequency)) {
+            return { msg: "Invalid frequency value", status: 400 };
+        }
     
-
         const account = await accountRepository.findOne({ where: { id: accountId }, lock: { mode: 'dirty_read' } });
         if (!account) {
             return { msg: "Account not found", status: 404 };
@@ -174,6 +173,7 @@ export class BillsService {
             return { msg: "Insufficient balance", status: 400 };
 
         } catch (error) {
+            console.log(error);
             return { msg: "Internal server error", status: 500 };
         }
     }
@@ -188,7 +188,7 @@ export class BillsService {
             if (!account) {
                 return { msg: "Account not found", status: 404 };
             }
-            const transactions = await transactionRepository.find({ where: { toAccount: account ,transactionType:Like("%Bill Payment%") } });
+            const transactions = await transactionRepository.find({ where: { toAccount: account ,transactionType:Like("%Bill Payment%") } ,order:{createdAt:"DESC"}});
             if (transactions) {
                 // transactions.accountNumber = account.account_number;
                 return { msg: transactions, status: 200 };

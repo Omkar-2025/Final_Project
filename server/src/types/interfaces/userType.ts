@@ -8,6 +8,7 @@ export interface UserType{
     role?:string;
     isVerified?:boolean;
     otp?:string;
+    address?:string;
 }
 
 export interface LoginType{

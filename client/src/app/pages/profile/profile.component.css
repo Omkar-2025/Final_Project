@@ -1,0 +1,38 @@
+.profile-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+}
+
+.profile-info h1{
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.profile-info p{
+    font-size: 1.2rem;
+    margin-bottom: 0.9em;
+}
+
+.profile-info p-button{
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 1.5rem;
+    gap: 1rem;;
+}
+
+.profile-info a{
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1.2rem;
+}
+
+.chart-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}

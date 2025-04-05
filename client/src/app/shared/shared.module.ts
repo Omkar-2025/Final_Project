@@ -5,6 +5,7 @@ import { BarchartComponent } from './barchart/barchart.component';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { HomeModule } from "../pages/home/home.module";
 
 
 
@@ -16,8 +17,9 @@ import { MessageService } from 'primeng/api';
     CommonModule,
     ChartModule,
     SelectModule,
-    FormsModule
-  ],
+    FormsModule,
+    HomeModule
+],
   exports:[
     BarchartComponent
   ],

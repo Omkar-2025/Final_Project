@@ -124,10 +124,11 @@ class UserService {
                 if (!user) {
                     return { msg: "User not found", status: 404 };
                 }
-                const { name, email, phone } = data;
+                const { name, email, phone, address } = data;
                 user.name = name;
                 user.email = email;
                 user.phone = phone;
+                user.address = address || " ";
                 yield userRepository.save(user);
                 return { msg: "User updated successfully", status: 200 };
             }

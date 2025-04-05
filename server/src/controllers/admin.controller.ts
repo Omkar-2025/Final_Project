@@ -106,6 +106,12 @@ export class AdminController{
         }
     }
 
+    /**
+     * This controller is used to get the All Accounts of the user by user id
+     * @param req 
+     * @param res 
+     */
+
 
     static async getAccountByUserId(req:Request,res:Response){
         try {
@@ -117,6 +123,12 @@ export class AdminController{
             res.status(500).json({msg:"Internal server error"});
         }
     }
+
+    /**
+     * This controller is used to get the All Queries of the user by user id
+     * @param req 
+     * @param res 
+     */
 
 
     static async getQueryById(req:Request,res:Response){

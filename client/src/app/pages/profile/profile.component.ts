@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../Services/auth.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { AccountService } from '../../Services/account.service';
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +28,7 @@ userData:any={};
 updateUserInfoForm!: FormGroup;
 updateUserPasswordForm:FormGroup;
 
-constructor(private authService:AuthService , private messageService:MessageService){
+constructor(private authService:AuthService , private messageService:MessageService , private accountService:AccountService){
   // this.updateUserInfoForm =  
   this.updateUserInfoForm = new FormGroup({
     name:new FormControl(this.userData.name,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
@@ -60,6 +61,21 @@ constructor(private authService:AuthService , private messageService:MessageServ
     },(err:any)=>{
       console.log(err);
     })
+  }
+
+
+  fetchExpnensePdf(){
+    this.accountService.getExpensePdf().subscribe((result)=>{
+        console.log(result);
+    },( err:any )=>{
+      console.log(err);
+    })
+  } 
+
+
+  downloadExpense(){
+    this.fetchExpnensePdf();
+    this.messageService.add({severity:'success',summary:'Success',detail:'Expense PDF Downloaded'})
   }
 
 

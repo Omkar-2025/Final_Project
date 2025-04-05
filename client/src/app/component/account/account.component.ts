@@ -11,7 +11,6 @@ import { MessageService } from 'primeng/api';
 })
 export class AccountComponent {
   
-  constructor(private router:ActivatedRoute,private accountService:AccountService , private messageService:MessageService){}
   id=0;
   account:any;
   transcations:any;
@@ -23,7 +22,9 @@ export class AccountComponent {
   accounts: { name: string, balance: number, account_type: string, id: number, account_number: string }[] = [];
   isSelectAccount: any = false;
   selectedAccounts:any=''
-
+  
+  constructor(private router:ActivatedRoute,private accountService:AccountService , private messageService:MessageService){}
+  
   selectAccount() {
     this.isSelectAccount = true;
   }
@@ -90,6 +91,18 @@ export class AccountComponent {
   }
 
   transferAmount(){
+
+    if(this.account_number == this.account.account_number){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Cannot transfer to same account'});
+      return;
+    }
+
+    if(this.account_number == ''){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Please enter a valid account number'});
+      return;
+    }
+
+    
 
     if(this.amount <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Please enter a valid amount'});

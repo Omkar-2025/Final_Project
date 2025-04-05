@@ -35,11 +35,11 @@ class BillsService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let { billName, amount, dueDate, accountId, frequency } = data;
-                // console.log(billName, amount, dueDate, accountId, frequency.name);
-                // const validFrequencies = ["daily", "weekly", "monthly"];
-                // if (!validFrequencies.includes(frequency)) {
-                //     return { msg: "Invalid frequency value", status: 400 };
-                // }
+                //    console.log(billName, amount, dueDate, accountId, frequency.name);
+                const validFrequencies = ["daily", "weekly", "monthly"];
+                if (!validFrequencies.includes(frequency)) {
+                    return { msg: "Invalid frequency value", status: 400 };
+                }
                 const account = yield accountRepository.findOne({ where: { id: accountId }, lock: { mode: 'dirty_read' } });
                 if (!account) {
                     return { msg: "Account not found", status: 404 };
@@ -173,6 +173,7 @@ class BillsService {
                 return { msg: "Insufficient balance", status: 400 };
             }
             catch (error) {
+                console.log(error);
                 return { msg: "Internal server error", status: 500 };
             }
         });
@@ -188,7 +189,7 @@ class BillsService {
                 if (!account) {
                     return { msg: "Account not found", status: 404 };
                 }
-                const transactions = yield transactionRepository.find({ where: { toAccount: account, transactionType: (0, typeorm_1.Like)("%Bill Payment%") } });
+                const transactions = yield transactionRepository.find({ where: { toAccount: account, transactionType: (0, typeorm_1.Like)("%Bill Payment%") }, order: { createdAt: "DESC" } });
                 if (transactions) {
                     // transactions.accountNumber = account.account_number;
                     return { msg: transactions, status: 200 };

@@ -12,6 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
+import { HomeModule } from "../home/home.module";
 
 @NgModule({
   declarations: [
@@ -28,9 +29,10 @@ import { MessageModule } from 'primeng/message';
     DialogModule,
     SelectModule,
     ConfirmDialogModule,
-    ProgressSpinnerModule ,
-    MessageModule
-  ],
+    ProgressSpinnerModule,
+    MessageModule,
+    HomeModule
+],
   providers: [
     MessageService,
     ConfirmationService

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const accountCreationTemplate = (courseName, name) => {
+const accountCreationTemplate = (name, accountName) => {
     return `<!DOCTYPE html>
     <html>
     
@@ -72,7 +72,7 @@ const accountCreationTemplate = (courseName, name) => {
             <div class="message">Account Registration Confirmation</div>
             <div class="body">
                 <p>Dear ${name},</p>
-                <p>You have successfully Created  the Account <span class="highlight">"${courseName}"</span>. We
+                <p>You have successfully Created  the Account <span class="highlight">"${accountName}"</span>. We
                     are excited to have you as a Customer !</p>
             </div>
             <div class="support">If you have any questions or need assistance, please feel free to reach out to us at <a

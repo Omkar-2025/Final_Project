@@ -336,7 +336,7 @@ export class AccountService{
             acc[key].totalTransactions += parseInt(transaction.transactionCount, 10);
             return acc;
         }, {});
-        console.log(groupedTransactions);
+        // console.log(groupedTransactions);
 
         
 
@@ -346,13 +346,13 @@ export class AccountService{
             border: "10mm",
             header: {
                 height: "45mm",
-                contents: '<div style="text-align: center;">Author: Shyam Hajare</div>'
+                contents: '<div style="text-align: center;">Author: Easy Bank</div>'
             },
             footer: {
                 height: "28mm",
                 contents: {
                     first: 'Cover page',
-                    2: 'Second page', // Any page number is working. 1-based index
+                    // 2: 'Second page', // Any page number is working. 1-based index
                     default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
                     last: 'Last Page'
                 }
@@ -375,7 +375,7 @@ export class AccountService{
             console.error(error);
           })
 
-        return { status: 200, msg: Object.values(groupedTransactions) };
+        return { status: 200, msg: Object.values(groupedTransactions)  };
         } catch (error) {
             console.error("Error fetching monthly expenses and transactions:", error);
             return { status: 500, msg: "Internal server error" };

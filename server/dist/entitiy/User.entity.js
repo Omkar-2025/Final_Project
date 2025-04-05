@@ -69,6 +69,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Bills_entity_1.Bills, (bills) => bills.user, { cascade: true }),
     __metadata("design:type", Array)
 ], User.prototype, "bills", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: null }),
+    __metadata("design:type", String)
+], User.prototype, "address", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)({ name: 'Online_Bank_User_1997' })
 ], User);
