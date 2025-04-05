@@ -233,5 +233,31 @@ class UserController {
             }
         });
     }
+    deactiveAccount(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.body.id;
+                const result = yield Account_service_1.default.deactiveAccountBLL(parseInt(id));
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
+    activateAccount(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.body.id;
+                const result = yield Account_service_1.default.activateAccountBLL(parseInt(id));
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
 }
 exports.default = new UserController();

@@ -51,6 +51,10 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Account.prototype, "isVerified", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ default: 0 }),
+    __metadata("design:type", Boolean)
+], Account.prototype, "status", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => User_entity_1.User, (user) => user.accounts, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ "name": "user_id" }),
     __metadata("design:type", User_entity_1.User)

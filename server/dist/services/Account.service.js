@@ -66,6 +66,7 @@ class AccountService {
                 return { msg: "Account not found", status: 404 };
             }
             catch (error) {
+                console.log(error);
                 return { msg: "Internal server error", status: 500 };
             }
         });
@@ -369,6 +370,40 @@ class AccountService {
             catch (error) {
                 console.error("Error fetching monthly expenses and transactions:", error);
                 return { status: 500, msg: "Internal server error" };
+            }
+        });
+    }
+    deactiveAccountBLL(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const account = yield accountRepository.findOne({ where: { id: id } });
+                if (!account) {
+                    return { msg: "Account not found", status: 404 };
+                }
+                account.status = false;
+                yield accountRepository.save(account);
+                return { msg: "Account deactivated successfully", status: 200 };
+            }
+            catch (error) {
+                console.log(error);
+                return { msg: "Internal server error", status: 500 };
+            }
+        });
+    }
+    activateAccountBLL(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const account = yield accountRepository.findOne({ where: { id: id } });
+                if (!account) {
+                    return { msg: "Account not found", status: 404 };
+                }
+                account.status = true;
+                yield accountRepository.save(account);
+                return { msg: "Account activated successfully", status: 200 };
+            }
+            catch (error) {
+                console.log(error);
+                return { msg: "Internal server error", status: 500 };
             }
         });
     }

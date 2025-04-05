@@ -16,33 +16,39 @@ export class Account {
     @Column()
     balance: number;
 
-    @Column({ type: `uuid`,unique:true,default:()=>`NewID()` })
+    @Column({ type: `uuid`, unique: true, default: () => `NewID()` })
     account_number: string;
 
     @Column({
-        enum:['Savings Account','Current Account','Salary Account'] ,
-        default:'Savings Account'
+        enum: ['Savings Account', 'Current Account', 'Salary Account'],
+        default: 'Savings Account'
     })
     account_type: string;
 
 
-    @Column({default:false})
+    @Column({ default: false })
     isVerified: boolean;
 
+    @Column({default:0})
+    status:boolean
 
-    @ManyToOne(() => User, (user) => user.accounts,{onDelete:'CASCADE'})
-    @JoinColumn({"name":"user_id"})
+
+    @ManyToOne(() => User, (user) => user.accounts, { onDelete: 'CASCADE' })
+    @JoinColumn({ "name": "user_id" })
     user: User;
 
 
-    @OneToMany(() => Transaction, (transaction) => transaction.fromAccount,{cascade:true})
+    @OneToMany(() => Transaction, (transaction) => transaction.fromAccount, { cascade: true })
     transactionsFrom: Transaction[];
 
-    @OneToMany(() => Transaction, (transaction) => transaction.toAccount,{cascade:true})
+    @OneToMany(() => Transaction, (transaction) => transaction.toAccount, { cascade: true })
     transactionsTo: Transaction[];
 
     @OneToMany(() => Bills, (bills) => bills.account, { cascade: true })
-bills: Bills[];
+    bills: Bills[];
+
+
+
 
     constructor(name: string, balance: number, account_type: string, user: User) {
         this.name = name;

@@ -55,6 +55,13 @@ export class AccountService {
       return this.http.get(`${this.accountEndPoint}/getExpensepdf`,{withCredentials:true,responseType:'blob'});
     }
 
+    deactivateAccount(id:number){
+      return this.http.post(`${this.accountEndPoint}/deactivateAccount`,{id},{withCredentials:true});
+    }
 
+    activateAccount(id:number){
+      return this.http.post(`${this.accountEndPoint}/activateAccount`,{id},{withCredentials:true});
+
+    }
 
 }

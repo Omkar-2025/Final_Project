@@ -124,8 +124,25 @@ export class AccountComponent {
       this.messageService.add({severity:'error', summary:'Error', detail:'Invalid Account Number'});
     })
     this.visible = false;
-
-   
   }
+
+  deactiveAccount(){
+    this.accountService.deactivateAccount(this.id).subscribe((result:any)=>{
+      this.messageService.add({severity:'success', summary:'Success', detail:'Account Deactivated Successfully'});
+      this.ngOnInit();
+    },(error)=>{
+      this.messageService.add({severity:'error', summary:'Error', detail:'Error Deactivating Account'});
+    })
+  }
+
+  activeAccount(){
+      this.accountService.activateAccount(this.id).subscribe((result:any)=>{
+      this.messageService.add({severity:'success', summary:'Success', detail:'Account Activated Successfully'});
+      this.ngOnInit();
+      },( error )=>{
+        this.messageService.add({severity:'error', summary:'Error', detail:'Error Activating Account'});
+      })
+  }
+
 
   }

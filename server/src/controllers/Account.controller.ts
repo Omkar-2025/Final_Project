@@ -227,7 +227,27 @@ class UserController{
     }
    }
 
+   async deactiveAccount(req:Request,res:Response){
+    try {
+        const id = req.body.id;
+        const result = await AccountService.deactiveAccountBLL(parseInt(id));
+        res.status(result.status).json({msg:result.msg});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal server error"});
+    }
+   }
 
+   async activateAccount(req:Request,res:Response){
+    try {
+        const id = req.body.id;
+        const result = await AccountService.activateAccountBLL(parseInt(id));
+        res.status(result.status).json({msg:result.msg});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal server error"});
+    }
+   }
 
 
 }

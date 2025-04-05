@@ -77,5 +77,19 @@ router.route('/getMonthlyAllExpenses').post(verifyJwt,AccountController.getMonth
 router.route('/getExpensepdf').get(verifyJwt,AccountController.getExpensePdf);
 
 
+/**
+ * This route is used to deactivate the account of the user
+ */
+
+router.route('/deactivateAccount').post(verifyJwt,AccountController.deactiveAccount);
+
+
+/**
+ *  This route is used to activate the account of the user
+ */
+
+router.route('/activateAccount').post(verifyJwt,AccountController.activateAccount);
+
+
 
 export default router;

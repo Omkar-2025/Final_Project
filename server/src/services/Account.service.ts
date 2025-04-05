@@ -54,6 +54,7 @@ export class AccountService{
             }
             return {msg:"Account not found",status:404};
         } catch (error) {
+            console.log(error)
             return {msg:"Internal server error",status:500};
         }
     }
@@ -379,6 +380,45 @@ export class AccountService{
         } catch (error) {
             console.error("Error fetching monthly expenses and transactions:", error);
             return { status: 500, msg: "Internal server error" };
+        }
+    }
+
+
+    async deactiveAccountBLL(id:number){
+        try {
+            
+            const account = await accountRepository.findOne({where:{id:id}});
+            if(!account){
+                return {msg:"Account not found",status:404};
+            }
+            account.status = false;
+            await accountRepository.save(account);
+            return {msg:"Account deactivated successfully",status:200};
+
+        } catch (error) {
+            console.log(error)
+            return {msg:"Internal server error",status:500};
+        }
+    }
+
+    async activateAccountBLL(id:number){
+        try {
+
+            const account = await accountRepository.findOne({where:{id:id}});
+
+            if(!account){
+                return {msg:"Account not found",status:404};
+            }
+
+            account.status = true;
+
+            await accountRepository.save(account);
+
+            return {msg:"Account activated successfully",status:200};
+
+        } catch (error) {
+            console.log(error)
+            return {msg:"Internal server error",status:500};   
         }
     }
 

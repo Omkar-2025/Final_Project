@@ -13,11 +13,15 @@
             <p><strong>Account Number:</strong> {{account.account_number}}</p>
         </div>
 
-        <div class="account-actions" >  
+
+
+        <div class="account-actions"  *ngIf="account.status == '1' ">  
         <p-button (click)="showDialog('deposit')" label="Deposit" *ngIf="transcations" />
         <p-button label="WithDraw" severity="warn" (click)="showDialog('withdraw')"  />
         <p-button label="Transfer Money " severity="help" (click)="showDialog('transfer')"  />
-        </div>
+        <p-button label="Deactivate Account " severity="danger" (click)="deactiveAccount()"  />
+    </div>
+    <p-button label="Activate Account " severity="success" (click)="activeAccount()"  *ngIf="account.status == '0' "/>
       
         </div>
 </ng-container>
@@ -97,6 +101,7 @@
             <p-button label="Deposit" (click)="DepositAmount()" *ngIf="type =='deposit'" />
             <p-button label="withdraw" severity="warn" (click)="withdrawAmount()"  *ngIf="type == 'withdraw'"/>
             <p-button label="Transfer" severity="help" (click)="transferAmount()"  *ngIf="type == 'transfer'"/>
+            <!-- <p-button label=" '' " ></p-button> -->
         </div>
     <!-- </p-dialog> -->
 <!-- </div> -->
