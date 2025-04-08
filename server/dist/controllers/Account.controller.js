@@ -8,11 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Account_service_1 = __importDefault(require("../services/Account.service"));
+const account_service_1 = require("../services/account.service");
 class UserController {
     /**
      * This method is used to create the Bank account of the User
@@ -25,7 +22,7 @@ class UserController {
             try {
                 const data = req.body;
                 data.id = req.body.user.id;
-                const result = yield Account_service_1.default.createAccount(data);
+                const result = yield account_service_1.AccountService.createAccount(data);
                 if (result.status == 404) {
                     res.status(404).json({ msg: "User not found" });
                 }
@@ -46,7 +43,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
-                const result = yield Account_service_1.default.getAccount(parseInt(id));
+                const result = yield account_service_1.AccountService.getAccount(parseInt(id));
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
@@ -65,7 +62,7 @@ class UserController {
             try {
                 const data = req.body;
                 //  data.fromAccount=req.body.user.id;
-                const result = yield Account_service_1.default.createTranscation(data);
+                const result = yield account_service_1.AccountService.createTranscation(data);
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {
@@ -83,7 +80,11 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
-                const result = yield Account_service_1.default.getTranscations(parseInt(id));
+                const page = req.body.page || 1;
+                const limit = 5;
+                // console.log(id,page,limit);
+                const result = yield account_service_1.AccountService.getTranscations(parseInt(id), page, limit);
+                // console.log(result);
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
@@ -100,7 +101,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
-                const result = yield Account_service_1.default.getTransactionsById(parseInt(id));
+                const result = yield account_service_1.AccountService.getTransactionsById(parseInt(id));
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
@@ -119,7 +120,9 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
-                const result = yield Account_service_1.default.Withdraw(data);
+                data.amount = parseInt(data.amount);
+                data.fromAccount = parseInt(data.fromAccount);
+                const result = yield account_service_1.AccountService.Withdraw(data);
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {
@@ -136,7 +139,9 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
-                const result = yield Account_service_1.default.Deposit(data);
+                data.amount = parseInt(data.amount);
+                data.toAccount = parseInt(data.toAccount);
+                const result = yield account_service_1.AccountService.Deposit(data);
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {
@@ -154,7 +159,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // const id = req.body.user.id;
-                const result = yield Account_service_1.default.getAllAccounts();
+                const result = yield account_service_1.AccountService.getAllAccounts();
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
@@ -173,7 +178,7 @@ class UserController {
                 const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
                 const currentYear = new Date().getFullYear();
                 const id = parseInt(req.params.id);
-                const result = yield Account_service_1.default.getMonthlyTransactionsBLL({ currentMonth, currentYear, id });
+                const result = yield account_service_1.AccountService.getMonthlyTransactionsBLL({ currentMonth, currentYear, id });
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
@@ -188,7 +193,7 @@ class UserController {
                 const id = parseInt(req.params.id);
                 const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
                 const currentYear = new Date().getFullYear();
-                const result = yield Account_service_1.default.getMonthlyTransactionsBLL({ currentMonth, currentYear, id });
+                const result = yield account_service_1.AccountService.getMonthlyTransactionsBLL({ currentMonth, currentYear, id });
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
@@ -205,7 +210,7 @@ class UserController {
                 // const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
                 const currentYear = new Date().getFullYear();
                 const currentDate = new Date().getDate(); // Assuming currentDate refers to the day of the month
-                const result = yield Account_service_1.default.getAllMonthlyExpenses({ currentDate, currentYear, id });
+                const result = yield account_service_1.AccountService.getAllMonthlyExpenses({ currentDate, currentYear, id });
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
@@ -237,7 +242,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.id;
-                const result = yield Account_service_1.default.deactiveAccountBLL(parseInt(id));
+                const result = yield account_service_1.AccountService.deactiveAccountBLL(parseInt(id));
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {
@@ -250,7 +255,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.id;
-                const result = yield Account_service_1.default.activateAccountBLL(parseInt(id));
+                const result = yield account_service_1.AccountService.activateAccountBLL(parseInt(id));
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {

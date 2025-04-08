@@ -4,7 +4,7 @@
     </p-button>
     <div class="card flex justify-center align-center ">
         <p-dialog header="Bills " [modal]="true" [(visible)]="visible" [style]="{ width: '100vw' , height: '100vh'}">
-             <form  [formGroup]="supportForm">
+             <!-- <form  [formGroup]="supportForm">
                 <span class="p-text-secondary block mb-8">  Create the query  </span>
             <div class="flex items-center gap-4 mb-4">
                 <label for="name" class="font-semibold w- 24">Query Name </label>
@@ -28,7 +28,13 @@
              <div class="flex justify-end gap-2 mt-4">
                 <p-button label="Cancel" severity="secondary" (click)="visible = false" />
                 <p-button label="Save" (click)="createSupport()" />
-            </div>
+            </div> -->
+
+            <!-- <app-digalog [formGroup]="supportForm" [InputControls] ="supportFormInputControls"   (formSubmit)="createSupport($event)" [btnlabel]="btnName" ></app-digalog> -->
+
+            <app-digalog [formGroup]="supportForm" [InputControls]="supportFormInputControls" (formSubmit)="createSupport($event)" [btnlabel]="btnName"  ></app-digalog>
+
+
         </p-dialog>
     </div>
 </ng-container>

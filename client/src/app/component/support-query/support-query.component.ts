@@ -20,6 +20,7 @@ export class SupportQueryComponent {
 
   role: string =  '';
   reply:string = '';
+  userUpdate:string='';
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private supportService: SupportService,
     private adminService:AdminService
@@ -27,6 +28,8 @@ export class SupportQueryComponent {
 
   showDialog() {
     this.visible = true;
+
+    // console.log("updated")
     // console.log(this.role);
     console.log("this.supportQuery", this.supportQuery);
     // console.log(this.visible);
@@ -35,6 +38,11 @@ export class SupportQueryComponent {
 
   ngOnInit() {
     this.role = localStorage.getItem('role')!;
+  }
+
+
+  submitUserUpdate(){
+    
   }
 
 

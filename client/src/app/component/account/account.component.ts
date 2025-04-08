@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../Services/account.service';
 import { MessageService } from 'primeng/api';
+import { PaginatorState } from 'primeng/paginator';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-account',
@@ -22,28 +24,56 @@ export class AccountComponent {
   accounts: { name: string, balance: number, account_type: string, id: number, account_number: string }[] = [];
   isSelectAccount: any = false;
   selectedAccounts:any=''
-  
-  constructor(private router:ActivatedRoute,private accountService:AccountService , private messageService:MessageService){}
+
+
+  depositFormGroup = new FormGroup({
+    amount:new FormControl(0,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.min(100),Validators.max(10000)]),
+  })
+
+  inputAmount=[{name:'amount',label:'Amount',type:'number'}];
+  Deposit:string='Deposit';
+
+  isTranscationCompleted:boolean = false;
+
+  childSubmit(event:any){
+    console.log(event);
+  }
+  // 
+
+  transferFromgroup!:FormGroup;
+
+
+  transferFromInputControl = [{name:'Account_Number',label:'Account_Number',type:'text'},{name:'Amount',label:'Amount',type:'number'},{name:'Description',label:'Description',type:'text'}]
+
+  constructor(private router:ActivatedRoute,private accountService:AccountService , private messageService:MessageService){
+    this.transferFromgroup = new FormGroup({
+      Account_Number:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      Amount:new FormControl(0,[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.min(500),Validators.max(10000)]),
+      Description:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+    })
+  }
   
   selectAccount() {
     this.isSelectAccount = true;
   }
 
+  fetchTranscations(id:number,pageNumber:number=1)
+  {
+    this.accountService.getaccountById(this.id).subscribe((result:any)=>{
+      this.account=result[0];
+    })
+    this.accountService.getTransactionsByAccount(this.id,pageNumber).subscribe((result:any)=>{
+      console.log(result);
+      console.log(this.id);
+      this.transcations=result;
+    })
+  }
 
   ngOnInit(){
-      this.router.params.subscribe((params)=>{
-        this.id=params['id'];
-      })
-      this.accountService.getaccountById(this.id).subscribe((result:any)=>{
-        this.account=result[0];
-      })
-
-      this.accountService.getTransactionsByAccount(this.id).subscribe((result:any)=>{
-        console.log(result);
-        console.log(this.id);
-        this.transcations=result;
-      })
-
+    this.router.params.subscribe((params)=>{
+      this.id=params['id'];
+    })
+    this.fetchTranscations(this.id);
   }
 
   showDialog(type:string) {
@@ -61,36 +91,56 @@ export class AccountComponent {
 
   }
 
-  DepositAmount(){
+  DepositAmount(val:any){
+    // console.log(val);
+    this.ngOnInit();
+    this.isTranscationCompleted = true;
+
+    this.amount = val.amount;
     if(this.amount <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Please enter a valid amount'});
+      this.isTranscationCompleted=false;
       return;
     }
     this.accountService.depositAmount(this.id,this.amount).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Amount Deposited Successfully'});
       this.visible = false;
-      this.ngOnInit();
+      // this.ngOnInit();
     })
   }
 
-  withdrawAmount(){ 
+  withdrawAmount(val:any){ 
+    // console.log(val);
+    // this.ngOnInit();
+    this.isTranscationCompleted = true;
+    this.amount =val.amount
     if(this.amount <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Please enter a valid amount'});
       return;
     }
-    if(this.amount > this.account.balance){
+    if(this.amount > val.amount){
       this.messageService.add({severity:'error', summary:'Error', detail:'Insufficient Balance'});
       return;
     }
     this.accountService.withdrawAmount(this.id,this.amount).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Amount Withdrawn Successfully'});
       this.visible = false;
-      this.ngOnInit();
+      // this.ngOnInit();
     })
     this.visible = false;
   }
 
-  transferAmount(){
+  transferAmount(val:any){
+
+    // this.ngOnInit();
+    this.isTranscationCompleted = true;
+
+    console.log(val);
+
+    this.account_number = val.Account_Number;
+    this.transactionType = val.Description;
+    this.amount  = val.Amount;
+    
 
     if(this.account_number == this.account.account_number){
       this.messageService.add({severity:'error', summary:'Error', detail:'Cannot transfer to same account'});
@@ -102,13 +152,11 @@ export class AccountComponent {
       return;
     }
 
-    
-
     if(this.amount <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Please enter a valid amount'});
       return;
     }
-    if(this.amount > this.account.balance){
+    if(this.amount >val.Amount){
       this.messageService.add({severity:'error', summary:'Error', detail:'Insufficient Balance'});
       return;
     }
@@ -119,7 +167,7 @@ export class AccountComponent {
     this.accountService.transferAmount(this.id,this.account_number,this.amount, this.transactionType).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Amount Transferred Successfully'});
       this.visible = false;
-      this.ngOnInit();
+      // this.ngOnInit();
     },(error)=>{
       this.messageService.add({severity:'error', summary:'Error', detail:'Invalid Account Number'});
     })
@@ -142,6 +190,20 @@ export class AccountComponent {
       },( error )=>{
         this.messageService.add({severity:'error', summary:'Error', detail:'Error Activating Account'});
       })
+  }
+
+
+  first: number = 0;
+
+  rows: number = 10;
+
+  onPageChange(event: PaginatorState) {
+      this.first = event.first ?? 0;
+      this.rows = event.rows ?? 10;
+      console.log(event.first, event.rows);
+    // console.log(event.first!/10);
+      const pageNumber = event.first!/10 + 1;
+      this.fetchTranscations(this.id,pageNumber) 
   }
 
 

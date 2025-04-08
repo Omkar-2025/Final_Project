@@ -11,6 +11,7 @@ import { SupportComponent } from './pages/support/support.component';
 import { DashboardComponent  } from './pages/admin/dashboard/dashboard.component';
 import { AdminRoutingModule } from './pages/admin/admin-routing.module';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ForgetPasswordComponent } from './pages/auth/forget-password/forget-password.component';
 
 const routes: Routes = [
   {path:'login',component:LoginComponent},
@@ -24,6 +25,8 @@ const routes: Routes = [
   // {path:'dashboard',loadChildren:()=>import('./pages/admin/admin.module').then(m=>m.AdminModule)},
   {path:'admin',component:DashboardComponent},
   {path:'profile',component:ProfileComponent},
+  {path:'',redirectTo:'/home',pathMatch:'full'},
+  {path:'forget',component:ForgetPasswordComponent}
   
 ];
 

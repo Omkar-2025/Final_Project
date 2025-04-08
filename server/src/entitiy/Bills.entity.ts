@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
-import { Account } from "./Account.entity";
-import { User } from "./User.entity";
+import { Account } from "./account.entity";
+import { User } from "./user.entity";
 
 @Entity({ name: "Online_Banking_Bills_1997" })
 export class Bills {

@@ -11,8 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bills = void 0;
 const typeorm_1 = require("typeorm");
-const Account_entity_1 = require("./Account.entity");
-const User_entity_1 = require("./User.entity");
+const account_entity_1 = require("./account.entity");
+const user_entity_1 = require("./user.entity");
 let Bills = class Bills {
     constructor(billName, amount, dueDate, account, frequency, nextPaymentDate) {
         this.billName = billName;
@@ -58,16 +58,16 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Bills.prototype, "isActive", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Account_entity_1.Account, (account) => account.bills, { onDelete: "CASCADE" }),
+    (0, typeorm_1.ManyToOne)(() => account_entity_1.Account, (account) => account.bills, { onDelete: "CASCADE" }),
     (0, typeorm_1.JoinColumn)({ name: "account_id" }),
-    __metadata("design:type", Account_entity_1.Account)
+    __metadata("design:type", account_entity_1.Account)
 ], Bills.prototype, "account", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => User_entity_1.User, (User) => User.bills),
-    __metadata("design:type", User_entity_1.User)
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (User) => User.bills),
+    __metadata("design:type", user_entity_1.User)
 ], Bills.prototype, "user", void 0);
 exports.Bills = Bills = __decorate([
     (0, typeorm_1.Entity)({ name: "Online_Banking_Bills_1997" }),
     __metadata("design:paramtypes", [String, Number, Date,
-        Account_entity_1.Account, String, Date])
+        account_entity_1.Account, String, Date])
 ], Bills);

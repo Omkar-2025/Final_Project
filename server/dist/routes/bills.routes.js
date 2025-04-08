@@ -4,39 +4,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const verifyJwt_1 = require("../middlewares/verifyJwt");
 const bills_controller_1 = __importDefault(require("../controllers/bills.controller"));
 const router = express_1.default.Router();
 /**
  * This route is used to create a new bill
  */
-router.route('/createbill').post(verifyJwt_1.verifyJwt, bills_controller_1.default.createBill);
+router.route('/createbill').post(bills_controller_1.default.createBill);
 /**
  * This route is used to get all bills of a user
  */
-router.route('/getbills/').get(verifyJwt_1.verifyJwt, bills_controller_1.default.getBill);
+router.route('/getbills/').get(bills_controller_1.default.getBill);
 /**
  *  This route is used to process the bills of a user
  */
-router.route('/processbills').get(verifyJwt_1.verifyJwt, bills_controller_1.default.ProcessBills);
+router.route('/processbills').get(bills_controller_1.default.ProcessBills);
 /**
  * This route is used to get a bill by id
  */
-router.route('/getbill/:id').get(verifyJwt_1.verifyJwt, bills_controller_1.default.getBillById);
+router.route('/getbill/:id').get(bills_controller_1.default.getBillById);
 /**
  * This route is used to pay a bill
  */
-router.route('/paybills').post(verifyJwt_1.verifyJwt, bills_controller_1.default.payBills);
+router.route('/paybills').post(bills_controller_1.default.payBills);
 /**
  * This route is used to get the bills history of a user
  */
-router.route('/getbillsTranscation').get(verifyJwt_1.verifyJwt, bills_controller_1.default.getBillshistoy);
+router.route('/getbillsTranscation').get(bills_controller_1.default.getBillshistoy);
 /**
  * This route is used to get the bills history of a user by id
  */
-router.route('/updateBill').put(verifyJwt_1.verifyJwt, bills_controller_1.default.updateBill);
+router.route('/updateBill').put(bills_controller_1.default.updateBill);
 /**
  * This route is used to delete a bill
  */
-router.route('/deleteBill').delete(verifyJwt_1.verifyJwt, bills_controller_1.default.deleteBill);
+router.route('/deleteBill').delete(bills_controller_1.default.deleteBill);
 exports.default = router;

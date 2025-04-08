@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from "typeorm";
-import { Account } from "./Account.entity";
+import { Account } from "./account.entity";
 import { Support } from "./support_query.entity";
-import { Bills } from "./Bills.entity";
+import { Bills } from "./bills.entity";
 import { role } from "../types/enums/role.enum";
 
 @Entity({ name: 'Online_Bank_User_1997' })

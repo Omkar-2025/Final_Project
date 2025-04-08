@@ -1,0 +1,71 @@
+<div class="dialog-container">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <ng-container *ngFor="let controls of InputControls">
+            <ng-container *ngIf="controls.label == 'frequency'">
+                <p-dropdown
+                    [formControlName]="controls.name"
+                    [options]="frequency_arr"
+                    optionLabel="name"
+                    placeholder="Select Frequency"
+                ></p-dropdown>
+                <p-message
+                    *ngIf="formGroup.get(controls.name)?.invalid && formGroup.get(controls.name)?.touched"
+                    severity="error"
+                    text="Frequency is required"
+                ></p-message>
+            </ng-container>
+
+            <ng-container *ngIf="controls.label == 'accounts'">
+                <p-dropdown
+                    [formControlName]="controls.name"
+                    [options]="accounts"
+                    optionLabel="account_number"
+                    (onChange)="selectAccount($event)"
+                    placeholder="Select Account"
+                ></p-dropdown>
+                <p-message
+                    *ngIf="formGroup.get(controls.name)?.invalid && formGroup.get(controls.name)?.touched"
+                    severity="error"
+                    text="Account selection is required"
+                ></p-message>
+            </ng-container>
+
+           
+            <ng-container *ngIf="controls.type !== 'select'">
+                <label for="">{{ controls.label }}</label>
+                <input
+                    [type]="controls.type"
+                    pInputText
+                    [formControlName]="controls.name"
+                    class="input-field"
+                />
+                <p-message
+                    *ngIf="formGroup.get(controls.name)?.invalid && formGroup.get(controls.name)?.touched"
+                    severity="error"
+                    [text]="controls.label + ' is required'"
+                ></p-message>
+            </ng-container>
+        </ng-container>
+
+
+        <ng-container *ngIf="isAccountselected">
+            <p>Account Name: {{ selectedAccounts.name }}</p>
+            <p>Amount: {{ selectedAccounts.balance }}</p>
+            <p>Account Type: {{ selectedAccounts.account_type }}</p>
+        </ng-container>
+
+        <!-- {{ selectedAccounts | json }} -->
+
+
+         <small *ngIf="!selectedAccounts?.isVerified && selectedAccounts">
+            Plz verify your account to proceed with the payment.
+        </small> 
+
+        <!-- {{formGroup.invalid || selectedAccounts?.isVerified}} -->
+
+        <p-button pButton type="submit" label="{{ btnlabel }}" [disabled]="formGroup.invalid && selectedAccounts?.isVerified"></p-button>
+
+        <a  routerLink ="/forget" *ngIf="type == 'login'" > If you dose not rember password forget the password </a>
+
+    </form>
+</div>

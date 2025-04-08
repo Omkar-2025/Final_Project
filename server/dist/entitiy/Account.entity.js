@@ -11,15 +11,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Account = void 0;
 const typeorm_1 = require("typeorm");
-const Transaction_entity_1 = require("./Transaction.entity");
-const User_entity_1 = require("./User.entity");
-const Bills_entity_1 = require("./Bills.entity");
+const transaction_entity_1 = require("./transaction.entity");
+const user_entity_1 = require("./user.entity");
+const bills_entity_1 = require("./bills.entity");
 let Account = class Account {
-    constructor(name, balance, account_type, user) {
+    constructor(name, balance, account_type, user, aadhar_card_number, pan_card_number) {
         this.name = name;
         this.balance = balance;
         this.account_type = account_type;
         this.user = user;
+        this.status = false;
+        this.aadhar_card_number = aadhar_card_number;
+        this.pan_card_number = pan_card_number;
     }
 };
 exports.Account = Account;
@@ -55,23 +58,31 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Account.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => User_entity_1.User, (user) => user.accounts, { onDelete: 'CASCADE' }),
+    (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+    __metadata("design:type", String)
+], Account.prototype, "pan_card_number", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+    __metadata("design:type", String)
+], Account.prototype, "aadhar_card_number", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.accounts, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ "name": "user_id" }),
-    __metadata("design:type", User_entity_1.User)
+    __metadata("design:type", user_entity_1.User)
 ], Account.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Transaction_entity_1.Transaction, (transaction) => transaction.fromAccount, { cascade: true }),
+    (0, typeorm_1.OneToMany)(() => transaction_entity_1.Transaction, (transaction) => transaction.fromAccount, { cascade: true }),
     __metadata("design:type", Array)
 ], Account.prototype, "transactionsFrom", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Transaction_entity_1.Transaction, (transaction) => transaction.toAccount, { cascade: true }),
+    (0, typeorm_1.OneToMany)(() => transaction_entity_1.Transaction, (transaction) => transaction.toAccount, { cascade: true }),
     __metadata("design:type", Array)
 ], Account.prototype, "transactionsTo", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Bills_entity_1.Bills, (bills) => bills.account, { cascade: true }),
+    (0, typeorm_1.OneToMany)(() => bills_entity_1.Bills, (bills) => bills.account, { cascade: true }),
     __metadata("design:type", Array)
 ], Account.prototype, "bills", void 0);
 exports.Account = Account = __decorate([
     (0, typeorm_1.Entity)({ name: 'Online_Banking_Account_1997' }),
-    __metadata("design:paramtypes", [String, Number, String, User_entity_1.User])
+    __metadata("design:paramtypes", [String, Number, String, user_entity_1.User, String, String])
 ], Account);

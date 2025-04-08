@@ -1,68 +1,26 @@
 
 <app-navbar></app-navbar>
 
+<div  *ngIf="!bills" class="spinner" >
+    <p-progress-spinner ariaLabel="loading"></p-progress-spinner>
+</div>
+
 <p-toast></p-toast>
 <ng-container *ngIf="bills">
     <div class="bills-container">
     <ng-container *ngFor="let item of bills" >
-        <app-bill-card [bill]="item" class="bill-card" (isBillUpdated)="isBillUpdatedParent($event)"  (isBillDeleted)="isBillDeletedParent($event)" ></app-bill-card>
+        <app-bill-card [bill]="item" class="bill-card" (isBillUpdated)="isBillUpdatedParent($event)"  (isBillDeleted)="isBillDeletedParent($event)" [accounts]="accounts" ></app-bill-card>
     </ng-container>
 </div>
 </ng-container>
 
 
 <ng-container>
-    <p-button label="Create the New Bill" (click)="showDialog()" class="create-bill-button">
+    <p-button label="Create the New Bill" (click)="showDialog()" class="create-bill-button" *ngIf="bills">
     </p-button>
     <div class="">
-        <p-dialog header="Bills " [modal]="true" [(visible)]="visible" [style]="{ width: '100vw' , height: '100vh'}">
-            <form  [formGroup]="createBillForm">
-                <span class="p-text-secondary block mb-8">  Create the New Bill </span>
-            <div class="">
-                <label for="name" class="font-semibold w- 24">Bill Name </label>
-                <input pInputText id="name" class="flex-auto  " autocomplete="off" formControlName="billName"  />
-            </div>
-            <span class="form-groupd-err"
-            *ngIf="!createBillForm.controls['billName']?.valid && (createBillForm.controls['billName']?.dirty
-            ||createBillForm.controls['billName'].touched)">
-                <p-message severity="error" text="Bill Name is required"></p-message>
-            </span>   
-            <div class="">
-                <label for="amount" class="font-semibold w-24">Amount</label>
-                <input pInputText id="amount" class="flex-auto" autocomplete="off" formControlName="amount" />
-            </div>
-            <span class="form-groupd-err"
-            *ngIf="!createBillForm.controls['amount']?.valid && (createBillForm.controls['amount']?.dirty
-            ||createBillForm.controls['amount'].touched)">
-                <p-message severity="error" text="Amount is required"></p-message>
-            </span> 
-            <div class="">
-                <label for="amount" class="font-semibold w-24">frequency</label>
-                <p-select [options]="billFrequencies"  optionLabel="name" placeholder="Select a frequency" formControlName="frequency" class="w-full md:w-56" />
-            </div>
-            <span class="form-groupd-err"
-            *ngIf="!createBillForm.controls['frequency']?.valid && (createBillForm.controls['frequency']?.dirty
-            ||createBillForm.controls['frequency'].touched)">
-                <p-message severity="error" text=" frequency is required"></p-message>
-            </span> 
-
-            
-            </form>
-            
-            <div class="">
-                <label for="">Select An Account </label>
-                <p-select [options]="accounts" (onChange)="selectAccount()"  optionLabel="account_number" placeholder="Select a account" class="w-full md:w-80"  [(ngModel)]="selectedAccounts" />
-            </div>
-
-                <ng-container *ngIf="isSelectAccount ">
-                    <p> Account Name :  {{selectedAccounts.name}} </p> 
-                     <p> Amount :   {{selectedAccounts.balance}} </p>
-                     <p> Account Type :  {{selectedAccounts.account_type}}</p>
-                   </ng-container>
-            <div class="flex justify-end gap-2 mt-4">
-                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
-                <p-button label="Save" (click)="createBill()" />
-            </div>
+        <p-dialog header="Bills " [modal]="true" [(visible)]="visible" [style]="{ width: '100vw' , height: '100vh'}"> 
+            <app-digalog [formGroup]="createBillForm" [InputControls]="billFormInputControls"  (formSubmit)="createBill($event)" [frequency_arr]="frequency_arr"  [btnlabel]="btnName" [accounts]="accounts"  ></app-digalog>
         </p-dialog>
     </div>
 </ng-container>
@@ -72,7 +30,7 @@
     <ng-container *ngIf="bills">
         <div class="bills-container">
             <ng-container *ngFor="let item of billsTranscation">
-               <app-payment [transcations]="item"  ></app-payment>
+                <app-generic-display-transcation [transaction]="item" ></app-generic-display-transcation>
             </ng-container>
         </div>
     </ng-container>

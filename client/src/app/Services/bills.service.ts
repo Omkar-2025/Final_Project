@@ -21,6 +21,7 @@ import { Injectable } from "@angular/core";
     }
 
     createBill(billName:string,amount:number,frequency:string,accountId:string){
+      console.log(accountId);
         return this.http.post(`${this.billsEndPoint}/createBill`,{billName,amount,frequency,accountId},{withCredentials:true});
     }
 

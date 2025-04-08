@@ -16,6 +16,15 @@ export class SupportComponent {
 
   visible: boolean = false;
 
+  btnName:string = 'Create Support Request';
+
+  supportFormInputControls = [
+    { name: 'subject', label: 'Subject', type: 'text' },
+    { name: 'description', label: 'Description', type: 'text' }
+  ];
+
+
+
   constructor(private supportService:SupportService, private messageService:MessageService){}
 
   supportForm:FormGroup= new FormGroup({
@@ -42,7 +51,10 @@ export class SupportComponent {
   }
 
 
-  createSupport() {
+  createSupport(value:any) {
+
+    console.log(value);
+
     if (this.supportForm.valid) {
       const subject = this.supportForm.get('subject')?.value;
       const description = this.supportForm.get('description')?.value;

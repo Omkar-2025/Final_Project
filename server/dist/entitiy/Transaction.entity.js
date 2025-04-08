@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Transaction = void 0;
 const typeorm_1 = require("typeorm");
-const Account_entity_1 = require("./Account.entity");
+const account_entity_1 = require("./account.entity");
 let Transaction = class Transaction {
     constructor(amount, transactionType, fromAccount, toAccount) {
         this.amount = amount;
@@ -34,12 +34,12 @@ __decorate([
     __metadata("design:type", String)
 ], Transaction.prototype, "transactionType", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Account_entity_1.Account, (account) => account.transactionsFrom, { onDelete: 'CASCADE' }),
-    __metadata("design:type", Account_entity_1.Account)
+    (0, typeorm_1.ManyToOne)(() => account_entity_1.Account, (account) => account.transactionsFrom, { onDelete: 'CASCADE' }),
+    __metadata("design:type", account_entity_1.Account)
 ], Transaction.prototype, "fromAccount", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Account_entity_1.Account, (account) => account.transactionsTo),
-    __metadata("design:type", Account_entity_1.Account)
+    (0, typeorm_1.ManyToOne)(() => account_entity_1.Account, (account) => account.transactionsTo),
+    __metadata("design:type", account_entity_1.Account)
 ], Transaction.prototype, "toAccount", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
@@ -47,5 +47,5 @@ __decorate([
 ], Transaction.prototype, "createdAt", void 0);
 exports.Transaction = Transaction = __decorate([
     (0, typeorm_1.Entity)({ name: 'Online_Banking_Transcation_1997' }),
-    __metadata("design:paramtypes", [Number, String, Account_entity_1.Account, Account_entity_1.Account])
+    __metadata("design:paramtypes", [Number, String, account_entity_1.Account, account_entity_1.Account])
 ], Transaction);

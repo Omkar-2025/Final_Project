@@ -1,10 +1,11 @@
 import { DataSource } from "typeorm";
 import 'dotenv/config' 
-import { User } from "../entitiy/User.entity";
-import { Transaction } from "../entitiy/Transaction.entity";
+import { User } from "../entitiy/user.entity";
+// import { Transaction } from "../entitiy/transaction.entity";
+import { Transaction } from "../entitiy/transaction.entity";
 import { Support } from "../entitiy/support_query.entity";
-import { Account } from "../entitiy/Account.entity";
-import { Bills } from "../entitiy/Bills.entity";
+import { Account } from "../entitiy/account.entity";
+import { Bills } from "../entitiy/bills.entity";
 
 
 /**

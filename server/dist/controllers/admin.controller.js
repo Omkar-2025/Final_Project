@@ -20,15 +20,6 @@ class AdminController {
      */
     static login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const data = req.body;
-                const result = yield admin_service_1.AdminService.loginAdminBLL(data);
-                res.status(result.status).json({ msg: result.msg, token: result.token });
-            }
-            catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
-            }
         });
     }
     /**
@@ -41,7 +32,12 @@ class AdminController {
             try {
                 const id = parseInt(req.params.id);
                 const result = yield admin_service_1.AdminService.verifyAccountBLL(id);
-                res.status(result.status).json({ msg: result.msg });
+                if (result) {
+                    res.status(result.status).json({ msg: result.msg });
+                }
+                else {
+                    res.status(500).json({ msg: "Unexpected error occurred" });
+                }
             }
             catch (error) {
                 console.log(error);
@@ -62,7 +58,13 @@ class AdminController {
                 data.queryId = parseInt(req.params.id);
                 data.id = req.body.user.id;
                 const result = yield admin_service_1.AdminService.resolveQueryBLL(data);
-                res.status(result.status).json({ msg: result.msg });
+                if (result) {
+                    res.status(result.status).json({ msg: result.msg });
+                }
+                else {
+                    res.status(500).json({ msg: "Unexpected error occurred" });
+                }
+                // res.status(result.status).json({msg:result.msg});
             }
             catch (error) {
                 console.log(error);

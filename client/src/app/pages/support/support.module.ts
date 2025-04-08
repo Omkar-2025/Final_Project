@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { AdminRoutingModule } from '../admin/admin-routing.module';
 import { MessageModule } from 'primeng/message';
+import { SharedModule } from "../../shared/shared.module";
 @NgModule({
   declarations: [
     SupportComponent,
@@ -22,12 +23,13 @@ import { MessageModule } from 'primeng/message';
     ButtonModule,
     DialogModule,
     ToastModule,
-    ConfirmDialogModule ,
+    ConfirmDialogModule,
     FormsModule,
     InputTextModule,
     AdminRoutingModule,
-    MessageModule
-  ],
+    MessageModule,
+    SharedModule
+],
   providers:[
       MessageService,
       ConfirmationService

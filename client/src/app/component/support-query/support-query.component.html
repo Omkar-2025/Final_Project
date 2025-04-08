@@ -16,6 +16,22 @@
          </li>
     </ul>
 
+    <ng-container *ngIf="role !== 'Admin'">
+        <p-dialog header="Update Your Query" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem', height: '25rem' }">
+            <span class="p-text-secondary block mb-8">Provide additional details for your query.</span>
+            <div class="flex items-center gap-4 mb-4">
+                <label for="updateQuery" class="font-semibold w-24">Update</label>
+                <input pInputText id="updateQuery" class="flex-auto" autocomplete="off" [(ngModel)]="userUpdate" />
+            </div>
+            <div class="flex justify-end gap-2">
+                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+                <p-button label="Submit" (click)="submitUserUpdate()" />
+            </div>
+        </p-dialog>
+    </ng-container>
+
+
+
 
 <ng-container *ngIf=" role == 'Admin' ">
     <!--  -->

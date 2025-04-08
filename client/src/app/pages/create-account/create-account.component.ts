@@ -24,6 +24,9 @@ export class CreateAccountComponent {
           name: new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
           amount:new FormControl(500,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
           accountType:new FormControl('Current Account',[Validators.required]),
+          panCardNumber:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+          aadharCardNumber:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+        //   :new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),          
       });
   }
 
@@ -32,7 +35,7 @@ export class CreateAccountComponent {
            this.messageService.add({severity:'error', summary:'Error', detail:'Please enter all the fields'});
           return;   
       }
-      this.accountService.createAccount(this.createAccountForm.value.name,this.createAccountForm.value.amount,this.createAccountForm.value.accountType).subscribe((result:any)=>{
+      this.accountService.createAccount(this.createAccountForm.value.name,this.createAccountForm.value.amount,this.createAccountForm.value.accountType,this.createAccountForm.value.aadharCardNumber,this.createAccountForm.value.panCardNumber).subscribe((result:any)=>{
           this.messageService.add({severity:'success', summary:'Success', detail:'Account created successfully'});
           this.createAccountForm.reset();
       },(error)=>{

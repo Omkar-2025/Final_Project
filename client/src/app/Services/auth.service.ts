@@ -51,9 +51,18 @@ export class AuthService {
   }
 
 
-
   updateUserPassword({ oldPassword, newPassword }: { oldPassword: string, newPassword: string }) {
     return this.http.post(`${this.loginEndPoint}/updatePassword`, { oldPassword, newPassword }, { withCredentials: true });
+  }
+
+  forgetOtp(email:string){
+    return this.http.post(`${this.loginEndPoint}/forgetOtp`, { email }, { withCredentials: true });
+  }
+
+  forgetPassword(data: any) {
+    console.log(data);
+    
+    return this.http.post(`${this.loginEndPoint}/verifyForgetOtp`, data, { withCredentials: true });
   }
 
 }

@@ -14,7 +14,12 @@ class supportController{
         try {
             const data = req.body;
             const result:any = await supportService.createSupport(data);
-            res.status(result.status).json({msg:result.msg});
+            if(result){
+                res.status(result.status).json({msg:result.msg});
+            }
+            else{
+                res.status(404).json({msg:"No support found"});
+            }
         } catch (error) {
             console.log(error);
             res.status(500).json({msg:"Internal server error"});
@@ -30,8 +35,8 @@ class supportController{
 
     async getAllSupport(req:Request,res:Response){
         try {
-            const data = req.body;
-            const result:any = await supportService.getAllSupport(data);
+            const id = +req.body.user.id;
+            const result:any = await supportService.getAllSupport(id);
             res.status(result.status).json({msg:result.msg});
         } catch (error) {
             console.log(error);

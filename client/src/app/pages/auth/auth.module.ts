@@ -16,12 +16,15 @@ import { RouterModule } from '@angular/router';
 import { InputOtpModule } from 'primeng/inputotp'; 
 import { FormsModule } from '@angular/forms';
 import { HomeModule } from "../home/home.module";
+import { SharedModule } from "../../shared/shared.module";
+import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     SignupComponent,
-    OtpComponent
+    OtpComponent,
+    ForgetPasswordComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +39,8 @@ import { HomeModule } from "../home/home.module";
     ProgressSpinnerModule,
     RouterModule,
     InputOtpModule,
-    HomeModule
+    HomeModule,
+    SharedModule
 ],
   exports: [
     LoginComponent,

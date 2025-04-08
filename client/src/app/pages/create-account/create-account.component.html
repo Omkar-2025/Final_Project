@@ -19,6 +19,21 @@
             <p-dropdown [options]="accountTypes" formControlName="accountType" id="accountType" placeholder="Select An Account Type"></p-dropdown>
         </div>
 
+    
+        
+        <div class="form-group">
+            <label for="amount">panCard Number</label>
+            <input type="text" pInputText formControlName="panCardNumber" id="panCardNumber" class="input-field" />
+            <p-message *ngIf="createAccountForm.get('panCardNumber')?.invalid && createAccountForm.get('panCardNumber')?.touched" severity="error" text="panCardNumber is required"></p-message>
+        </div>
+
+        
+        <div class="form-group">
+            <label for="amount">Aadhar Card Number</label>
+            <input type="text" pInputText formControlName="aadharCardNumber" id="aadharCardNumber" class="input-field" />
+            <p-message *ngIf="createAccountForm.get('aadharCardNumber')?.invalid && createAccountForm.get('aadharCardNumber')?.touched" severity="error" text="aadhar Card Number is required"></p-message>
+        </div>
+
         <div class="button-container">
             <p-button label="Create Account" type="submit"pRipple></p-button>
         </div>

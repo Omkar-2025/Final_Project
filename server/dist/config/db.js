@@ -12,11 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.dbconnect = exports.AppDataSource = void 0;
 const typeorm_1 = require("typeorm");
 require("dotenv/config");
-const User_entity_1 = require("../entitiy/User.entity");
-const Transaction_entity_1 = require("../entitiy/Transaction.entity");
+const user_entity_1 = require("../entitiy/user.entity");
+// import { Transaction } from "../entitiy/transaction.entity";
+const transaction_entity_1 = require("../entitiy/transaction.entity");
 const support_query_entity_1 = require("../entitiy/support_query.entity");
-const Account_entity_1 = require("../entitiy/Account.entity");
-const Bills_entity_1 = require("../entitiy/Bills.entity");
+const account_entity_1 = require("../entitiy/account.entity");
+const bills_entity_1 = require("../entitiy/bills.entity");
 /**
  * * This is the database connection file
  */
@@ -29,10 +30,10 @@ exports.AppDataSource = new typeorm_1.DataSource({
     database: process.env.DB_DATABASE,
     synchronize: false,
     entities: [
-        User_entity_1.User,
-        Account_entity_1.Account,
-        Transaction_entity_1.Transaction,
-        Bills_entity_1.Bills,
+        user_entity_1.User,
+        account_entity_1.Account,
+        transaction_entity_1.Transaction,
+        bills_entity_1.Bills,
         support_query_entity_1.Support
     ],
     options: {

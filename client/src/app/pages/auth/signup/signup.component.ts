@@ -15,6 +15,16 @@ export class SignupComponent {
 
   registerForm:FormGroup;
 
+
+  registerInputControl=[
+    {name:'name',label:'Name',type:'text'},
+    {name:'email',label:'Email',type:'text'},
+    {name:'password',label:'Password',type:'password'},
+    {name:'confirmPassowrd',label:'Confirm Password',type:'password'},
+    {name:'phone',label:'Phone',type:'text'}
+  ]
+  btnName:string='Register';
+
   constructor(private authService:AuthService,private messageService:MessageService,private router:Router){
 
     this.registerForm=new FormGroup({
@@ -22,36 +32,41 @@ export class SignupComponent {
       password:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
       name:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
       confirmPassowrd:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-      phone:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)])
+      phone:new FormControl( '' ,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.maxLength(10),Validators.minLength(10)])
     })
 
   }
 
-  register(){
+  register(registerCredentials:{name:string,email:string,password:string,confirmPassowrd:string,phone:string}){
+    if(registerCredentials.name=='' || registerCredentials.email=='' || registerCredentials.password=='' || registerCredentials.confirmPassowrd=='' || !registerCredentials.phone){
 
-    if(this.registerForm.invalid){
-      this.registerForm.controls['email'].markAsDirty();
-      this.registerForm.controls['confirmPassowrd'].markAsDirty();
-      this.registerForm.controls['phone'].markAsDirty();
-      this.registerForm.controls['password'].markAsDirty();
-      this.registerForm.controls['name'].markAsDirty();
-      this.messageService.add({severity:'error',summary:'Error',detail:'Please fill all the fields'})
+      this.messageService.add({severity:'error',summary:'Error',detail:'Please fill all the fields'});
+      
       return;
     }
 
+    if(registerCredentials.password!=registerCredentials.confirmPassowrd){
 
-    if(this.registerForm.value.password!=this.registerForm.value.confirmPassowrd){
       this.messageService.add({severity:'error',summary:'Error',detail:'Password and Confirm Password should be same'})
+
       return;
     }
 
-    this.authService.signup(this.registerForm.value).subscribe((data:any)=>{
+    registerCredentials.confirmPassowrd = registerCredentials.password;
+
+    this.authService.signup(registerCredentials).subscribe((data:any)=>{
+
       this.messageService.add({severity:'success',summary:'Success',detail:data.msg});
+
       this.authService.userAuthSubject.next(this.registerForm.value.email);
+
       this.router.navigate(['/otp']);
+
     },(error)=>{
       console.log(error);
+
       this.messageService.add({severity:'success',summary:'Success',detail:error});
+
     })
     
   }

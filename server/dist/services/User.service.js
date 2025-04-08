@@ -14,29 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const db_1 = require("../config/db");
-const User_entity_1 = require("../entitiy/User.entity");
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const user_entity_1 = require("../entitiy/user.entity");
 require("dotenv/config");
-const otp_generator_1 = __importDefault(require("otp-generator"));
-const mailerSender_1 = require("../utils/mailerSender");
-const authTemplate_1 = require("../utils/authTemplate");
-const userRepository = db_1.AppDataSource.getRepository(User_entity_1.User);
+const user_dal_1 = __importDefault(require("../dal/user.dal"));
+const user_schema_1 = require("../types/schema/user.schema");
+const userRepository = db_1.AppDataSource.getRepository(user_entity_1.User);
 class UserService {
+    /**
+     * This method is used to create a new user
+     * @param data This is the data that is used to create a new user
+     * @returns
+     */
     static createUserBLL(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, email, password, phone, role } = data;
-                const userexist = yield userRepository.find({ where: { email: email } });
-                if (userexist.length > 0) {
+                if (!name || !email || !password || !phone) {
+                    return { msg: "Please provide all the fields", status: 400 };
+                }
+                const isValiddata = user_schema_1.userSchema.safeParse(data);
+                if (!isValiddata.success) {
+                    return { msg: isValiddata.error.issues[0].message, status: 400 };
+                }
+                const dalResult = yield user_dal_1.default.createUserDAl({ name, email, password, phone, role: role || "user" });
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
                     return { msg: "User already exist", status: 400 };
                 }
-                const hashpassowrd = yield bcryptjs_1.default.hash(password, 10);
-                let opt = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, });
-                const user = userRepository.create({ name, email, password: hashpassowrd, phone, role, isVerified: false, otp: opt });
-                yield (0, mailerSender_1.mailerSender)({ email: email, title: "verfication", body: (0, authTemplate_1.otpTemplate)(opt) });
-                user.accounts = [];
-                yield userRepository.save(user);
                 return { msg: "User created successfully", status: 201 };
             }
             catch (error) {
@@ -45,19 +48,28 @@ class UserService {
             }
         });
     }
+    /**
+     * This method is used to login a user
+     * @param data This is the data that is used to login a user
+     * @returns
+     */
     static loginBLL(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password } = data;
-                const user = yield userRepository.findOne({ where: { email: email } });
-                if (user) {
-                    if (yield bcryptjs_1.default.compare(password, user.password)) {
-                        const token = jsonwebtoken_1.default.sign({ id: user.id, email: email, role: user.role }, process.env.JWT_SECRET);
-                        return ({ msg: "Login successfull", role: user.role, token: token, status: 200 });
-                    }
-                    else {
-                        return ({ msg: "Invalid password", status: 400 });
-                    }
+                if (!email || !password) {
+                    return { msg: "Please provide all the fields", status: 400 };
+                }
+                const isvalidUser = user_schema_1.loginSchema.safeParse(data);
+                if (!isvalidUser.success) {
+                    return { msg: isvalidUser.error.issues[0].message, status: 400 };
+                }
+                const dalResult = yield user_dal_1.default.loginDAL({ email, password });
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
+                    return { msg: "Invalid password", status: 400 };
+                }
+                else if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 200) {
+                    return { msg: "Login successfull", role: dalResult.role, token: dalResult.token, status: 200 };
                 }
                 return ({ message: "User not found", status: 404 });
             }
@@ -78,81 +90,134 @@ class UserService {
             }
         });
     }
+    /**
+     * This method is used to verify a user
+     * @param data
+     * @returns
+     */
     static verifyUserBLL(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, otp } = data;
-                const user = yield userRepository.findOne({ where: { email: email } });
-                if (!user) {
-                    return { msg: "User not found", status: 404 };
+                if (!email || !otp) {
+                    return { msg: "Please provide all the fields", status: 400 };
                 }
-                if (user) {
-                    if (otp == user.otp) {
-                        user.isVerified = true;
-                        yield userRepository.save(user);
-                        return { msg: "User verified successfully", status: 200 };
-                    }
-                    return { msg: "Invalid OTP", status: 400 };
+                const dalResult = yield user_dal_1.default.verifyOtpDAL({ email, otp });
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
+                    return { msg: dalResult.msg, status: 400 };
                 }
-                return { msg: "User not found", status: 404 };
+                else if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
+                    return { msg: dalResult.msg, status: 404 };
+                }
+                return { msg: dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg, status: 404 };
             }
             catch (error) {
                 return { msg: "Internal server error", status: 500 };
             }
         });
     }
+    /**
+     * This method is used to get the user by id
+     * @param id This is the id of the user
+     * @returns
+     */
     static getUsers(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield userRepository.findOne({ where: { id: id } });
-                if (!user) {
-                    return { msg: "User not found", status: 404 };
+                const dalResult = yield user_dal_1.default.getUsersDAL(id);
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
+                    return { msg: dalResult.msg, status: 404 };
                 }
-                user.password = "";
-                user.otp = "";
-                return { msg: user, status: 200 };
+                return { msg: dalResult.msg, status: 200 };
             }
             catch (error) {
                 return { msg: "Internal server error", status: 500 };
             }
         });
     }
+    /**
+     * This method is used to update the user details
+     * @param id This is the id of the user
+     * @param data user data to be updated
+     * @returns
+     */
     static updateUser(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield userRepository.findOne({ where: { id: id } });
-                if (!user) {
-                    return { msg: "User not found", status: 404 };
-                }
                 const { name, email, phone, address } = data;
-                user.name = name;
-                user.email = email;
-                user.phone = phone;
-                user.address = address || " ";
-                yield userRepository.save(user);
-                return { msg: "User updated successfully", status: 200 };
+                if (!name || !email || !phone) {
+                    return { msg: "Please provide all the fields", status: 400 };
+                }
+                const isValiddata = user_schema_1.updateUserSchema.safeParse(data);
+                if (!isValiddata.success) {
+                    return { msg: isValiddata.error.issues[0].message, status: 400 };
+                }
+                const dalResult = yield user_dal_1.default.updateUserDAL(id, data);
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
+                    return { msg: dalResult.msg, status: 404 };
+                }
+                return { msg: dalResult.msg, status: 200 };
             }
             catch (error) {
                 return { msg: "Internal server error", status: 500 };
             }
         });
     }
+    /**
+     * This method is used to update the user password
+     * @param id This is the id of the user
+     * @param data password data to be updated
+     * @returns
+     */
     static updatePassword(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield userRepository.findOne({ where: { id: id } });
-                if (!user) {
-                    return { msg: "User not found", status: 404 };
-                }
                 const { oldPassword, newPassword } = data;
-                // console.log(oldPassword,newPassword);
-                if (yield bcryptjs_1.default.compare(oldPassword, user.password)) {
-                    const hashpassowrd = yield bcryptjs_1.default.hash(newPassword, 10);
-                    user.password = hashpassowrd;
-                    yield userRepository.save(user);
-                    return { msg: "Password updated successfully", status: 200 };
+                if (!oldPassword || !newPassword) {
+                    return { msg: "Please provide all the fields", status: 400 };
                 }
-                return { msg: "Invalid password", status: 400 };
+                const isValidPassword = user_schema_1.updateUserSchema.safeParse(data);
+                if (!isValidPassword.success) {
+                    return { msg: isValidPassword.error.issues[0].message, status: 400 };
+                }
+                const dalResult = yield user_dal_1.default.updatePasswordDAL(id, data);
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
+                    return { msg: dalResult.msg, status: 404 };
+                }
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
+                    return { msg: dalResult.msg, status: 400 };
+                }
+                return { msg: dalResult.msg, status: dalResult.status };
+            }
+            catch (error) {
+                console.log(error);
+                return { msg: "Internal server error", status: 500 };
+            }
+        });
+    }
+    static sendforgetPasswordOtp(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const dalResult = yield user_dal_1.default.sendforgetPasswordOtpDAL(email);
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
+                    return { msg: dalResult.msg, status: 404 };
+                }
+                return { msg: dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg, status: 200 };
+            }
+            catch (error) {
+                console.log(error);
+                return { msg: "Internal server error", status: 500 };
+            }
+        });
+    }
+    static verifyForgetPasswordOtp(email, otp, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const dalResult = yield user_dal_1.default.verifyForgetPasswordOtpDAL(email, otp, password);
+                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
+                    return { msg: dalResult.msg, status: 404 };
+                }
+                return { msg: dalResult.msg, status: 200 };
             }
             catch (error) {
                 console.log(error);

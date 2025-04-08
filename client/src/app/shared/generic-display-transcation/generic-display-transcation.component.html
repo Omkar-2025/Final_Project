@@ -1,0 +1,25 @@
+
+<div class="transcations">
+
+    <ng-container *ngFor="let k of keys">
+
+        <!-- {{k}} -->
+        <!-- <li>{{ k }}: {{ transaction[k] }}</li> -->
+        
+        <ng-container *ngIf="k === 'createdAt'"> 
+            <p><strong>Date:</strong> {{ transaction[k] | date:'fullDate' }}</p> 
+            </ng-container>
+
+         <ng-container *ngIf=" k == 'fromAccount' || k  === 'toAccount' else other" >
+            <p><strong> {{k}} Number :</strong> {{ transaction[k].account_number }}</p> 
+            <p><strong> {{k}}  Type : </strong> {{ transaction[k].account_type }}</p> 
+            <!-- <p><strong>From Account Balance:</strong> {{ transaction[k].balance }}</p> -->
+            <p><strong> {{k}} Name : </strong> {{ transaction[k].name }}</p>
+         </ng-container>
+         <ng-template #other>
+            <p ><strong>{{k}}:</strong>{{transaction[k]}}</p>
+         </ng-template>
+
+    </ng-container>
+
+</div>

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.depositWithDrawSchema = exports.transactionSchema = exports.accountSchema = void 0;
+exports.amountAccountSchema = exports.depositWithDrawSchema = exports.transactionSchema = exports.accountSchema = void 0;
 const account_1 = require("../enums/account");
 const zod_1 = require("zod");
 /**
@@ -27,7 +27,6 @@ exports.transactionSchema = zod_1.z.object({
     amount: zod_1.z.number().min(1),
     toAccount: zod_1.z.string(),
     fromAccount: zod_1.z.string(),
-    // type:z.enum(["credit","debit"]),
     transcationType: zod_1.z.string()
 });
 /**
@@ -38,4 +37,8 @@ exports.transactionSchema = zod_1.z.object({
 exports.depositWithDrawSchema = zod_1.z.object({
     amount: zod_1.z.number().min(1),
     accountId: zod_1.z.string()
+});
+exports.amountAccountSchema = zod_1.z.object({
+    amount: zod_1.z.number().positive("Amount must be a positive number"),
+    accountId: zod_1.z.number().int("Account ID must be an integer").positive("Account ID must be a positive number"),
 });

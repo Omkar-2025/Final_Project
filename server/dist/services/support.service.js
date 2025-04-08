@@ -10,24 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = require("../config/db");
+const support_dal_1 = require("../dal/support.dal");
 const support_query_entity_1 = require("../entitiy/support_query.entity");
-const User_entity_1 = require("../entitiy/User.entity");
+const user_entity_1 = require("../entitiy/user.entity");
 const supportRepo = db_1.AppDataSource.getRepository(support_query_entity_1.Support);
-const userRepo = db_1.AppDataSource.getRepository(User_entity_1.User);
+const userRepo = db_1.AppDataSource.getRepository(user_entity_1.User);
 class supportService {
+    /**
+     * This method is used to create a new support query
+     * @param data This is the data that is used to create a new support query
+     * @returns
+     */
     createSupport(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { subject, description } = data;
-                const id = data.user.id;
-                const support = new support_query_entity_1.Support(subject, description, id);
-                const user = yield userRepo.findOneBy({ id: id });
-                if (!user) {
-                    return { msg: "User not found", status: 404 };
-                }
-                support.user = user;
-                yield supportRepo.save(support);
-                return { msg: "Support created", status: 201 };
+                const dalResult = yield support_dal_1.SupportDAL.crateSupportDAL(data);
+                return { msg: dalResult.msg, status: dalResult.status };
             }
             catch (error) {
                 console.log(error);
@@ -35,45 +33,48 @@ class supportService {
             }
         });
     }
-    getAllSupport(data) {
+    /**
+     * This method is used to get all support queries of a user
+     * @param data This is the data that is used to get all support queries of a user
+     * @returns
+     */
+    getAllSupport(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield userRepo.findOne({ where: { id: data.user.id } });
-                console.log(user);
-                if (!user) {
-                    return { msg: "User not found", status: 404 };
-                }
-                const support = yield supportRepo.find({ where: { user: user }, });
-                return { msg: support, status: 200 };
+                const dalResult = yield support_dal_1.SupportDAL.getAllSupportDAL(id);
+                return { msg: dalResult.msg, status: dalResult.status };
             }
             catch (error) {
                 return { msg: "Internal server error", status: 500 };
             }
         });
     }
+    /**
+     * This method is used to get a support query by id
+     * @param id This is the id of the support query
+     * @returns
+     */
     getSupportById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const support = yield supportRepo.findOne({ where: { id: id } });
-                if (!support) {
-                    return { msg: "Support not found", status: 404 };
-                }
-                return { msg: support, status: 200 };
+                const dalResult = yield support_dal_1.SupportDAL.getSupportByIdDAL(id);
+                return { msg: dalResult.msg, status: dalResult.status };
             }
             catch (error) {
                 return { msg: "Internal server error", status: 500 };
             }
         });
     }
+    /**
+     * This method is used to delete a support query by id
+     * @param id This is the id of the support query
+     * @returns
+     */
     deleteSupport(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const support = yield supportRepo.findOne({ where: { id: id } });
-                if (!support) {
-                    return { msg: "Support not found", status: 404 };
-                }
-                yield supportRepo.remove(support);
-                return { msg: "Support deleted", status: 200 };
+                const dalResult = yield support_dal_1.SupportDAL.deleteSupportByIdDAL(id);
+                return { msg: dalResult.msg, status: dalResult.status };
             }
             catch (error) {
                 return { msg: "Internal server error", status: 500 };

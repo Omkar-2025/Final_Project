@@ -20,8 +20,8 @@ export class AccountService {
         return this.http.get(`${this.accountEndPoint}/getAccount/${id}`,{withCredentials:true});
     }
 
-    getTransactionsByAccount(id:number){
-        return this.http.get(`${this.accountEndPoint}/getTransactions/${id}`,{withCredentials:true});
+    getTransactionsByAccount(id:number,page:number=1){
+        return this.http.post(`${this.accountEndPoint}/getTransactions/${id}`,{page},{withCredentials:true});
     }
 
     depositAmount(accountId:number,amount:number){
@@ -36,10 +36,9 @@ export class AccountService {
       return this.http.post(`${this.accountEndPoint}/createTransaction`,{fromAccount,toAccount,amount,transcationType},{withCredentials:true});
     }
 
-    createAccount(name:string,balance:number,account_type:string){
-      return this.http.post(`${this.accountEndPoint}/createAccount`,{name,balance,account_type},{withCredentials:true});
+    createAccount(name:string,balance:number,account_type:string,aadhar_card_number:string,pan_card_number:string){
+      return this.http.post(`${this.accountEndPoint}/createAccount`,{name,balance,account_type,aadhar_card_number,pan_card_number},{withCredentials:true});
     }
-
 
     getAllBankAccounts(){
       return this.http.get(`${this.accountEndPoint}/allAccounts`,{withCredentials:true});
@@ -61,7 +60,6 @@ export class AccountService {
 
     activateAccount(id:number){
       return this.http.post(`${this.accountEndPoint}/activateAccount`,{id},{withCredentials:true});
-
     }
 
 }

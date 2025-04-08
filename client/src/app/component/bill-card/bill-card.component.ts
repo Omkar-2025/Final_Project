@@ -3,6 +3,7 @@ import { BillsService } from '../../Services/bills.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AccountService } from '../../Services/account.service';
 import { EventEmitter, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-bill-card',
   standalone: false,
@@ -16,43 +17,71 @@ export class BillCardComponent {
   billName: any;
   amount: any
 
+  // @Input() bill!:any;
+
+
+  @Input()  accounts!: any[];
+
 
   frequency_arr = [{ name: 'daily' }, { name: 'weekly' }, { name: 'monthly' }];
   frequency: any;
 
-  constructor(private billService: BillsService, private messageService: MessageService, private accountService: AccountService, private confirmationService: ConfirmationService) { }
+
+  updateBillFrom!:FormGroup;
+
+  billFormInputControls = [{name:'billName',label:'bill',type:'text'},{name:'amount',label:'amount',type:'number'},{name:'frequency',label:'frequency',type:'select'},{name:'account',label:'accounts',type:'select'}]
+
+  btnName:string = 'updateBill';
+
+  payBillBtn : string = 'paybill';
+
+  payBillFormGroup!:FormGroup;
+
+  payBillInputControls=[{name:'account',label:'accounts',type:'select'}]
+
+  constructor(private billService: BillsService, private messageService: MessageService, private accountService: AccountService, private confirmationService: ConfirmationService) { 
+
+    this.updateBillFrom = new FormGroup({
+      billName:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      amount:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      frequency:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      account:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+    })
+
+    this.payBillFormGroup = new FormGroup({
+      account:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+    })
+
+
+  }
 
   @Input() bill: any;
 
   @Output() isBillUpdated = new EventEmitter<any>();
   @Output() isBillDeleted = new EventEmitter<any>();
 
-  accounts: { name: string, balance: number, account_type: string, id: number, account_number: string }[] = [];
+ 
   selectedAccounts: any = undefined;
   isSelectAccount: boolean = false;
   isbillPayed: boolean = false;
-  dialogtype: string = '';
+  dialogtype: string = 'Update the bill';
+  
+
 
   selectAccount() {
     this.isSelectAccount = true;
-    // console.log(this.selectedAccounts);
+  
   }
 
   showDialog(type: string) {
     this.dialogtype = type;
-    // console.log(type, this.dialogtype);
+    console.log(type);
+    
+ 
     this.visible = true;
     this.visible = true;
-    this.accountService.getAllaccounts().subscribe((result: any) => {
-      //console.log(result[0].accounts); 
-      // if(result[0].accounts.isVerified){
-      this.accounts = result[0].accounts;
-      // }
-      
-    }, (error) => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching accounts' });
-    })
-    // console.log(this.accounts);
+   
+   
     this.frequency = this.bill.frequency;
     this.billName = this.bill.billName;
     this.amount = this.bill.amount;
@@ -60,13 +89,24 @@ export class BillCardComponent {
 
   acc_number: number = 0;
 
-  payBill($event: any) {
+  payBill(value: any) {
+
+    // console.log($event);
+    
+
     if (this.selectedAccounts == undefined) {
         this.selectedAccounts = this.bill.account; 
     }
-    console.log(this.selectedAccounts);
+    // console.log(value.account);
+    // console.log(this.bill);
+    // console.log(value);
+    // console.log(value.account.id);
+    
+    
+    let accountId = parseInt(value.account.id)
+    
     this.visible = true;
-    this.billService.paybills(this.bill.id, this.selectedAccounts.id).subscribe((result: any) => {
+    this.billService.paybills(this.bill.id, accountId).subscribe((result: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill paid successfully' });
       this.visible = false;
       this.isbillPayed = true;
@@ -82,8 +122,13 @@ export class BillCardComponent {
   }
 
 
-  updateBill(event: any) {
-    this.billService.updateBill(this.bill.id, this.billName, this.amount, this.frequency.name, this.selectedAccounts.id).subscribe((result: any) => {
+  updateBill(value: any) {
+
+    // console.log(value);
+
+    
+
+    this.billService.updateBill(this.bill.id, value.billName, value.amount, value.frequency, value.account).subscribe((result: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill updated successfully' });
       this.visible = false;
       this.isBillUpdated.emit(this.bill.id);

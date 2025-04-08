@@ -29,7 +29,6 @@ export const transactionSchema = z.object({
     amount:z.number().min(1),
     toAccount:z.string(),
     fromAccount:z.string(),
-    // type:z.enum(["credit","debit"]),
     transcationType:z.string()
 })
 
@@ -44,6 +43,12 @@ export const depositWithDrawSchema = z.object({
     amount:z.number().min(1),
     accountId:z.string()
 })
+
+
+export const amountAccountSchema = z.object({
+    amount: z.number().positive("Amount must be a positive number"),
+    accountId: z.number().int("Account ID must be an integer").positive("Account ID must be a positive number"),
+});
 
 
 

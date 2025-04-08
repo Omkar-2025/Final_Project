@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from "typeorm";
-import { User } from "./User.entity";
+import { User } from "./user.entity";
 
 @Entity({ name: 'Online_Banking_support_1997' })
 export class Support{

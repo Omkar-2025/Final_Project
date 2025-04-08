@@ -1,7 +1,8 @@
 import express from 'express';
 import userController from '../controllers/user.controller';
-import { User } from '../entitiy/User.entity';
+import { User } from '../entitiy/user.entity';
 import { verifyJwt } from '../middlewares/verifyJwt';
+import rateLimiter from '../middlewares/rateLimiter';
 const router = express.Router();
 
 
@@ -9,13 +10,13 @@ const router = express.Router();
  * This route is used to create a new user
  */
 
-router.route('/createuser').post(userController.createUser);
+router.route('/createuser').post(rateLimiter,userController.createUser);
 
 /**
  * This route is used to login a user
  */
 
-router.route('/login').post(userController.Login);
+router.route('/login').post(rateLimiter,userController.Login);
 
 /**
  * This route is used to get all accounts of a user
@@ -55,6 +56,18 @@ router.route('/updateUser').post(verifyJwt,userController.updateUser);
  */
 
 router.route('/updatePassword').post(verifyJwt,userController.updatePassword);
+
+/**
+ * This route is used to forgetOtp
+ */
+
+router.route('/forgetOtp').post(userController.sendForgetPasswordOtp);
+
+
+/**
+ * 
+ */
+router.route('/verifyForgetOtp').post(userController.verifyForgetPasswordOtp);
 
 
 export default router;

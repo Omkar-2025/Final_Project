@@ -25,7 +25,12 @@ class supportController {
             try {
                 const data = req.body;
                 const result = yield support_service_1.default.createSupport(data);
-                res.status(result.status).json({ msg: result.msg });
+                if (result) {
+                    res.status(result.status).json({ msg: result.msg });
+                }
+                else {
+                    res.status(404).json({ msg: "No support found" });
+                }
             }
             catch (error) {
                 console.log(error);
@@ -41,8 +46,8 @@ class supportController {
     getAllSupport(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const data = req.body;
-                const result = yield support_service_1.default.getAllSupport(data);
+                const id = +req.body.user.id;
+                const result = yield support_service_1.default.getAllSupport(id);
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {

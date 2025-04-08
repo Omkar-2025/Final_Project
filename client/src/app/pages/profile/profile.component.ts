@@ -11,123 +11,135 @@ import { AccountService } from '../../Services/account.service';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
-showDialog() {
-throw new Error('Method not implemented.');
-}
-sendResponse() {
-throw new Error('Method not implemented.');
-}
-reply: any;
+ 
 
 
-visible: boolean = false;
-
-userData:any={};
+ 
 
 
-updateUserInfoForm!: FormGroup;
-updateUserPasswordForm:FormGroup;
+  visible: boolean = false;
 
-constructor(private authService:AuthService , private messageService:MessageService , private accountService:AccountService){
-  // this.updateUserInfoForm =  
-  this.updateUserInfoForm = new FormGroup({
-    name:new FormControl(this.userData.name,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-    email:new FormControl(this.userData.email,[Validators.required,Validators.email]),
-    phone:new FormControl(this.userData.phone,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-    // password:new FormControl('',[Validators.required]),
-    // confirmPassword:new FormControl('',[Validators.required]),
-    address:new FormControl('',[Validators.required ,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-  })
+  userData: any = {};
 
-  this.updateUserPasswordForm = new FormGroup({
-    oldPassword:new FormControl('',[Validators.required]),
-    newPassword:new FormControl('',[Validators.required]),
-    confirmPassword:new FormControl('',[Validators.required]),
-  })
 
-}
-    
+  updateUserInfoForm!: FormGroup;
 
-  fetchUserInfo(){
-    this.authService.getUser().subscribe((result:any)=>{
-      this.userData=result.msg;
-      // console.log(this.userData);
+  updateUserPasswordForm: FormGroup;
+
+  btnProfileName: string = 'Update Profile';
+
+  updateInfoControls = [
+    { name: 'name', label: 'Name', type: 'text' },
+    { name: 'email', label: 'Email', type: 'text' },
+    {name:'phone',label:'Phone',type:'number' },
+    {name:'address',label:'Address',type:'text'}
+  ]
+
+  updatePasswordControls=[
+    { name: 'oldPassword', label: 'Old Password', type: 'password' },
+    { name: 'newPassword', label: 'New Password', type: 'password' },
+    { name: 'confirmPassword', label: 'Confirm Password', type: 'password' }
+  ]
+
+  constructor(private authService: AuthService, private messageService: MessageService, private accountService: AccountService) {
+
+    this.updateUserInfoForm = new FormGroup({
+      name: new FormControl(this.userData.name, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      email: new FormControl(this.userData.email, [Validators.required, Validators.email]),
+      phone: new FormControl(this.userData.phone, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      address: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+    })
+
+    this.updateUserPasswordForm = new FormGroup({
+      oldPassword: new FormControl('', [Validators.required]),
+      newPassword: new FormControl('', [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required]),
+    })
+
+  }
+
+
+  fetchUserInfo() {
+    this.authService.getUser().subscribe((result: any) => {
+      this.userData = result.msg;
+
       this.updateUserInfoForm.patchValue({
-        name:this.userData.name,
-        email:this.userData.email,
-        phone:this.userData.phone,
-        address:this.userData.address
+        name: this.userData.name,
+        email: this.userData.email,
+        phone: this.userData.phone,
+        address: this.userData.address
       })
-    },(err:any)=>{
+      
+    }, (err: any) => {
       console.log(err);
     })
   }
 
 
-  fetchExpnensePdf(){
-    this.accountService.getExpensePdf().subscribe((result)=>{
-        console.log(result);
-    },( err:any )=>{
+  fetchExpnensePdf() {
+    this.accountService.getExpensePdf().subscribe((result) => {
+      console.log(result);
+    }, (err: any) => {
       console.log(err);
     })
-  } 
+  }
 
 
-  downloadExpense(){
+  downloadExpense() {
     this.fetchExpnensePdf();
-    this.messageService.add({severity:'success',summary:'Success',detail:'Expense PDF Downloaded'})
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Expense PDF Downloaded' })
   }
 
 
-  ngOnInit(){
+  ngOnInit() {
     this.fetchUserInfo();
   }
 
 
-  updateProfileDialog(){
-    this.visible=true;
+  updateProfileDialog() {
+    this.visible = true;
   }
 
-  updatePasswordVisible:boolean=false;
-  updatePasswordDialog(){
-    this.updatePasswordVisible=true;
+  updatePasswordVisible: boolean = false;
+  updatePasswordDialog() {
+    this.updatePasswordVisible = true;
   }
 
-  updateUserInfo(){
-  
-    if(!this.updateUserInfoForm.valid){
-      console.log('Form is invalid');
-      this.messageService.add({severity:'error',summary:'Error',detail:'Form is Invalid'})
+  updateUserInfo(updateUserValue: { name: string, email: string, phone: string, address: string }) {
+    // console.log($event);
+    
+    if (updateUserValue.name == '' || updateUserValue.email == '' || updateUserValue.phone == '' || updateUserValue.address == '') {
+      // console.log('Form is invalid');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Form is Invalid' })
       return;
     }
-    this.authService.updateUser(this.updateUserInfoForm.value).subscribe((result:any)=>{
-      this.messageService.add({severity:'success',summary:'Success',detail:result.msg})
-      this.visible=false;
+    const updatedUserData = { ...updateUserValue, password: '', confirmPassword: '' };
+    this.authService.updateUser(updatedUserData).subscribe((result: any) => {
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: result.msg })
+      this.visible = false;
       this.fetchUserInfo();
-    },(error:any)=>{
+    }, (error: any) => {
       console.log(error);
-      this.messageService.add({severity:'error',summary:'Error',detail:error.error.msg})
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg })
     })
   }
 
 
-  updatePassword()
-  {
-    if(!this.updateUserPasswordForm.valid){
-      console.log('Form is invalid');
-      this.messageService.add({severity:'error',summary:'Error',detail:'Form is Invalid'})
+  updatePassword(updatePasswordValue:{oldPassword:string,newPassword:string,confirmPassword:string}) {
+    if (updatePasswordValue.oldPassword == '' || updatePasswordValue.newPassword == '' || updatePasswordValue.confirmPassword == '') {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Form is Invalid' })
       return;
     }
-    if(this.updateUserPasswordForm.value.newPassword != this.updateUserPasswordForm.value.confirmPassword){
-      this.messageService.add({severity:'error',summary:'Error',detail:'New Password and Confirm Password do not match'})
+    if (updatePasswordValue.newPassword != updatePasswordValue.confirmPassword) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'New Password and Confirm Password do not match' })
       return;
     }
-    this.authService.updateUserPassword(this.updateUserPasswordForm.value).subscribe((result:any)=>{
-      this.messageService.add({severity:'success',summary:'Success',detail:result.msg})
-      this.updatePasswordVisible=false;
-    },(error:any)=>{
+    this.authService.updateUserPassword(updatePasswordValue).subscribe((result: any) => {
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: result.msg })
+      this.updatePasswordVisible = false;
+    }, (error: any) => {
       console.log(error);
-      this.messageService.add({severity:'error',summary:'Error',detail:error.error.msg})
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg })
     })
   }
 

@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Support = void 0;
 const typeorm_1 = require("typeorm");
-const User_entity_1 = require("./User.entity");
+const user_entity_1 = require("./user.entity");
 let Support = class Support {
     constructor(subject, description, user) {
         this.subject = subject;
@@ -45,10 +45,10 @@ __decorate([
     __metadata("design:type", String)
 ], Support.prototype, "resolve", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => User_entity_1.User, (user) => user.support),
-    __metadata("design:type", User_entity_1.User)
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.support),
+    __metadata("design:type", user_entity_1.User)
 ], Support.prototype, "user", void 0);
 exports.Support = Support = __decorate([
     (0, typeorm_1.Entity)({ name: 'Online_Banking_support_1997' }),
-    __metadata("design:paramtypes", [String, String, User_entity_1.User])
+    __metadata("design:paramtypes", [String, String, user_entity_1.User])
 ], Support);

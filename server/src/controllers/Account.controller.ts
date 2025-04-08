@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import AccountService from '../services/Account.service';
+import { AccountService } from '../services/account.service';
 import { UserResponseType } from '../types/interfaces/userType';
 
 
@@ -73,7 +73,12 @@ class UserController{
     async getTransactions(req:Request,res:Response){
         try {
             const id = req.params.id;
-            const result = await AccountService.getTranscations(parseInt(id));
+            const page = req.body.page || 1;
+            const limit = 5;
+            // console.log(id,page,limit);
+            
+            const result = await AccountService.getTranscations(parseInt(id),page,limit);
+            // console.log(result);
             res.status(result.status).json(result.msg);
         } catch (error) {
             res.status(500).json({msg:"Internal server error"});
@@ -111,6 +116,8 @@ class UserController{
     async withdraw(req:Request,res:Response){
         try {
             const data = req.body;
+            data.amount = parseInt(data.amount);
+            data.fromAccount = parseInt(data.fromAccount);
             const result = await AccountService.Withdraw(data);
             res.status(result.status).json({msg:result.msg});
         } catch (error) {
@@ -129,6 +136,8 @@ class UserController{
     async deposit(req:Request,res:Response){
         try {  
             const data = req.body;
+            data.amount = parseInt(data.amount);
+            data.toAccount = parseInt(data.toAccount);
             const result = await AccountService.Deposit(data);
             res.status(result.status).json({msg:result.msg});
         } catch (error) {

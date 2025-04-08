@@ -8,7 +8,7 @@ export interface registerInterface{
     email:string,
     password:string,
     name:string,
-    confirmPassword:string,
+    // confirmPassword:string,
     phone:string,
     address?:string
 }

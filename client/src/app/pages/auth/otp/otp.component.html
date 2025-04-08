@@ -1,8 +1,7 @@
 <p-toast></p-toast>
 <div class="card flex justify-center">
     <p-inputotp [length]="6" [(ngModel)]="value" [mask]="false"></p-inputotp>    
-    <button (click)="validateOtp()"> otp </button>
+    <p-button severity="success" (click)="validateOtp()" label="Otp" ></p-button>
 </div>
-
 
 <router-outlet></router-outlet>

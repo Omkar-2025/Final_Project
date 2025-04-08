@@ -37,9 +37,18 @@ export class BillsComponent {
 
   isbillPayed: boolean = false;
 
+  frequency_arr = [{ name: 'daily' }, { name: 'weekly' }, { name: 'monthly' }];
+  frequency: any;
 
 
-  createBillForm: FormGroup;
+  createBillForm!:FormGroup;
+
+  billFormInputControls = [{name:'billName',label:'bill',type:'text'},{name:'amount',label:'amount',type:'number'},{name:'frequency',label:'frequency',type:'select'},{name:'account_id',label:'accounts',type:'select'}]
+
+  btnName:string = 'createBill'
+
+
+  // createBillForm: FormGroup;
 
   constructor(private billService: BillsService, private accountService: AccountService, private messageService: MessageService) {
 
@@ -51,6 +60,10 @@ export class BillsComponent {
     });
 
   }
+
+
+  // accounts: { name: string, balance: number, account_type: string, id: number, account_number: string }[] = [];
+
 
 
   ngOnInit() {
@@ -65,6 +78,8 @@ export class BillsComponent {
 
     this.billService.getBills().subscribe((result: any) => {
       this.bills = result;
+      console.log(result);
+      
     }, (error) => {
       console.log(error);
     })
@@ -73,6 +88,13 @@ export class BillsComponent {
       this.billsTranscation = result;
     }, (error) => {
       console.log(error);
+    })
+    
+    this.accountService.getAllaccounts().subscribe((result: any) => {
+      //console.log(result[0].accounts); 
+      this.accounts = result[0].accounts;
+    }, (error) => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching accounts' });
     })
   }
 
@@ -85,19 +107,21 @@ export class BillsComponent {
 
   showDialog() {
     this.visible = true;
-    this.accountService.getAllaccounts().subscribe((result: any) => {
-      //console.log(result[0].accounts); 
-      this.accounts = result[0].accounts;
-    }, (error) => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching accounts' });
-    })
+    
     // console.log(this.accounts);
   }
 
 
-  createBill() {
+  createBill(value:any) {
+    // console.log(val);
+    // console.log("event called");
+    
     // console.log(this.createBillForm.value);
-    this.billService.createBill(this.createBillForm.value.billName, this.createBillForm.value.amount, this.createBillForm.value.frequency, this.selectedAccounts.id).subscribe((result: any) => {
+    console.log(value.account_id.id);
+    
+    console.log(value.account);
+    
+    this.billService.createBill(value.billName,value.amount, value.frequency, value.account_id.id).subscribe((result: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill created successfully' });
       this.visible = false;
       this.ngOnInit();

@@ -11,9 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
-const Account_entity_1 = require("./Account.entity");
+const account_entity_1 = require("./account.entity");
 const support_query_entity_1 = require("./support_query.entity");
-const Bills_entity_1 = require("./Bills.entity");
+const bills_entity_1 = require("./bills.entity");
 const role_enum_1 = require("../types/enums/role.enum");
 let User = class User {
 };
@@ -58,7 +58,7 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Account_entity_1.Account, (account) => account.user, { cascade: true }),
+    (0, typeorm_1.OneToMany)(() => account_entity_1.Account, (account) => account.user, { cascade: true }),
     __metadata("design:type", Array)
 ], User.prototype, "accounts", void 0);
 __decorate([
@@ -66,7 +66,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "support", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Bills_entity_1.Bills, (bills) => bills.user, { cascade: true }),
+    (0, typeorm_1.OneToMany)(() => bills_entity_1.Bills, (bills) => bills.user, { cascade: true }),
     __metadata("design:type", Array)
 ], User.prototype, "bills", void 0);
 __decorate([

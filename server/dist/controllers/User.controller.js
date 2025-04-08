@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_service_1 = require("../services/User.service");
+const user_service_1 = require("../services/user.service");
 const user_schema_1 = require("../types/schema/user.schema");
 class UserController {
     /**
@@ -18,7 +18,7 @@ class UserController {
      * @param res
      * @returns
      */
-    createUser(req, res) {
+    createUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
@@ -27,7 +27,7 @@ class UserController {
                     res.status(400).json({ msg: "please enter valid data" });
                     return;
                 }
-                const result = yield User_service_1.UserService.createUserBLL(data);
+                const result = yield user_service_1.UserService.createUserBLL(data);
                 if (result.status == 400) {
                     res.status(400).json({ msg: result.msg });
                     return;
@@ -35,8 +35,7 @@ class UserController {
                 res.status(201).json({ msg: result.msg });
             }
             catch (error) {
-                // console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -56,7 +55,7 @@ class UserController {
                     res.status(400).json({ msg: "please enter valid data" });
                     return;
                 }
-                const result = yield User_service_1.UserService.loginBLL(data);
+                const result = yield user_service_1.UserService.loginBLL(data);
                 if (result.status == 404) {
                     res.status(404).json({ msg: result.msg });
                     return;
@@ -78,7 +77,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.user.id;
-                const result = yield User_service_1.UserService.getAccountsBLL(parseInt(id));
+                const result = yield user_service_1.UserService.getAccountsBLL(parseInt(id));
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
@@ -96,7 +95,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
-                const result = yield User_service_1.UserService.verifyUserBLL(data);
+                const result = yield user_service_1.UserService.verifyUserBLL(data);
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {
@@ -110,6 +109,7 @@ class UserController {
     logout(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                res.clearCookie('token').status(200).json({ msg: "Logout successfull" });
             }
             catch (error) {
                 console.log(error);
@@ -120,7 +120,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.user.id;
-                const result = yield User_service_1.UserService.getUsers(id);
+                const result = yield user_service_1.UserService.getUsers(id);
                 if (result.status == 404) {
                     res.status(404).json({ msg: result.msg });
                     return;
@@ -143,7 +143,7 @@ class UserController {
                 //     res.status(400).json({msg:"please enter valid data"});
                 //     return;
                 // }
-                const result = yield User_service_1.UserService.updateUser(id, data);
+                const result = yield user_service_1.UserService.updateUser(id, data);
                 if (result.status == 404) {
                     res.status(404).json({ msg: result.msg });
                     return;
@@ -168,7 +168,7 @@ class UserController {
                 //     res.status(400).json({msg:"please enter valid data"});
                 //     return;
                 // }
-                const result = yield User_service_1.UserService.updatePassword(id, data);
+                const result = yield user_service_1.UserService.updatePassword(id, data);
                 if (result.status == 404) {
                     res.status(404).json({ msg: result.msg });
                     return;
@@ -179,6 +179,37 @@ class UserController {
             catch (error) {
                 res.status(500).json({ msg: "Internal server error" });
                 return;
+            }
+        });
+    }
+    sendForgetPasswordOtp(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const data = req.body.email;
+                const result = yield user_service_1.UserService.sendforgetPasswordOtp(data);
+                if (result.status == 404) {
+                    res.status(404).json({ msg: result.msg });
+                }
+                res.status(200).json({ msg: result.msg });
+                return;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
+    verifyForgetPasswordOtp(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const data = req.body;
+                const result = yield user_service_1.UserService.verifyForgetPasswordOtp(data.email, data.otp, data.password);
+                if (result.status == 404) {
+                    res.status(404).json({ msg: result.msg });
+                }
+                res.status(200).json({ msg: result.msg });
+                return;
+            }
+            catch (error) {
             }
         });
     }

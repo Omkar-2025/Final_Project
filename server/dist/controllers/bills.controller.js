@@ -29,8 +29,15 @@ class billsController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
+                data.amount = parseInt(data.amount);
+                data.frequency = data.frequency.name;
                 const result = yield bills_service_1.BillsService.createBill(data);
-                res.status(result.status).json({ msg: result.msg });
+                if (result) {
+                    res.status(result.status).json({ msg: result.msg });
+                }
+                else {
+                    res.status(404).json({ msg: "No Dose not  create bill" });
+                }
             }
             catch (error) {
                 console.log(error);
@@ -47,9 +54,16 @@ class billsController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // const id = req.params.id;
-                const data = req.body;
-                const result = yield bills_service_1.BillsService.getBill(data);
-                res.status(result.status).json(result.msg);
+                const id = req.body.user.id;
+                const result = yield bills_service_1.BillsService.getBill(id);
+                // console.log(result);
+                if (result) {
+                    res.status(result.status).json(result.msg);
+                    return;
+                }
+                else {
+                    res.status(404).json({ msg: "No bills found" });
+                }
             }
             catch (error) {
                 res.status(500).json({ msg: "Internal server error" });
@@ -83,7 +97,12 @@ class billsController {
             try {
                 const id = req.params.id;
                 const result = yield bills_service_1.BillsService.getBillById(parseInt(id));
-                res.status(result.status).json(result.msg);
+                if (result) {
+                    res.status(result.status).json(result.msg);
+                }
+                else {
+                    res.status(404).json({ msg: "Bill not found" });
+                }
             }
             catch (error) {
                 res.status(500).json({ msg: "Internal server error" });
@@ -99,6 +118,9 @@ class billsController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
+                // console.log(data);
+                data.amount = parseInt(data.amount);
+                data.billId = parseInt(data.billId);
                 const result = yield bills_service_1.BillsService.payBills(data);
                 if (result.status == 404) {
                     res.status(404).json({ msg: "Bill not found" });
@@ -144,6 +166,8 @@ class billsController {
             try {
                 const id = req.body.billId;
                 const data = req.body;
+                data.amount = parseInt(data.amount);
+                data.frequency = data.frequency.name;
                 const result = yield bills_service_1.BillsService.updateBillBLL(parseInt(id), data);
                 res.status(result.status).json(result.msg);
             }

@@ -6,19 +6,18 @@ import { BillsComponent } from './bills.component';
 import { BillCardComponent } from '../../component/bill-card/bill-card.component';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { PaymentComponent } from '../../component/payment/payment.component';
 import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { HomeModule } from "../home/home.module";
+import { SharedModule } from "../../shared/shared.module";
 
 @NgModule({
   declarations: [
     BillsComponent,
     BillCardComponent,
-    PaymentComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +30,8 @@ import { HomeModule } from "../home/home.module";
     ConfirmDialogModule,
     ProgressSpinnerModule,
     MessageModule,
-    HomeModule
+    HomeModule,
+    SharedModule
 ],
   providers: [
     MessageService,
@@ -39,8 +39,7 @@ import { HomeModule } from "../home/home.module";
   ],
   exports: [
     BillsComponent,
-    BillCardComponent,
-    PaymentComponent 
+   
   ]
 })
 export class BillsModule { }

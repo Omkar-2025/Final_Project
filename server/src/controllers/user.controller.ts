@@ -1,5 +1,5 @@
 import { NextFunction, Request,Response } from "express";
-import { UserService } from "../services/User.service";
+import { UserService } from "../services/user.service"
 import { loginSchema, userSchema } from "../types/schema/user.schema";
 import { ZodError } from "zod";
 import {z} from 'zod';
@@ -14,7 +14,7 @@ class UserController{
      * @returns
      */
 
-    async createUser(req:Request,res:Response){
+    async createUser(req:Request,res:Response,next:NextFunction){
         try {
             const data = req.body;
             const isvalidUser = userSchema.safeParse(data);
@@ -22,15 +22,18 @@ class UserController{
                res.status(400).json({msg:"please enter valid data"});
                return;
             }
+
             const result:UserResponseType = await UserService.createUserBLL(data);
+
             if(result.status==400){
                 res.status(400).json({msg:result.msg});
                 return
             }
             res.status(201).json({msg:result.msg});
         } catch (error) {
-            // console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+           
+            next(error)
+           
         }
     }
 
@@ -102,7 +105,7 @@ class UserController{
 
     async logout(req:Request,res:Response){
         try {
-
+            res.clearCookie('token').status(200).json({msg:"Logout successfull"});
 
         } catch (error) {
             console.log(error);
@@ -169,6 +172,40 @@ class UserController{
         } catch (error) {
              res.status(500).json({msg:"Internal server error"});
              return;
+        }
+    }
+
+    async sendForgetPasswordOtp(req:Request,res:Response){
+        try {
+
+            const data = req.body.email
+            ;
+            const result = await UserService.sendforgetPasswordOtp(data);
+            if(result.status==404){
+                res.status(404).json({msg:result.msg});
+            }
+
+            res.status(200).json({msg:result.msg});
+            return ;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    async verifyForgetPasswordOtp(req:Request,res:Response){
+        try {
+
+            const data = req.body;
+            const result = await UserService.verifyForgetPasswordOtp(data.email,data.otp,data.password);
+            if(result.status==404){
+                res.status(404).json({msg:result.msg});
+            }
+            res.status(200).json({msg:result.msg});
+            return ;
+
+        } catch (error) {
+            
         }
     }
 

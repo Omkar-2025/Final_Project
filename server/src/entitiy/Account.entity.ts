@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn, PrimaryColumn } from "typeorm";
-import { Transaction } from "./Transaction.entity";
-import { User } from "./User.entity";
-import { Bills } from "./Bills.entity";
+import { Transaction } from "./transaction.entity";
+import { User } from "./user.entity";
+import { Bills } from "./bills.entity";
 
 
 
@@ -33,6 +33,13 @@ export class Account {
     status:boolean
 
 
+    @Column({type: "varchar", nullable: true})
+    pan_card_number:string;
+
+
+    @Column({type:"varchar", nullable: true})
+    aadhar_card_number:string;
+
     @ManyToOne(() => User, (user) => user.accounts, { onDelete: 'CASCADE' })
     @JoinColumn({ "name": "user_id" })
     user: User;
@@ -50,11 +57,14 @@ export class Account {
 
 
 
-    constructor(name: string, balance: number, account_type: string, user: User) {
+    constructor(name: string, balance: number, account_type: string, user: User,aadhar_card_number:string,pan_card_number:string) {
         this.name = name;
         this.balance = balance;
         this.account_type = account_type;
         this.user = user;
+        this.status=false;
+        this.aadhar_card_number=aadhar_card_number;
+        this.pan_card_number=pan_card_number;
     }
 
 }

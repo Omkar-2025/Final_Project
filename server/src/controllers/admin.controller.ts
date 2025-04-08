@@ -12,14 +12,7 @@ export class AdminController{
      */
 
     static async login(req:Request,res:Response){
-        try {
-            const data = req.body;
-            const result = await AdminService.loginAdminBLL(data);
-            res.status(result.status).json({msg:result.msg,token:result.token});
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
-        }
+       
     }
 
     /**
@@ -32,7 +25,11 @@ export class AdminController{
         try {
             const id = parseInt(req.params.id);
             const result = await AdminService.verifyAccountBLL(id);
-            res.status(result.status).json({msg:result.msg});
+            if (result) {
+                res.status(result.status).json({msg:result.msg});
+            } else {
+                res.status(500).json({msg: "Unexpected error occurred"});
+            }
         } catch (error) {
             console.log(error);
             res.status(500).json({msg:"Internal server error"});
@@ -51,8 +48,13 @@ export class AdminController{
             const data = req.body;
             data.queryId = parseInt(req.params.id);
             data.id = req.body.user.id;
-            const result = await AdminService.resolveQueryBLL(data);
-            res.status(result.status).json({msg:result.msg});
+            const result  = await AdminService.resolveQueryBLL(data);
+            if (result) {
+                res.status(result.status).json({msg:result.msg});
+            } else {
+                res.status(500).json({msg: "Unexpected error occurred"});
+            }
+            // res.status(result.status).json({msg:result.msg});
         } catch (error) {
             console.log(error);
             res.status(500).json({msg:"Internal server error"});

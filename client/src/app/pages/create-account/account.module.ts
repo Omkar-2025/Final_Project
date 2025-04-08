@@ -14,6 +14,10 @@ import { DialogModule } from 'primeng/dialog';
 import { CardComponent } from '../../component/card/card.component';
 import { HomeModule } from '../home/home.module';
 import { SelectModule } from 'primeng/select';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { PaginatorModule } from 'primeng/paginator';
+import { SharedModule } from '../../shared/shared.module';
+
 
 
 @NgModule({
@@ -33,7 +37,9 @@ import { SelectModule } from 'primeng/select';
     FormsModule,
     DialogModule,
     HomeModule,
-    SelectModule
+    SelectModule,
+    PaginatorModule,
+    SharedModule
   ],
   exports: [
     CreateAccountComponent,
