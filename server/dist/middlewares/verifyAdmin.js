@@ -6,6 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyAdmin = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
+/**
+ * This middleware is used to verify the jwt token and check if the user is admin or not
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 const verifyAdmin = (req, res, next) => {
     var _a;
     try {
@@ -14,7 +21,7 @@ const verifyAdmin = (req, res, next) => {
             res.status(401).json({ message: "Unauthorized" });
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         req.body.user = decoded;
-        if (req.body.user.role !== "admin") {
+        if (req.body.user.role !== "Admin") {
             res.status(403).json({ message: "Forbidden" });
             return;
         }

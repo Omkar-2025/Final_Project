@@ -10,7 +10,7 @@ const pdf = require('pdf-creator-node')
 import fs from 'fs';
 import { AccountType, AmountAccount, TransactionType } from "../types/interfaces/accountType";
 import { number } from "zod";
-const html = fs.readFileSync('src/services/expense.html', 'utf-8')
+const html = fs.readFileSync('src/utils/expense.html', 'utf-8')
 
 
 const userRepository = AppDataSource.getRepository(User);
@@ -62,7 +62,7 @@ export class AccountDAL {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            
+
             let { fromAccount, toAccount, amount, transcationType } = data;
         
 
@@ -345,7 +345,7 @@ export class AccountDAL {
                 data: {
                     users: groupedTransactions,
                 },
-                path: "./output.pdf",
+                path: "../utils/expense.pdf",
                 type: " ",
             };
 

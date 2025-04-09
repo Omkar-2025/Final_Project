@@ -3,6 +3,8 @@ import { AuthService } from '../../Services/auth.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AccountService } from '../../Services/account.service';
+import { saveAs } from 'file-saver';
+
 
 @Component({
   selector: 'app-profile',
@@ -44,16 +46,16 @@ export class ProfileComponent {
   constructor(private authService: AuthService, private messageService: MessageService, private accountService: AccountService) {
 
     this.updateUserInfoForm = new FormGroup({
-      name: new FormControl(this.userData.name, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-      email: new FormControl(this.userData.email, [Validators.required, Validators.email]),
-      phone: new FormControl(this.userData.phone, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-      address: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      name: new FormControl(this.userData.name, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(20)]),
+      email: new FormControl(this.userData.email, [Validators.required, Validators.email,Validators.minLength(3),Validators.maxLength(12)]),
+      phone: new FormControl(this.userData.phone, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(10),Validators.maxLength(10)]),
+      address: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(20)]),
     })
 
     this.updateUserPasswordForm = new FormGroup({
-      oldPassword: new FormControl('', [Validators.required]),
-      newPassword: new FormControl('', [Validators.required]),
-      confirmPassword: new FormControl('', [Validators.required]),
+      oldPassword: new FormControl('', [Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(12)]),
+      newPassword: new FormControl('', [Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(12)]),
+      confirmPassword: new FormControl('', [Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(12)]),
     })
 
   }
@@ -77,8 +79,11 @@ export class ProfileComponent {
 
 
   fetchExpnensePdf() {
-    this.accountService.getExpensePdf().subscribe((result) => {
-      console.log(result);
+    this.accountService.getExpensePdf().subscribe((blob) => {
+        const url  =window.URL.createObjectURL(blob);
+        saveAs(blob, 'Expense.pdf');
+        window.URL.revokeObjectURL(url);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Expense PDF Downloaded' })
     }, (err: any) => {
       console.log(err);
     })

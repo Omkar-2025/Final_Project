@@ -5,7 +5,6 @@ const pdf = require('pdf-creator-node')
 import fs from 'fs';
 import { AccountType, AmountAccount, TransactionType } from "../types/interfaces/accountType";
 import { AccountDAL } from "../dal/account.dal";
-const html = fs.readFileSync('src/services/expense.html', 'utf-8')
 
 
 const accountRepository = AppDataSource.getRepository(Account);
@@ -200,7 +199,7 @@ export class AccountService {
             return { status: 500, msg: "Internal server error" };
         }
     }
-
+ 
 
     static async deactiveAccountBLL(id: number) {
         try {

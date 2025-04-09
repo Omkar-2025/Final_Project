@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const account_service_1 = require("../services/account.service");
+const fs_1 = __importDefault(require("fs"));
 class UserController {
     /**
      * This method is used to create the Bank account of the User
@@ -222,15 +226,15 @@ class UserController {
     getExpensePdf(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // const pdf = fs.readFileSync('output.pdf');
-                // if(!pdf) {
-                //      res.status(404).json({msg:"Pdf not found"});
-                //      return;
-                // }
-                // res.setHeader('Content-Type', 'application/pdf');
-                // res.setHeader('Content-Disposition', 'attachment; filename=expense.pdf');
-                const pdf = 'C:/Users/OmkarBagalINDev/Desktop/Final_Project/server\output.pdf';
-                res.download(pdf);
+                const pdf = fs_1.default.readFileSync('output.pdf');
+                if (!pdf) {
+                    res.status(404).json({ msg: "Pdf not found" });
+                    return;
+                }
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', 'attachment; filename=expense.pdf');
+                // const pdf = 'C:/Users/OmkarBagalINDev/Desktop/Final_Project/server\output.pdf'
+                res.send(pdf);
             }
             catch (error) {
                 console.log(error);

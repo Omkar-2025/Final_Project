@@ -120,12 +120,14 @@ export class BillsService {
      * @returns 
      */
 
-    static async getBillshistoy(data:any) {
+    static async getBillshistoy(data:any,page:number) {
         try {
 
             // console.log(data);
+            let limit = 5;
             const id:number = data.user.id
-            const dalResult = await BillsDAL.getBillHistoryDAL(id);
+            // const page = 
+            const dalResult = await BillsDAL.getBillHistoryDAL(id,page,limit);
             return { msg: dalResult.msg, status: dalResult.status };
            
         } catch (error) {

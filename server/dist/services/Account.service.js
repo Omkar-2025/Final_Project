@@ -8,18 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccountService = void 0;
 const db_1 = require("../config/db");
 const account_entity_1 = require("../entitiy/account.entity");
 const account_scehma_1 = require("../types/schema/account.scehma");
 const pdf = require('pdf-creator-node');
-const fs_1 = __importDefault(require("fs"));
 const account_dal_1 = require("../dal/account.dal");
-const html = fs_1.default.readFileSync('src/services/expense.html', 'utf-8');
 const accountRepository = db_1.AppDataSource.getRepository(account_entity_1.Account);
 class AccountService {
     /**

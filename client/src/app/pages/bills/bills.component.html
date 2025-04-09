@@ -36,4 +36,9 @@
     </ng-container>
 </ng-container>
 
+<div class="card flex justify-center">
+    <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="120"  />
+</div>
+
+
 

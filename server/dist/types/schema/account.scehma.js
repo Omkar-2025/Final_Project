@@ -11,7 +11,7 @@ const zod_1 = require("zod");
  * @param id id of the account holder
  */
 exports.accountSchema = zod_1.z.object({
-    name: zod_1.z.string().min(3).max(255),
+    name: zod_1.z.string().min(3).max(20),
     balance: zod_1.z.number().min(500),
     account_type: zod_1.z.enum([account_1.accountType.SAVINGS, account_1.accountType.CURRENT, account_1.accountType.SALARY]),
     id: zod_1.z.number()

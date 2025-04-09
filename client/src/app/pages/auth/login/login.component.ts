@@ -48,6 +48,7 @@ export class LoginComponent {
       localStorage.setItem('token',JSON.stringify(true));
       localStorage.setItem('role',res.role);
       this.authService.isloggedInSubject.next(true);
+      this.authService.userRole.next(res.role);
       this.router.navigate(['/home']);
     },
     (error)=>{
@@ -55,5 +56,8 @@ export class LoginComponent {
       return;
     })
   }
+
+
+  
   
 }

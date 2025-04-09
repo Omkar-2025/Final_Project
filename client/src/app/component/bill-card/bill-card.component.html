@@ -19,7 +19,7 @@
 
 <div class="card flex justify-center">
    
-     <p-dialog header="Pay bills" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem', height:'50rem' }">
+     <p-dialog header="Pay bills" [modal]="true" [(visible)]="visible" [style]="{ width: '35rem', height:'35rem' }">
         
         <ng-container *ngIf=" dialogtype == 'isupdateBill' ">
             <app-digalog [formGroup]="updateBillFrom" [InputControls]="billFormInputControls" [frequency_arr]="frequency_arr" [accounts]="accounts" [btnlabel]="dialogtype" (formSubmit)="updateBill($event)"   ></app-digalog>

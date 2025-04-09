@@ -14,7 +14,8 @@
         <p   > Address : {{userData.address}} </p>
         <p-button severity="success" label="Update  Profile" (click)="updateProfileDialog()" ></p-button>
         <p-button severity="warn" label="Update  Password " (click)="updatePasswordDialog()" ></p-button>
-        <a href="http://localhost:4000/api/account/getExpensepdf">Download Expense Pdf </a>
+        <!-- <a href="http://localhost:4000/api/account/getExpensepdf">Download Expense Pdf </a> -->
+         <p-button (click)="downloadExpense()"  > DownLoad Expense  Pdf </p-button>
     </div>
     
    <div class="chart-container">

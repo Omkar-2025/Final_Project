@@ -4,6 +4,7 @@ import { BillsService } from '../../Services/bills.service';
 import { AccountService } from '../../Services/account.service';
 import { MessageService } from 'primeng/api';
 import { AccountType } from '../../types/account';
+import { PaginatorState } from 'primeng/paginator';
 
 @Component({
   selector: 'app-bills',
@@ -53,10 +54,10 @@ export class BillsComponent {
   constructor(private billService: BillsService, private accountService: AccountService, private messageService: MessageService) {
 
     this.createBillForm = new FormGroup({
-      billName: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-      amount: new FormControl(0, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      billName: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(20)]),
+      amount: new FormControl(0, [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.min(1),Validators.max(10000)]),
       frequency: new FormControl('Monthly', [Validators.required]),
-      account_id: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+      account_id: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(35)]),
     });
 
   }
@@ -78,8 +79,6 @@ export class BillsComponent {
 
     this.billService.getBills().subscribe((result: any) => {
       this.bills = result;
-      console.log(result);
-      
     }, (error) => {
       console.log(error);
     })
@@ -140,5 +139,26 @@ export class BillsComponent {
   isBillDeletedParent($event: any) {
     this.fetchBills();
   }
+
+  fetchTranscations(pageNumber: number = 1) {
+  this.billService.getbillshistory(pageNumber).subscribe((result:any)=>{
+    this.billsTranscation = result;
+  },(error:any)=>{
+    console.log(error);
+  })  
+  }
+
+  first: number = 0;
+  
+    rows: number = 10;
+  
+    onPageChange(event: PaginatorState) {
+        this.first = event.first ?? 0;
+        this.rows = event.rows ?? 10;
+        // console.log(event.first, event.rows);
+      // console.log(event.first!/10);
+        const pageNumber = event.first!/10 + 1;
+        this.fetchTranscations(pageNumber) 
+    }
 
 }

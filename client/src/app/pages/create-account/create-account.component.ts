@@ -21,11 +21,14 @@ export class CreateAccountComponent {
 
   constructor(private accountService:AccountService, private messageService:MessageService , private router:Router) {
       this.createAccountForm = new FormGroup({
-          name: new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-          amount:new FormControl(500,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+          name: new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(20)]),
+          amount:new FormControl(500,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.min(500),Validators.max(10000)]),
           accountType:new FormControl('Current Account',[Validators.required]),
-          panCardNumber:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-          aadharCardNumber:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+          panCardNumber:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),
+Validators.maxLength(20)
+          ]),
+          aadharCardNumber:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),
+Validators.maxLength(20)]),
         //   :new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),          
       });
   }

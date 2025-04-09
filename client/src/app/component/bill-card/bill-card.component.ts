@@ -114,7 +114,7 @@ export class BillCardComponent {
       this.isBillDeleted.emit(this.bill.id);
     }, (error) => {
       console.log(error);
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error paying bill' });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg });
       return;
     })
 
@@ -135,7 +135,7 @@ export class BillCardComponent {
       this.isBillDeleted.emit(this.bill.id);
     }, (error: any) => {
       console.log(error);
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating bill' });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg });
     })
   }
 

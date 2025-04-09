@@ -35,10 +35,7 @@ export class AccountComponent {
 
   isTranscationCompleted:boolean = false;
 
-  childSubmit(event:any){
-    console.log(event);
-  }
-  // 
+   
 
   transferFromgroup!:FormGroup;
 

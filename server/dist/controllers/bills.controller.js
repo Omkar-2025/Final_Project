@@ -63,10 +63,12 @@ class billsController {
                 }
                 else {
                     res.status(404).json({ msg: "No bills found" });
+                    return;
                 }
             }
             catch (error) {
                 res.status(500).json({ msg: "Internal server error" });
+                return;
             }
         });
     }
@@ -148,10 +150,12 @@ class billsController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
-                const result = yield bills_service_1.BillsService.getBillshistoy(data);
+                const page = req.body.page;
+                const result = yield bills_service_1.BillsService.getBillshistoy(data, page);
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
+                console.log(error);
                 res.status(500).json({ msg: "Internal server error" });
             }
         });

@@ -13,7 +13,7 @@ router.route('/createbill').post(bills_controller_1.default.createBill);
 /**
  * This route is used to get all bills of a user
  */
-router.route('/getbills/').get(bills_controller_1.default.getBill);
+router.route('/getbills').get(bills_controller_1.default.getBill);
 /**
  *  This route is used to process the bills of a user
  */
@@ -29,7 +29,7 @@ router.route('/paybills').post(bills_controller_1.default.payBills);
 /**
  * This route is used to get the bills history of a user
  */
-router.route('/getbillsTranscation').get(bills_controller_1.default.getBillshistoy);
+router.route('/getbillsTranscation').post(bills_controller_1.default.getBillshistoy);
 /**
  * This route is used to get the bills history of a user by id
  */

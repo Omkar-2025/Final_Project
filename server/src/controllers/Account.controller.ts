@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { AccountService } from '../services/account.service';
+import fs from 'fs';
 import { UserResponseType } from '../types/interfaces/userType';
 
 
@@ -220,15 +221,15 @@ class UserController{
      async getExpensePdf(req:Request,res:Response){
     try {
     
-        // const pdf = fs.readFileSync('output.pdf');
-        // if(!pdf) {
-        //      res.status(404).json({msg:"Pdf not found"});
-        //      return;
-        // }
-        // res.setHeader('Content-Type', 'application/pdf');
-        // res.setHeader('Content-Disposition', 'attachment; filename=expense.pdf');
-        const pdf = 'C:/Users/OmkarBagalINDev/Desktop/Final_Project/server\output.pdf'
-        res.download(pdf);
+        const pdf = fs.readFileSync('output.pdf');
+        if(!pdf) {
+             res.status(404).json({msg:"Pdf not found"});
+             return;
+        }
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=expense.pdf');
+        // const pdf = 'C:/Users/OmkarBagalINDev/Desktop/Final_Project/server\output.pdf'
+        res.send(pdf);
 
     } catch (error) {
         console.log(error);

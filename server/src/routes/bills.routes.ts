@@ -15,7 +15,7 @@ router.route('/createbill').post(billsController.createBill);
  * This route is used to get all bills of a user
  */
 
-router.route('/getbills/').get(billsController.getBill);
+router.route('/getbills').get(billsController.getBill);
 
 /**
  *  This route is used to process the bills of a user
@@ -39,7 +39,7 @@ router.route('/paybills').post(billsController.payBills);
  * This route is used to get the bills history of a user
  */
 
-router.route('/getbillsTranscation').get(billsController.getBillshistoy);
+router.route('/getbillsTranscation').post(billsController.getBillshistoy);
 
 /**
  * This route is used to get the bills history of a user by id

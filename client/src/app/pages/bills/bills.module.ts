@@ -13,6 +13,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { HomeModule } from "../home/home.module";
 import { SharedModule } from "../../shared/shared.module";
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { SharedModule } from "../../shared/shared.module";
     ProgressSpinnerModule,
     MessageModule,
     HomeModule,
-    SharedModule
+    SharedModule,
+    PaginatorModule
 ],
   providers: [
     MessageService,

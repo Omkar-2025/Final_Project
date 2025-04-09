@@ -86,10 +86,8 @@ export class BillsDAL {
 
                 await accountRepository.save(account);
                 await billsRepository.save(bill);
-                return { msg: "Bill process successfully", status: 201 };
             } else {
                 console.log(`Insufficient balance for bill ID ${bill.id}`);
-                return { msg: "Insufficient balance", status: 400 };
             }
         }
 
@@ -189,9 +187,14 @@ export class BillsDAL {
         return { msg: "Insufficient balance", status: 400 };
     }
 
-    static async getBillHistoryDAL(id: number) {
+    static async getBillHistoryDAL(id: number,page:number,limit:number) {
+
+        // console.log(id,page,limit);
+        
 
         const user = await userRepository.find({ where: { id: id } });
+
+        const skip = (page - 1) * limit;
 
 
         if (!user) {
@@ -202,7 +205,14 @@ export class BillsDAL {
             return { msg: "Account not found", status: 404 };
         }
 
-        const transactions = await transactionRepository.find({ where: { toAccount: account, transactionType: Like("%Bill Payment%") }, order: { createdAt: "DESC" } });
+        const transactions = await transactionRepository.find({ where: { toAccount: account, transactionType: Like("%Bill Payment%") }, 
+        order: { createdAt: "DESC" } ,
+        skip:skip,
+        take:limit
+        
+    });
+  
+    //  console.log(transactions)
 
         if (transactions) {
             // transactions.accountNumber = account.account_number;

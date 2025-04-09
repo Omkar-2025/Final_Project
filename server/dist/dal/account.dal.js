@@ -22,7 +22,7 @@ const accountTemplate_1 = __importDefault(require("../utils/accountTemplate"));
 const transcationVerfication_1 = __importDefault(require("../utils/transcationVerfication"));
 const pdf = require('pdf-creator-node');
 const fs_1 = __importDefault(require("fs"));
-const html = fs_1.default.readFileSync('src/services/expense.html', 'utf-8');
+const html = fs_1.default.readFileSync('src/utils/expense.html', 'utf-8');
 const userRepository = db_1.AppDataSource.getRepository(user_entity_1.User);
 const accountRepository = db_1.AppDataSource.getRepository(account_entity_1.Account);
 const transactionRepository = db_1.AppDataSource.getRepository(transaction_entity_1.Transaction);
@@ -319,7 +319,7 @@ class AccountDAL {
                     data: {
                         users: groupedTransactions,
                     },
-                    path: "./output.pdf",
+                    path: "../utils/expense.pdf",
                     type: " ",
                 };
                 pdf.create(document, options).then((res) => {

@@ -25,8 +25,8 @@ import { Injectable } from "@angular/core";
         return this.http.post(`${this.billsEndPoint}/createBill`,{billName,amount,frequency,accountId},{withCredentials:true});
     }
 
-    getbillshistory(){
-        return this.http.get(`${this.billsEndPoint}/getbillsTranscation`,{withCredentials:true});
+    getbillshistory(page:number=1){
+        return this.http.post(`${this.billsEndPoint}/getbillsTranscation`,{page},{withCredentials:true});
       }    
 
       deleteBill(billId:number){

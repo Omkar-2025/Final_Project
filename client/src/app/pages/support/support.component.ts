@@ -28,8 +28,8 @@ export class SupportComponent {
   constructor(private supportService:SupportService, private messageService:MessageService){}
 
   supportForm:FormGroup= new FormGroup({
-    subject:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-    description:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
+    subject:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(5),Validators.maxLength(12)]),
+    description:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(5),Validators.maxLength(50)]),
   })
 
   

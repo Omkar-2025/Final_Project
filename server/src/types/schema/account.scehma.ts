@@ -10,7 +10,7 @@ import { z } from "zod";
  */
 
 export const accountSchema = z.object({
-    name:z.string().min(3).max(255),
+    name:z.string().min(3).max(20),
     balance:z.number().min(500),
     account_type:z.enum([accountType.SAVINGS, accountType.CURRENT, accountType.SALARY]),
     id:z.number()
@@ -43,6 +43,7 @@ export const depositWithDrawSchema = z.object({
     amount:z.number().min(1),
     accountId:z.string()
 })
+
 
 
 export const amountAccountSchema = z.object({

@@ -45,6 +45,7 @@ class billsController{
     async getBill(req:Request,res:Response){
         try {
            // const id = req.params.id;
+         
             const id:number = req.body.user.id;
             const result = await BillsService.getBill(id);
             // console.log(result);
@@ -55,9 +56,11 @@ class billsController{
             }
             else{
                 res.status(404).json({msg:"No bills found"});
+                return ;
             }
         } catch (error) {
             res.status(500).json({msg:"Internal server error"});
+            return ;
         }
     }
 
@@ -139,10 +142,13 @@ class billsController{
     async getBillshistoy(req:Request,res:Response){
         try {
             const data = req.body;
-            const result:any = await BillsService.getBillshistoy(data);
+            const page = req.body.page;
+        
+            const result:any = await BillsService.getBillshistoy(data,page);
             res.status(result.status).json(result.msg);
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+            console.log(error)
+             res.status(500).json({msg:"Internal server error"});
         }
     }
 

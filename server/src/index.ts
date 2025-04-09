@@ -9,7 +9,6 @@ import billsRouter from './routes/bills.routes';
 import supportRouter from './routes/support.routes';
 import { verifyJwt } from './middlewares/verifyJwt';
 import adminRouter from './routes/admin.routes'; 
-import rateLimiter from './middlewares/rateLimiter';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
 import { verifyAdmin } from './middlewares/verifyAdmin';
 
@@ -24,6 +23,7 @@ app.use(cors({
 
 
 app.use(cookieParser());
+
 
 app.use('/api/user',userRouter);
 

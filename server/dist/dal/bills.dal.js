@@ -78,11 +78,9 @@ class BillsDAL {
                     bill.nextPaymentDate = this.calculateNextPaymentDate(bill.nextPaymentDate, bill.frequency);
                     yield accountRepository.save(account);
                     yield billsRepository.save(bill);
-                    return { msg: "Bill process successfully", status: 201 };
                 }
                 else {
                     console.log(`Insufficient balance for bill ID ${bill.id}`);
-                    return { msg: "Insufficient balance", status: 400 };
                 }
             }
             return { msg: "Bills processed successfully", status: 201 };
@@ -154,9 +152,11 @@ class BillsDAL {
             return { msg: "Insufficient balance", status: 400 };
         });
     }
-    static getBillHistoryDAL(id) {
+    static getBillHistoryDAL(id, page, limit) {
         return __awaiter(this, void 0, void 0, function* () {
+            // console.log(id,page,limit);
             const user = yield userRepository.find({ where: { id: id } });
+            const skip = (page - 1) * limit;
             if (!user) {
                 return { msg: "User not found", status: 404 };
             }
@@ -164,7 +164,12 @@ class BillsDAL {
             if (!account) {
                 return { msg: "Account not found", status: 404 };
             }
-            const transactions = yield transactionRepository.find({ where: { toAccount: account, transactionType: (0, typeorm_1.Like)("%Bill Payment%") }, order: { createdAt: "DESC" } });
+            const transactions = yield transactionRepository.find({ where: { toAccount: account, transactionType: (0, typeorm_1.Like)("%Bill Payment%") },
+                order: { createdAt: "DESC" },
+                skip: skip,
+                take: limit
+            });
+            //  console.log(transactions)
             if (transactions) {
                 // transactions.accountNumber = account.account_number;
                 return { msg: transactions, status: 200 };

@@ -14,7 +14,8 @@ export class AuthService {
   userAuth = this.userAuthSubject.asObservable();
   isloggedInSubject = new BehaviorSubject<boolean>(false);
   isloggedIn = this.isloggedInSubject.asObservable();
-
+  userRole = new BehaviorSubject<string>('');
+  userRoleObservable = this.userRole.asObservable();
 
   loginEndPoint: string = 'http://localhost:4000/api/user'
 
@@ -38,6 +39,8 @@ export class AuthService {
   verifyUser(data: any) {
     this.userAuth.subscribe((result: any) => {
       data.email = result;
+    },(error)=>{
+      console.log(error);
     })
     return this.http.post(`${this.loginEndPoint}/verifyUser`, data, { withCredentials: true });
   }
