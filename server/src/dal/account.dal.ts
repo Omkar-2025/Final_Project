@@ -10,6 +10,7 @@ const pdf = require('pdf-creator-node')
 import fs from 'fs';
 import { AccountType, AmountAccount, TransactionType } from "../types/interfaces/accountType";
 import { number } from "zod";
+import { Like } from "typeorm";
 const html = fs.readFileSync('src/utils/expense.html', 'utf-8')
 
 
@@ -401,6 +402,43 @@ export class AccountDAL {
             return { msg: "Internal server error", status: 500 };
         }
     }
+
+
+    static async searchTransactionDAL(id:number,search:any){
+
+
+
+            let limit = 10;
+            // console.log(search);
+            // const transactions = await transactionRepository.find({where:[
+            //     { fromAccount: { id: id } },
+            //     { toAccount: { id: id } },
+            //     {transactionType:Like(`%${search}%`)}],
+            //     relations:['fromAccount','toAccount'],
+            //     take:limit,
+            // });
+
+            console.log(id);
+            
+
+            const transactions = await transactionRepository.createQueryBuilder("transaction")
+            .where("transaction.fromAccountId = :id or transaction.toAccountId=:id",{id})
+            .andWhere("transaction.transactionType LIKE :search",{search:`%${search}%`})
+            .limit(limit)
+            .getMany();
+            
+            // console.log(transactions);
+
+            if(transactions.length > 0){
+                return {msg:transactions,status:200};
+            }
+
+            return {msg:"No transaction found",status:404};
+
+       
+    }
+
+   
 
 
 }

@@ -34,4 +34,8 @@ router.route('/verifyAccount/:id').put(admin_controller_1.AdminController.verify
  * This route is used to resolve the support query by id
  */
 router.route('/resolveQuery/:id').put(admin_controller_1.AdminController.resolveSupport);
+/**
+ *
+ */
+router.route('/getAllExpenses').get(admin_controller_1.AdminController.getAllExpenses);
 exports.default = router;

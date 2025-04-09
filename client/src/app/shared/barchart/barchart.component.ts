@@ -1,144 +1,114 @@
-import { Component } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectorRef, effect, inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { AccountService } from '../../Services/account.service';
-import { AccountType } from '../../types/account';
-import { MessageService } from 'primeng/api';
+import { ChangeDetectorRef, Component, inject, Input, OnChanges, PLATFORM_ID, SimpleChanges } from '@angular/core';
+import { AdminService } from '../../Services/admin.service';
+
 
 @Component({
-  selector: 'app-barchart',
+  selector: 'app-barchart1',
   standalone: false,
   templateUrl: './barchart.component.html',
   styleUrl: './barchart.component.css'
 })
-export class BarchartComponent {
+export class BarchartComponent1 implements OnChanges {
+
+  basicData: any;
+ data:any[]=[0,0,0,0,0,0,0,0,0,0,0,0];
+lables:any=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+
+    basicOptions: any;
+
+    platformId = inject(PLATFORM_ID);
+
+    // configService = inject(AppConfigService);
+
+    constructor(private cd: ChangeDetectorRef, private adminService:AdminService) {}
 
 
-  data: any=[];
-
-  options: any;
- 
-  result: any =[];
-
-
-    selectedMonth: any | undefined = null;
-
-
-    monthFrequencies = [
-      { name: "Jan", val: 1 },
-      { name: "Feb", val: 2 },
-      { name: "Mar", val: 3 },
-      { name: "Apr", val: 4 },
-      { name: "May", val: 5 },
-      { name: "Jun", val: 6 },
-      { name: "Jul", val: 7 },
-      { name: "Aug", val: 8 },
-      { name: "Sep", val: 9 },
-      { name: "Oct", val: 10 },
-      { name: "Nov", val: 11 },
-      { name: "Dec", val: 12 }
-  ];
-
-
-   accounts: AccountType[] = [];
-   
-
-   selectedAccount:any = null;
-
-   selectMonthId:any=null;
-
-   isSelectAccount:boolean = false;
-
-
-
-   selectedMonthOption(){
-      // console.log(this.selectedMonth);
-      // console.log(this.selectedAccount);
-
-      this.isSelectAccount = true;
-      if(this.selectedAccount){
-        this.selectMonthId=this.selectedMonth.val;
-        this.fetchData(this.selectedAccount.id);
-      }
-     
-   }
-  
-
-  constructor(private cd: ChangeDetectorRef, private accountService: AccountService , private messageService:MessageService) {
-    this.accountService.getAllaccounts().subscribe((result: any) => {
-      this.accounts = result[0].accounts;
-    }, (error) => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching accounts' });
-    })
-    
-  }
-
-  fetchData(id:number) {
-    // console.log(id); 
-    this.accountService.getAllMonthlyExpense(id).subscribe((res: any) => {
-      
-      res.map((item:any)=>{
-        
-        if(item.month==this.selectMonthId){
-            console.log(item);
-            // console.log(item.month);
-            // console.log(item);
-            this.result = [];
-            this.result.push(item.deposits);
-            this.result.push(item.withdrawals);
-            this.result.push(item.billPayments)
-            this.result.push(item.transferAmount)
-            console.log(this.result);
-            
-          }
-      })
-      // console.log(this.result);
-
-      this.initChart();
-      
-    }, (error) => {
-      console.log(error);
-    })
-  }
-
-
-  platformId = inject(PLATFORM_ID);
-
-
-  ngOnInit() {
-    // this.fetchData(1);
-  }
-
-
-
-  initChart() {
-    // console.log(this.result);
-    if (isPlatformBrowser(this.platformId)) {
-      const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--text-color');
-
-      this.data = {
-        labels: ['Deposits', 'withdrawals', 'billPayments','Transfer Amount'],
-        datasets: [
-          {
-            data:this.result,
-            backgroundColor: [documentStyle.getPropertyValue('--p-cyan-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-gray-500'),documentStyle.getPropertyValue('--p-red-500')],
-            hoverBackgroundColor: [documentStyle.getPropertyValue('--p-cyan-400'), documentStyle.getPropertyValue('--p-orange-400'), documentStyle.getPropertyValue('--p-gray-400'),documentStyle.getPropertyValue('--p-red-400')],
-          }
-        ]
-      };
-      this.options = {
-        plugins: {
-          legend: {
-            labels: {
-              usePointStyle: true,
-              color: textColor
-            }
-          }
+    ngOnChanges(changes:SimpleChanges) {
+        if(changes['lables'] && changes['data']){
+            this.initChart();
+        // console.log(this.data);
+        // console.log(this.lables);
         }
-      };
-      this.cd.markForCheck()
     }
-  }
+
+    ngOnInit(){
+        this.getAllExpenses();
+       
+    }
+
+    getAllExpenses(){
+        this.adminService.getAllExpenses().subscribe((res:any)=>{
+          console.log(res.msg);
+          res.msg.map((item:any)=>{
+            if(item.month){
+              this.data[item.month-1]=item.totalAmount;
+            }
+          })
+
+          console.log(this.data);
+          this.initChart();
+        },
+          ( err:any )=>{
+            console.log(err.error.msg);
+          })  
+      }
+   
+    initChart() {
+        if (isPlatformBrowser(this.platformId)) {
+            const documentStyle = getComputedStyle(document.documentElement);
+            const textColor = documentStyle.getPropertyValue('--p-text-color');
+            const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+            const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+
+            this.basicData = {
+                labels: this.lables,
+                datasets: [
+                    {
+                        label: 'Expense',
+                        data: this.data,
+                        backgroundColor: [
+                            'rgba(249, 115, 22, 0.2)',
+                            'rgba(6, 182, 212, 0.2)',
+                            'rgb(107, 114, 128, 0.2)',
+                            'rgba(139, 92, 246, 0.2)',
+                        ],
+                        borderColor: ['rgb(249, 115, 22)', 'rgb(6, 182, 212)', 'rgb(107, 114, 128)', 'rgb(139, 92, 246)'],
+                        borderWidth: 1,
+                    },
+                ],
+            };
+
+            this.basicOptions = {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: textColor,
+                        },
+                    },
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: textColorSecondary,
+                        },
+                        grid: {
+                            color: surfaceBorder,
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: textColorSecondary,
+                        },
+                        grid: {
+                            color: surfaceBorder,
+                        },
+                    },
+                },
+            };
+            this.cd.markForCheck()
+        }
+    }
 
 }

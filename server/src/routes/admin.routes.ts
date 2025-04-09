@@ -48,5 +48,11 @@ router.route('/verifyAccount/:id').put(AdminController.verifyAccount)
 router.route('/resolveQuery/:id').put(AdminController.resolveSupport)
 
 
+/**
+ * 
+ */
+
+router.route('/getAllExpenses').get(AdminController.getAllExpenses);
+
 
 export default router;

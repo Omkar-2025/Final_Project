@@ -17,11 +17,11 @@ class UserController{
     async createUser(req:Request,res:Response,next:NextFunction){
         try {
             const data = req.body;
-            const isvalidUser = userSchema.safeParse(data);
-            if(!isvalidUser.success){
-               res.status(400).json({msg:"please enter valid data"});
-               return;
-            }
+            // const isvalidUser = userSchema.safeParse(data);
+            // if(!isvalidUser.success){
+            //    res.status(400).json({msg:"please enter valid data"});
+            //    return;
+            // }
 
             const result:UserResponseType = await UserService.createUserBLL(data);
 
@@ -44,23 +44,17 @@ class UserController{
      * @returns jwt token and message
      */
 
-    async Login(req:Request,res:Response){
+    async Login(req:Request,res:Response,next:NextFunction){
             try {
                 const data = req.body;
-                const isvalidUser = loginSchema.safeParse(data);
-                if(!isvalidUser.success){
-                    console.log(isvalidUser.error);
-                    res.status(400).json({msg:"please enter valid data"});
-                    return;
-                }
                const result:UserResponseType = await UserService.loginBLL(data);
                 if(result.status==404){
                     res.status(404).json({msg:result.msg});
                     return;
                 }
                 res.status(200).cookie('token',result.token,{httpOnly:true,secure:true}).json({msg:result.msg,role:result.role});
-            } catch (error) {
-                console.log(error)
+            } catch (error:Error | any) {
+                next(error)
             }
     }
 

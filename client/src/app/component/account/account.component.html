@@ -25,6 +25,9 @@
 </ng-container>
 
 
+<input pInputText id="username" [(ngModel)]="search" [formControl]="searchText" autocomplete="off"   />
+<label for="username">Search Transactions</label>
+
 
 
 <div class="transactions" *ngIf="transcations">

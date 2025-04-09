@@ -144,6 +144,17 @@ export class AdminController{
         }
     }
 
+  static async getAllExpenses(req:Request,res:Response){
+
+    try {
+        const result = await AdminService.getAllExpenseBLL();
+        res.status(result.status).json({msg:result.msg});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal server error"});
+    }
+
+  }
     
 
 }

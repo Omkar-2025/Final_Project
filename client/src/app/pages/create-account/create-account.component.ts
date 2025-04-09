@@ -14,9 +14,9 @@ export class CreateAccountComponent {
 
   createAccountForm: FormGroup;
   accountTypes = [
-      { label: 'Current Account', value: 'Current Account' },
-      { label: 'Salary Account', value: 'Salary Account' },
-      {label:'Savings Account',value:'Savings Account'}
+      {name: 'Current Account', value: 'Current Account' },
+      {name: 'Salary Account', value: 'Salary Account' },
+      {name:'Savings Account',value:'Savings Account'}
   ];
 
   constructor(private accountService:AccountService, private messageService:MessageService , private router:Router) {
@@ -33,7 +33,20 @@ Validators.maxLength(20)]),
       });
   }
 
+  createAccountInputControl = [
+    { name: 'name', label: 'Account Name', type: 'text' },
+    { name: 'amount', label: 'Amount', type: 'number' },
+    { name: 'accountType', label: 'AccountTypes ', type: 'select' },
+    { name: 'panCardNumber', label: 'Pan Card Number', type: 'text' },
+    { name: 'aadharCardNumber', label: 'Aadhar Card Number', type: 'text' }
+  ];
+  createBtnName:string='Create Account';
+
+
+
   createAccount() {
+    // console.log(value);
+    
       if (!this.createAccountForm.valid) {
            this.messageService.add({severity:'error', summary:'Error', detail:'Please enter all the fields'});
           return;   

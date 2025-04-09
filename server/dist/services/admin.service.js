@@ -77,8 +77,7 @@ class AdminService {
                 return { msg: dalResult.msg, status: dalResult.status };
             }
             catch (error) {
-                console.log(error);
-                return { msg: "Internal server error", status: 500 };
+                throw new Error(error);
             }
         });
     }
@@ -102,6 +101,12 @@ class AdminService {
             catch (error) {
                 return { msg: "Internal server error", status: 500 };
             }
+        });
+    }
+    static getAllExpenseBLL() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dalResult = yield admin_dal_1.adminDAL.getAllExpenseDAL();
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
 }

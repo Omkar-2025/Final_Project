@@ -7,6 +7,7 @@ import { otpTemplate } from "../utils/authTemplate";
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { UserType } from "../types/interfaces/userType";
+import { GlobalErrorHandler } from "../types/globalErrorHandler";
 
 
 
@@ -20,7 +21,7 @@ class UserDAL {
         const userexist = await userRepository.find({ where: { email: email } });
 
             if (userexist.length > 0) {
-                return { msg: "User already exist", status: 400 };
+                throw new GlobalErrorHandler("User already exist",400);
             }
 
             const hashpassowrd = await bcryptjs.hash(password, 10);
@@ -35,29 +36,30 @@ class UserDAL {
 
             await userRepository.save(user);
 
+            return {msg:true};
+
     }
 
 
     static async loginDAL({email, password}:{email:string, password:string}) {
 
          const user = await userRepository.findOne({ where: { email: email } });
-        
+
                     if (user) {
         
                         if (await bcryptjs.compare(password, user.password)) {
         
                             const token = jwt.sign({ id: user.id, email: email, role: user.role }, process.env.JWT_SECRET!);
-        
+                            
                             return ({ msg: "Login successfull", role: user.role, token: token, status: 200 });
-        
                         }
-        
                         else {
-        
-                            return ({ msg: "Invalid password", status: 400 });
-        
+
+                            throw new GlobalErrorHandler("Invalid password",401);
                         }
                     }
+
+        throw new GlobalErrorHandler("User not found",404);
     }
 
     static async verifyOtpDAL({email, otp}:{email:string, otp:string}) {
@@ -66,8 +68,7 @@ class UserDAL {
 
         if (!user) {
 
-            return { msg: "User not found", status: 404 };
-
+           throw new Error("User not found")
         }
         if (user) {
 
@@ -81,7 +82,7 @@ class UserDAL {
 
             }
 
-            return { msg: "Invalid OTP", status: 400 };
+            throw new GlobalErrorHandler("Invalid OTP",401);
         }
     }
 
@@ -90,8 +91,7 @@ class UserDAL {
 
             if (!user) {
 
-                return { msg: "User not found", status: 404 };
-
+               throw new Error("User not found")
             }
 
             user.password = "";
@@ -107,8 +107,7 @@ class UserDAL {
 
         if (!user) {
 
-            return { msg: "User not found", status: 404 };
-
+           throw new Error("User not found")
         }
 
         const { name, email, phone, address } = data;
@@ -132,7 +131,7 @@ class UserDAL {
 
         if (!user) {
 
-            return { msg: "User not found", status: 404 };
+            throw new Error("User not found")
 
         }
 
@@ -148,7 +147,7 @@ class UserDAL {
 
             return { msg: "Password updated successfully", status: 200 };
         }
-        return {msg:"Invalid password",status:400};
+        throw new Error("Invalid password");
     }
 
     static async sendforgetPasswordOtpDAL(email:string){
@@ -156,7 +155,7 @@ class UserDAL {
 
             if (!user) {
 
-                return { msg: "User not found", status: 404 };
+              throw new Error("User not found")
 
             }
 
@@ -177,17 +176,13 @@ class UserDAL {
 
             if (!user) {
 
-                return { msg: "User not found", status: 404 };
+               throw new Error("User not found")
 
             }
 
             if (otp !== user.otp) {
 
-                console.log(otp,user.otp);
-                
-
-                return { msg: "Invalid OTP", status: 400 };
-                
+                throw new Error("Invalid OTP")  
             }
             
             const hashpassowrd = await bcryptjs.hash(password, 10);

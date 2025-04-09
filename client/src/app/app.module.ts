@@ -26,12 +26,11 @@ import { ProfileModule } from './pages/profile/profile.module';
     HttpClientModule,
     HomeModule,
     AccountModule,
-    BillsModule,
     AuthModule,
-    SupportModule,
-    AdminModule,
     SharedModule,
-    ProfileModule
+    ProfileModule,
+    AdminModule,
+    BillsModule
   ], providers: [
     provideAnimationsAsync(),
     providePrimeNG({

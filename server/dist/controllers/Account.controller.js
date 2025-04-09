@@ -268,5 +268,20 @@ class UserController {
             }
         });
     }
+    searchTransaction(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.body.id;
+                const search = req.body.search;
+                // console.log(id,search);
+                const result = yield account_service_1.AccountService.searchTranscationBLL(parseInt(id), search);
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
 }
 exports.default = new UserController();

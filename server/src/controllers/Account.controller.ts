@@ -260,6 +260,23 @@ class UserController{
    }
 
 
+   async searchTransaction(req:Request,res:Response){
+    try {
+        
+        const id= req.body.id;
+        const search = req.body.search;
+        // console.log(id,search);
+        const result = await AccountService.searchTranscationBLL(parseInt(id),search);
+        res.status(result.status).json({msg:result.msg});
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal server error"});
+    }
+
+   }
+
+
 }
 
 export default new  UserController();

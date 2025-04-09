@@ -28,7 +28,7 @@ export const mailerSender= async(mail:any)=>{
         return info;
 
     } catch (error) {
-            console.log(error);
+            // console.log(error);
             return error;
     }
 

@@ -234,6 +234,28 @@ export class AccountService {
     }
 
 
+    static async searchTranscationBLL(id:number,search:string) {
+        try {
+
+            // if(!id || !search){
+            //     return { msg: "Please provide all the fields", status: 400 };
+            // }
+
+            const dalResult = await AccountDAL.searchTransactionDAL(id,search);
+
+            return { msg: dalResult.msg, status: dalResult.status };
+
+        } catch (error) {
+            console.log(error)
+            return { msg: "Internal server error", status: 500 };
+        }
+    }
+
+    
+
+    
+
+
 }
 
 

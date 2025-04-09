@@ -91,5 +91,12 @@ router.route('/deactivateAccount').post(AccountController.deactiveAccount);
 router.route('/activateAccount').post(AccountController.activateAccount);
 
 
+/**
+ * This route is used to find the transcation through the transcation type
+ */
+
+
+router.route('/searchTranscation').post(AccountController.searchTransaction);
+
 
 export default router;

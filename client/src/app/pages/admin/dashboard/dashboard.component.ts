@@ -16,7 +16,10 @@ visible: any;
   allQueries:any = [];
   allUsers:any=[];
   selectedQuery:any = {};
+  AllExpenses:number[] = [0,0,0,0,0,0,0,0,0,0,0,0];
   reply:string='';
+
+  labelsMonthOption:string[] = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
 
   fetchAllQuerys(){
     this.adminService.getAllSupports().subscribe((res:any)=>{
@@ -30,6 +33,12 @@ visible: any;
   ngOnInit(){
     this.fetchAllQuerys();
     this.fetchAllAccounts();
+    // console.log(this.allUsers);
+    
+  }
+  
+  ngAfterViewInit(){
+    this.getAllExpenses();
   }
 
 
@@ -81,6 +90,23 @@ visible: any;
     },( err:any )=>{
       console.log(err.error.msg);
     })
+  }
+
+
+  getAllExpenses(){
+    this.adminService.getAllExpenses().subscribe((res:any)=>{
+      console.log(res.msg);
+      res.msg.map((item:any)=>{
+        // this.AllExpenses.push(item.totalAmount)
+        if(item.month){
+          this.AllExpenses[item.month-1]=item.totalAmount;
+        }
+      })
+      // console.log(this.AllExpenses);
+    },
+      ( err:any )=>{
+        console.log(err.error.msg);
+      })  
   }
   
 

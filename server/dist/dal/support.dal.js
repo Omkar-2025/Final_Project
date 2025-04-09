@@ -22,7 +22,7 @@ class SupportDAL {
             const id = data.user.id;
             const user = yield userRepo.findOneBy({ id: id });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             const support = new support_query_entity_1.Support(subject, description, user);
             support.user = user;
@@ -34,7 +34,7 @@ class SupportDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepo.findOneBy({ id: id });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             const support = yield supportRepo.find({ where: { user: user } });
             return { msg: support, status: 200 };
@@ -44,7 +44,7 @@ class SupportDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const support = yield supportRepo.findOne({ where: { id: id } });
             if (!support) {
-                return { msg: "Support not found", status: 404 };
+                throw new Error("Support not found");
             }
             return { msg: support, status: 200 };
         });
@@ -53,7 +53,7 @@ class SupportDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const support = yield supportRepo.findOne({ where: { id: id } });
             if (!support) {
-                return { msg: "Support not found", status: 404 };
+                throw new Error("Support not found");
             }
             yield supportRepo.remove(support);
             return { msg: "Support deleted", status: 200 };

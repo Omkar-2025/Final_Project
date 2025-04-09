@@ -62,4 +62,8 @@ router.route('/deactivateAccount').post(account_controller_1.default.deactiveAcc
  *  This route is used to activate the account of the user
  */
 router.route('/activateAccount').post(account_controller_1.default.activateAccount);
+/**
+ * This route is used to find the transcation through the transcation type
+ */
+router.route('/searchTranscation').post(account_controller_1.default.searchTransaction);
 exports.default = router;

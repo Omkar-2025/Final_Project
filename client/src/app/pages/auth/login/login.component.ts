@@ -52,7 +52,8 @@ export class LoginComponent {
       this.router.navigate(['/home']);
     },
     (error)=>{
-      this.messageService.add({severity:'error',summary:'Error',detail:error.error.msg});
+      console.log(error);
+      this.messageService.add({severity:'error',summary:'Error',detail:error.error.message});
       return;
     })
   }

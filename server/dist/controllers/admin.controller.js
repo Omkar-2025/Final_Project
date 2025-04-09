@@ -159,5 +159,17 @@ class AdminController {
             }
         });
     }
+    static getAllExpenses(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield admin_service_1.AdminService.getAllExpenseBLL();
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ msg: "Internal server error" });
+            }
+        });
+    }
 }
 exports.AdminController = AdminController;

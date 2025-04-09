@@ -370,6 +370,30 @@ class AccountDAL {
             }
         });
     }
+    static searchTransactionDAL(id, search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let limit = 10;
+            // console.log(search);
+            // const transactions = await transactionRepository.find({where:[
+            //     { fromAccount: { id: id } },
+            //     { toAccount: { id: id } },
+            //     {transactionType:Like(`%${search}%`)}],
+            //     relations:['fromAccount','toAccount'],
+            //     take:limit,
+            // });
+            console.log(id);
+            const transactions = yield transactionRepository.createQueryBuilder("transaction")
+                .where("transaction.fromAccountId = :id or transaction.toAccountId=:id", { id })
+                .andWhere("transaction.transactionType LIKE :search", { search: `%${search}%` })
+                .limit(limit)
+                .getMany();
+            // console.log(transactions);
+            if (transactions.length > 0) {
+                return { msg: transactions, status: 200 };
+            }
+            return { msg: "No transaction found", status: 404 };
+        });
+    }
 }
 exports.AccountDAL = AccountDAL;
 // export default new AccountDAL();

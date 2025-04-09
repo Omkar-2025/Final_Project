@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeModule } from '../home/home.module';
 import { SupportModule } from '../support/support.module';
 import { SupportAdminComponent } from './support-admin/support-admin.component';
+import { SharedModule } from "../../shared/shared.module";
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -20,18 +21,19 @@ import { SupportAdminComponent } from './support-admin/support-admin.component';
     SupportAdminComponent
   ],
   imports: [
-    CommonModule, 
-    AdminRoutingModule, 
-    ButtonModule, 
-    ConfirmDialogModule, 
+    CommonModule,
+    AdminRoutingModule,
+    ButtonModule,
+    ConfirmDialogModule,
     ToastModule,
-    DialogModule, 
-    DataViewModule, 
-    RouterModule, 
-    ReactiveFormsModule ,
+    DialogModule,
+    DataViewModule,
+    RouterModule,
+    ReactiveFormsModule,
     HomeModule,
     SupportModule,
-  ],
+    SharedModule
+],
   exports: [
     DashboardComponent,
     AccountsComponent,

@@ -18,8 +18,7 @@ export class SupportDAL{
         const user:User|null = await userRepo.findOneBy({id:id});
         if(!user){
 
-            return {msg:"User not found",status:404};
-
+           throw new Error("User not found");
         }
 
         const support = new Support(subject,description,user);
@@ -38,8 +37,7 @@ export class SupportDAL{
 
         if(!user){
 
-            return {msg:"User not found",status:404};
-
+           throw new Error("User not found");
         }
 
         const support = await supportRepo.find({where:{user:user}});
@@ -53,7 +51,7 @@ export class SupportDAL{
         const support = await supportRepo.findOne({where:{id:id}});
 
             if(!support){
-                return {msg:"Support not found",status:404};
+               throw new Error("Support not found");
             }
 
             return {msg:support,status:200};
@@ -62,7 +60,7 @@ export class SupportDAL{
     static async deleteSupportByIdDAL(id:number){
         const support = await supportRepo.findOne({where:{id:id}});
             if(!support){
-                return {msg:"Support not found",status:404};
+               throw new Error("Support not found");
             }
             await supportRepo.remove(support);
             return {msg:"Support deleted",status:200};

@@ -46,9 +46,7 @@ export class SignupComponent {
     }
 
     if(registerCredentials.password!=registerCredentials.confirmPassowrd){
-
       this.messageService.add({severity:'error',summary:'Error',detail:'Password and Confirm Password should be same'})
-
       return;
     }
 

@@ -4,6 +4,7 @@ import { AccountService } from '../../Services/account.service';
 import { MessageService } from 'primeng/api';
 import { PaginatorState } from 'primeng/paginator';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-account',
@@ -39,6 +40,9 @@ export class AccountComponent {
 
   transferFromgroup!:FormGroup;
 
+  search = ''
+  searchText = new FormControl('');
+
 
   transferFromInputControl = [{name:'Account_Number',label:'Account_Number',type:'text'},{name:'Amount',label:'Amount',type:'number'},{name:'Description',label:'Description',type:'text'}]
 
@@ -60,8 +64,8 @@ export class AccountComponent {
       this.account=result[0];
     })
     this.accountService.getTransactionsByAccount(this.id,pageNumber).subscribe((result:any)=>{
-      console.log(result);
-      console.log(this.id);
+      // console.log(result);
+      // console.log(this.id);
       this.transcations=result;
     })
   }
@@ -70,8 +74,37 @@ export class AccountComponent {
     this.router.params.subscribe((params)=>{
       this.id=params['id'];
     })
+
     this.fetchTranscations(this.id);
+
+    
   }
+
+  // searchValueChanges(val:any){
+  //     // console.log(val);
+  //   this.searchTransaction();
+    
+  // }
+
+
+  // searchTransaction(){
+
+  //   this.searchText.valueChanges.pipe(debounceTime(1000)).subscribe((value:any)=>{
+  //     // console.log(value);
+      
+  //     this.accountService.searchTransaction(this.id,value).subscribe((result:any)=>{
+  //       // console.log(result);
+  //       this.transcations=result.msg;
+  //       // console.log(result.msg.length);
+        
+  //     })
+  //     ,( error:any )=>{
+  //       this.messageService.add({severity:'error', summary:'Error', detail:'Error fetching transactions'}); 
+  //     }
+  //   })
+
+  // }
+
 
   showDialog(type:string) {
     this.type = type;

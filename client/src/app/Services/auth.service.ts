@@ -63,9 +63,15 @@ export class AuthService {
   }
 
   forgetPassword(data: any) {
-    console.log(data);
     
     return this.http.post(`${this.loginEndPoint}/verifyForgetOtp`, data, { withCredentials: true });
   }
+
+  logout(){
+    return this.http.get(`${this.loginEndPoint}/logout`, { withCredentials: true });
+  }
+
+
+
 
 }

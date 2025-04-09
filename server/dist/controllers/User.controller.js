@@ -22,11 +22,11 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
-                const isvalidUser = user_schema_1.userSchema.safeParse(data);
-                if (!isvalidUser.success) {
-                    res.status(400).json({ msg: "please enter valid data" });
-                    return;
-                }
+                // const isvalidUser = userSchema.safeParse(data);
+                // if(!isvalidUser.success){
+                //    res.status(400).json({msg:"please enter valid data"});
+                //    return;
+                // }
                 const result = yield user_service_1.UserService.createUserBLL(data);
                 if (result.status == 400) {
                     res.status(400).json({ msg: result.msg });
@@ -45,16 +45,10 @@ class UserController {
      * @param res
      * @returns jwt token and message
      */
-    Login(req, res) {
+    Login(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
-                const isvalidUser = user_schema_1.loginSchema.safeParse(data);
-                if (!isvalidUser.success) {
-                    console.log(isvalidUser.error);
-                    res.status(400).json({ msg: "please enter valid data" });
-                    return;
-                }
                 const result = yield user_service_1.UserService.loginBLL(data);
                 if (result.status == 404) {
                     res.status(404).json({ msg: result.msg });
@@ -63,7 +57,7 @@ class UserController {
                 res.status(200).cookie('token', result.token, { httpOnly: true, secure: true }).json({ msg: result.msg, role: result.role });
             }
             catch (error) {
-                console.log(error);
+                next(error);
             }
         });
     }

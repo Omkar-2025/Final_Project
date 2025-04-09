@@ -15,7 +15,7 @@
                 ></p-message>
             </ng-container>
 
-            <ng-container *ngIf="controls.label == 'accounts'">
+            <ng-container *ngIf="controls.label == 'accounts' || controls.label == 'Account Types' ">
                 <p-dropdown
                     [formControlName]="controls.name"
                     [options]="accounts"

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
-import { BarchartComponent } from './barchart/barchart.component';
+import { BarchartComponent } from './piechart/barchart.component';
 import { SelectModule } from 'primeng/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
@@ -12,18 +12,19 @@ import { Button, ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageModule } from 'primeng/message';
 import { RouterModule } from '@angular/router';
+import { BarchartComponent1 } from './barchart/barchart.component';
 
 
 
 @NgModule({
   declarations: [
-    BarchartComponent,
     GenericDisplayTranscationComponent,
     DigalogComponent,
+    BarchartComponent,
+    BarchartComponent1
   ],
   imports: [
     CommonModule,
-    ChartModule,
     SelectModule,
     FormsModule,
     HomeModule,
@@ -31,13 +32,15 @@ import { RouterModule } from '@angular/router';
     DropdownModule,
     ButtonModule,
     MessageModule,
-    RouterModule
+    RouterModule,
+    ChartModule
 ],
   exports:[
     BarchartComponent,
     GenericDisplayTranscationComponent,
     DigalogComponent,
-    ButtonModule
+    ButtonModule,
+    BarchartComponent1
   ],
   providers:[
     MessageService

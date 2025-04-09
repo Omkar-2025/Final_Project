@@ -6,16 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const user_controller_1 = __importDefault(require("../controllers/user.controller"));
 const verifyJwt_1 = require("../middlewares/verifyJwt");
-const rateLimiter_1 = __importDefault(require("../middlewares/rateLimiter"));
 const router = express_1.default.Router();
 /**
  * This route is used to create a new user
  */
-router.route('/createuser').post(rateLimiter_1.default, user_controller_1.default.createUser);
+router.route('/createuser').post(user_controller_1.default.createUser);
 /**
  * This route is used to login a user
  */
-router.route('/login').post(rateLimiter_1.default, user_controller_1.default.Login);
+router.route('/login').post(user_controller_1.default.Login);
 /**
  * This route is used to get all accounts of a user
  */

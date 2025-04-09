@@ -196,6 +196,21 @@ class AccountService {
             }
         });
     }
+    static searchTranscationBLL(id, search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // if(!id || !search){
+                //     return { msg: "Please provide all the fields", status: 400 };
+                // }
+                const dalResult = yield account_dal_1.AccountDAL.searchTransactionDAL(id, search);
+                return { msg: dalResult.msg, status: dalResult.status };
+            }
+            catch (error) {
+                console.log(error);
+                return { msg: "Internal server error", status: 500 };
+            }
+        });
+    }
 }
 exports.AccountService = AccountService;
 // 83504A2F-62EC-4AAE-BB02-3E61D75A4439

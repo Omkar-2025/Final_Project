@@ -15,10 +15,9 @@ import { PaginatorState } from 'primeng/paginator';
 export class BillsComponent {
 
 
-  visible: any;
+  visible: boolean=false;
 
-
-  date: any;
+  selectedAccounts!: AccountType;
 
   bills: any;
 
@@ -31,7 +30,6 @@ export class BillsComponent {
 
   accounts: AccountType[] = [];
 
-  selectedAccounts: any;
 
   isSelectAccount: boolean = false;
 
@@ -59,6 +57,8 @@ export class BillsComponent {
       frequency: new FormControl('Monthly', [Validators.required]),
       account_id: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.minLength(3),Validators.maxLength(35)]),
     });
+
+    
 
   }
 

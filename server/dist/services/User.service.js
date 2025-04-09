@@ -18,6 +18,7 @@ const user_entity_1 = require("../entitiy/user.entity");
 require("dotenv/config");
 const user_dal_1 = __importDefault(require("../dal/user.dal"));
 const user_schema_1 = require("../types/schema/user.schema");
+const globalErrorHandler_1 = require("../types/globalErrorHandler");
 const userRepository = db_1.AppDataSource.getRepository(user_entity_1.User);
 class UserService {
     /**
@@ -27,25 +28,19 @@ class UserService {
      */
     static createUserBLL(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { name, email, password, phone, role } = data;
-                if (!name || !email || !password || !phone) {
-                    return { msg: "Please provide all the fields", status: 400 };
-                }
-                const isValiddata = user_schema_1.userSchema.safeParse(data);
-                if (!isValiddata.success) {
-                    return { msg: isValiddata.error.issues[0].message, status: 400 };
-                }
-                const dalResult = yield user_dal_1.default.createUserDAl({ name, email, password, phone, role: role || "user" });
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
-                    return { msg: "User already exist", status: 400 };
-                }
-                return { msg: "User created successfully", status: 201 };
+            const { name, email, password, phone, role } = data;
+            if (!name || !email || !password || !phone) {
+                throw new Error("Please provide all the fields");
             }
-            catch (error) {
-                console.log(error);
-                return ({ message: "Error creating user", status: 500 });
+            const isValiddata = user_schema_1.userSchema.safeParse(data);
+            if (!isValiddata.success) {
+                return { msg: isValiddata.error.issues[0].message, status: 400 };
             }
+            const dalResult = yield user_dal_1.default.createUserDAl({ name, email, password, phone, role: role || "user" });
+            if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg) == false) {
+                throw new Error("Error while Creating the Account");
+            }
+            return { msg: "User created successfully", status: 201 };
         });
     }
     /**
@@ -57,25 +52,27 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password } = data;
+                // console.log(email, password);
                 if (!email || !password) {
-                    return { msg: "Please provide all the fields", status: 400 };
+                    throw new globalErrorHandler_1.GlobalErrorHandler("Please provide all the fields", 400);
                 }
                 const isvalidUser = user_schema_1.loginSchema.safeParse(data);
                 if (!isvalidUser.success) {
-                    return { msg: isvalidUser.error.issues[0].message, status: 400 };
+                    throw new Error(isvalidUser.error.issues[0].message);
                 }
                 const dalResult = yield user_dal_1.default.loginDAL({ email, password });
                 if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
-                    return { msg: "Invalid password", status: 400 };
+                    throw new Error(dalResult.msg);
                 }
                 else if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 200) {
                     return { msg: "Login successfull", role: dalResult.role, token: dalResult.token, status: 200 };
                 }
-                return ({ message: "User not found", status: 404 });
+                else {
+                    throw new globalErrorHandler_1.GlobalErrorHandler("Invalid password", 404);
+                }
             }
             catch (error) {
-                console.log(error);
-                return ({ msg: "Internal server error", status: 500 });
+                throw new Error(error.message);
             }
         });
     }
@@ -220,8 +217,7 @@ class UserService {
                 return { msg: dalResult.msg, status: 200 };
             }
             catch (error) {
-                console.log(error);
-                return { msg: "Internal server error", status: 500 };
+                throw new Error(error.message);
             }
         });
     }

@@ -20,13 +20,14 @@ const mailerSender_1 = require("../utils/mailerSender");
 const authTemplate_1 = require("../utils/authTemplate");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
+const globalErrorHandler_1 = require("../types/globalErrorHandler");
 const userRepository = db_1.AppDataSource.getRepository(user_entity_1.User);
 class UserDAL {
     static createUserDAl(_a) {
         return __awaiter(this, arguments, void 0, function* ({ name, email, password, phone, role }) {
             const userexist = yield userRepository.find({ where: { email: email } });
             if (userexist.length > 0) {
-                return { msg: "User already exist", status: 400 };
+                throw new globalErrorHandler_1.GlobalErrorHandler("User already exist", 400);
             }
             const hashpassowrd = yield bcryptjs_1.default.hash(password, 10);
             let opt = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false, digits: true });
@@ -34,6 +35,7 @@ class UserDAL {
             yield (0, mailerSender_1.mailerSender)({ email: email, title: "verfication", body: (0, authTemplate_1.otpTemplate)(opt) });
             user.accounts = [];
             yield userRepository.save(user);
+            return { msg: true };
         });
     }
     static loginDAL(_a) {
@@ -45,16 +47,17 @@ class UserDAL {
                     return ({ msg: "Login successfull", role: user.role, token: token, status: 200 });
                 }
                 else {
-                    return ({ msg: "Invalid password", status: 400 });
+                    throw new globalErrorHandler_1.GlobalErrorHandler("Invalid password", 401);
                 }
             }
+            throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
         });
     }
     static verifyOtpDAL(_a) {
         return __awaiter(this, arguments, void 0, function* ({ email, otp }) {
             const user = yield userRepository.findOne({ where: { email: email } });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             if (user) {
                 if (otp == user.otp) {
@@ -62,7 +65,7 @@ class UserDAL {
                     yield userRepository.save(user);
                     return { msg: "User verified successfully", status: 200 };
                 }
-                return { msg: "Invalid OTP", status: 400 };
+                throw new globalErrorHandler_1.GlobalErrorHandler("Invalid OTP", 401);
             }
         });
     }
@@ -70,7 +73,7 @@ class UserDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { id: id } });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             user.password = "";
             user.otp = "";
@@ -81,7 +84,7 @@ class UserDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { id: id } });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             const { name, email, phone, address } = data;
             user.name = name;
@@ -96,7 +99,7 @@ class UserDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { id: id } });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             const { oldPassword, newPassword } = data;
             // console.log(oldPassword,newPassword);
@@ -106,14 +109,14 @@ class UserDAL {
                 yield userRepository.save(user);
                 return { msg: "Password updated successfully", status: 200 };
             }
-            return { msg: "Invalid password", status: 400 };
+            throw new Error("Invalid password");
         });
     }
     static sendforgetPasswordOtpDAL(email) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { email: email } });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             let opt = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false, digits: true });
             yield (0, mailerSender_1.mailerSender)({ email: email, title: "Forget Password", body: (0, authTemplate_1.otpTemplate)(opt) });
@@ -126,11 +129,10 @@ class UserDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { email: email } });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             if (otp !== user.otp) {
-                console.log(otp, user.otp);
-                return { msg: "Invalid OTP", status: 400 };
+                throw new Error("Invalid OTP");
             }
             const hashpassowrd = yield bcryptjs_1.default.hash(password, 10);
             user.password = hashpassowrd;

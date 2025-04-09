@@ -19,9 +19,11 @@ const account_entity_1 = require("../entitiy/account.entity");
 const mailerSender_1 = require("../utils/mailerSender");
 const queryresolveTemplate_1 = __importDefault(require("../utils/queryresolveTemplate"));
 const support_query_entity_1 = require("../entitiy/support_query.entity");
+const transaction_entity_1 = require("../entitiy/transaction.entity");
 const userRepo = db_1.AppDataSource.getRepository(user_entity_1.User);
 const accountRepo = db_1.AppDataSource.getRepository(account_entity_1.Account);
 const supportRepo = db_1.AppDataSource.getRepository(support_query_entity_1.Support);
+const transactionRepository = db_1.AppDataSource.getRepository(transaction_entity_1.Transaction);
 class adminDAL {
     static getAllUsersDAL() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,7 +35,7 @@ class adminDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const account = yield accountRepo.findOne({ where: { id: id }, relations: ["user"] });
             if (!account) {
-                return { msg: "Account not found", status: 404 };
+                throw new Error("Account not found");
             }
             account.isVerified = true;
             yield (0, mailerSender_1.mailerSender)({ email: account.user.email, title: "Account Verified", body: `Your account with account number ${account.account_number} has been verified successfully` });
@@ -59,12 +61,12 @@ class adminDAL {
             const support = yield supportRepo.findOne({ where: { id: data.queryId }, relations: ["user"] });
             // console.log(support);
             if (!support) {
-                return { msg: "Query not found", status: 404 };
+                throw new Error("Query not found");
             }
             const user = yield userRepo.findOne({ where: { id: support.user.id } });
             // console.log(user);
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             support.resolve = reply;
             support.status = 'Completed';
@@ -77,11 +79,11 @@ class adminDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepo.findOne({ where: { id: id } });
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             const accounts = yield accountRepo.find({ where: { user: user } });
             if (!accounts || accounts.length === 0) {
-                return { msg: "No accounts found for this user", status: 404 };
+                throw new Error("No accounts found for this user");
             }
             return { msg: accounts, status: 200 };
         });
@@ -91,7 +93,7 @@ class adminDAL {
             const user = yield userRepo.findOne({ where: { id: id } });
             console.log(user);
             if (!user) {
-                return { msg: "User not found", status: 404 };
+                throw new Error("User not found");
             }
             const support = yield supportRepo.find({ where: { user: user }, });
             return { msg: support, status: 200 };
@@ -101,6 +103,60 @@ class adminDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const support = yield supportRepo.find({ relations: ["user"] });
             return { msg: support, status: 200 };
+        });
+    }
+    static getAllExpenseDAL() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const transaction = yield transactionRepository.createQueryBuilder("transaction")
+                .select([
+                "MONTH(transaction.createdAt) AS month",
+                "YEAR(transaction.createdAt) AS year",
+                "transaction.transactionType AS transactionType",
+                "SUM(transaction.amount) AS totalAmount",
+                "COUNT(transaction.id) AS transactionCount"
+            ])
+                .groupBy("YEAR(transaction.createdAt), MONTH(transaction.createdAt), transaction.transactionType")
+                .orderBy("YEAR(transaction.createdAt)", "DESC")
+                .addOrderBy("MONTH(transaction.createdAt)", "DESC")
+                .getRawMany();
+            const groupedTransactions = transaction.reduce((acc, transaction) => {
+                const key = `${transaction.year}-${transaction.month}`;
+                // console.log(key);
+                if (!acc[key]) {
+                    acc[key] = {
+                        // year: transaction.year,
+                        month: transaction.month,
+                        // deposits: 0,
+                        // withdrawals: 0,
+                        // billPayments: 0,
+                        // totalTransactions: 0,
+                        totalAmount: 0,
+                    };
+                }
+                // console.log();
+                // console.log(transaction);
+                if (transaction.transactionType === "Deposit") {
+                    // acc[key].deposits += parseFloat(transaction.totalAmount);
+                    acc[key].totalAmount += parseFloat(transaction.totalAmount);
+                }
+                else if (transaction.transactionType === "withDraw") {
+                    // acc[key].withdrawals += parseFloat(transaction.totalAmount);
+                    acc[key].totalAmount += parseFloat(transaction.totalAmount);
+                }
+                else if (transaction.transactionType.trim().startsWith("Bill Payment")) {
+                    // acc[key].billPayments += parseFloat(transaction.totalAmount);
+                    acc[key].totalAmount += parseFloat(transaction.totalAmount);
+                }
+                else {
+                    // console.log(transaction);
+                    // acc[key].transferAmount += parseFloat(transaction.totalAmount);
+                    acc[key].totalAmount += parseFloat(transaction.totalAmount);
+                }
+                // acc[key].totalTransactions += parseInt(transaction.transactionCount, 10);
+                return acc;
+            }, {});
+            // console.log(groupedTransactions);
+            return { status: 200, msg: Object.values(groupedTransactions) };
         });
     }
 }

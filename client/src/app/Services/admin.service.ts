@@ -40,4 +40,8 @@ export class AdminService {
         return this.http.get(`${this.adminEndPoint}/getSupportById/${id}`,{withCredentials:true});
     }
 
+    getAllExpenses(){
+        return this.http.get(`${this.adminEndPoint}/getAllExpenses`,{withCredentials:true});
+    }
+
 }

@@ -33,7 +33,7 @@ const mailerSender = (mail) => __awaiter(void 0, void 0, void 0, function* () {
         return info;
     }
     catch (error) {
-        console.log(error);
+        // console.log(error);
         return error;
     }
 });

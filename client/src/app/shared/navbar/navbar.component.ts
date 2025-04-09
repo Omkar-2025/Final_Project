@@ -12,19 +12,31 @@ export class NavbarComponent {
 
 
   isloggedIn:boolean=false;
+  role :string = '';
 
   constructor(private authService:AuthService,private router:Router) { }
 
   ngOnInit() {
-    localStorage.getItem('token')?this.isloggedIn=true:this.isloggedIn=false;
+    this.authService.isloggedIn.subscribe((result:any)=>{
+      this.isloggedIn=result;
+    })
+    this.role = localStorage.getItem('role') || '';
   }
   userLogout() {
     localStorage.removeItem('token');  
   }
 
   logOutUser(){
-    localStorage.removeItem('token');
-    this.router.navigate(['/login'])
+
+    this.authService.logout().subscribe((result:any)=>{
+      this.authService.userRole.next('');
+      this.authService.isloggedInSubject.next(false);
+      this.router.navigate(['/login']);
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      this.router.navigate(['/login'])
+    })
+    localStorage.removeItem('role');
   }
 
 

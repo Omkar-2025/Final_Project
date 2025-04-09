@@ -4,6 +4,7 @@ import 'dotenv/config';
 import { LoginType, UserType, VerifyType } from "../types/interfaces/userType";
 import UserDAL from "../dal/user.dal";
 import { loginSchema, updateUserSchema, userSchema } from "../types/schema/user.schema";
+import { GlobalErrorHandler } from "../types/globalErrorHandler";
 
 
 const userRepository = AppDataSource.getRepository(User);
@@ -21,12 +22,12 @@ export class UserService {
 
 
     static async createUserBLL(data: UserType) {
-        try {
+       
 
             const { name, email, password, phone, role } = data;
 
             if(!name || !email || !password || !phone) {
-                return { msg: "Please provide all the fields", status: 400 };
+               throw new Error("Please provide all the fields");
             }
 
             const isValiddata = userSchema.safeParse(data);
@@ -36,19 +37,12 @@ export class UserService {
             }
 
             const dalResult = await UserDAL.createUserDAl({ name, email, password, phone, role: role || "user" });
-
-            if(dalResult?.status == 400) {
-                return { msg: "User already exist", status: 400 };
+            if(dalResult?.msg == false) {
+                throw new Error("Error while Creating the Account")
             }
-            
             return { msg: "User created successfully", status: 201 };
 
-        } catch (error) {
-
-            console.log(error);
-
-            return ({ message: "Error creating user", status: 500 });
-        }
+        
     }
 
 
@@ -64,14 +58,17 @@ export class UserService {
 
             const { email, password } = data;
 
+            // console.log(email, password);
+            
+
             if(!email || !password) {
-                return { msg: "Please provide all the fields", status: 400 };
+                throw new GlobalErrorHandler("Please provide all the fields", 400);
             }
 
             const isvalidUser = loginSchema.safeParse(data);
 
             if(!isvalidUser.success){
-                return { msg: isvalidUser.error.issues[0].message, status: 400 };
+               throw new Error(isvalidUser.error.issues[0].message);
             }
 
 
@@ -79,19 +76,17 @@ export class UserService {
             const dalResult = await UserDAL.loginDAL({ email, password });
 
             if(dalResult?.status == 400) {
-                return { msg: "Invalid password", status: 400 };
+               throw new Error(dalResult.msg);
             }
             else if(dalResult?.status == 200) {
                 return { msg: "Login successfull", role: dalResult.role, token: dalResult.token, status: 200 };
             }
-
-            return ({ message: "User not found", status: 404 });
-        } catch (error) {
-
-            console.log(error)
-
-            return ({ msg: "Internal server error", status: 500 });
-
+            else{
+                throw new GlobalErrorHandler("Invalid password",404);
+            }
+            
+        } catch (error:any) {
+           throw new Error(error.message)
         }
     }
 
@@ -285,10 +280,8 @@ export class UserService {
             
             return { msg: dalResult.msg, status: 200 };
             
-        } catch (error) {
-            console.log(error);
-            return { msg: "Internal server error", status: 500 };
-            
+        } catch (error:Error|any) {
+           throw new Error(error.message);
         }
 
     }

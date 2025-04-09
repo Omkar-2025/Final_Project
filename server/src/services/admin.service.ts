@@ -62,9 +62,8 @@ export class AdminService{
             // Fetch the user by ID
             const dalResult = await adminDAL.getAllAccountsDAL(id);
             return { msg: dalResult.msg, status: dalResult.status };
-        } catch (error) {
-            console.log(error);
-            return { msg: "Internal server error", status: 500 };
+        } catch (error:Error|any) {
+            throw new Error(error)
         }
     }
 
@@ -84,6 +83,14 @@ export class AdminService{
         } catch (error) {
             return {msg:"Internal server error",status:500};
         }
-    }   
+    }
+
+    static async getAllExpenseBLL(){
+
+            const dalResult = await adminDAL.getAllExpenseDAL();
+            return {msg:dalResult.msg,status:dalResult.status};
+
+    }
+    
 }
 

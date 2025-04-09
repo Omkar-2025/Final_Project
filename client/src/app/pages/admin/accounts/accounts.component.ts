@@ -31,6 +31,7 @@ export class AccountsComponent {
 
   ngOnInit(){
     this.fetchAllAccounts();
+   
   }
   
   accountVerfied(event:any){

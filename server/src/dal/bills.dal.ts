@@ -25,16 +25,16 @@ export class BillsDAL {
         const account = await accountRepository.findOne({ where: { id: accountId }, lock: { mode: 'dirty_read' } });
 
         if (!account) {
-            return { msg: "Account not found", status: 404 };
+           throw new Error("Account not found")
         }
 
         if (!data.user) {
-            return { msg: "User data is missing", status: 400 };
+            throw new Error("User not found")
         }
         const user = await userRepository.findOne({ where: { id: data.user.id } });
 
         if (!user) {
-            return { msg: "User not found", status: 404 };
+              throw new Error("User not found")
         }
 
 
@@ -120,7 +120,7 @@ export class BillsDAL {
         const user = await userRepository.findOne({ where: { id: id } });
 
         if (!user) {
-            return { msg: "User not found", status: 404 };
+            throw new Error("User not found")
         }
 
         const bill = await billsRepository.find({ where: { user: user }, relations: ["account"] });
@@ -131,7 +131,7 @@ export class BillsDAL {
             return { msg: bill, status: 200 };
         }
 
-        return { msg: "Bill not found", status: 404 };
+       throw new Error("Bill not found")
     }
 
 
@@ -141,7 +141,7 @@ export class BillsDAL {
         const user = await userRepository.findOne({ where: { id: id } });
 
         if (!user) {
-            return { msg: "User not found", status: 404 };
+           throw new Error("User not found")
         }
 
         const bill = await billsRepository.find({ where: { user: user }, relations: ["account"] });
@@ -150,7 +150,7 @@ export class BillsDAL {
         if (bill) {
             return { msg: bill, status: 200 };
         }
-        return { msg: "Bill not found", status: 404 };
+       throw new Error("Bill not found")
     }
 
 
@@ -163,13 +163,13 @@ export class BillsDAL {
         const bill = await billsRepository.findOne({ where: { id: billId }, relations: ['account'] });
 
         if (!bill) {
-            return { msg: "Bill not found", status: 404 };
+           throw new Error("Bill not found")
         }
 
         const account = await accountRepository.findOne({ where: { id: accountId } });
 
         if (!account) {
-              return { msg: "Account not found", status: 404 };
+              throw new Error("Account not found")
         }
 
         if (account.balance >= bill.amount) {
@@ -198,11 +198,11 @@ export class BillsDAL {
 
 
         if (!user) {
-            return { msg: "User not found", status: 404 };
+          throw new Error("User not found")
         }
         const account = await accountRepository.findOne({ where: { user: user[0] } });
         if (!account) {
-            return { msg: "Account not found", status: 404 };
+           throw new Error("Account not found")
         }
 
         const transactions = await transactionRepository.find({ where: { toAccount: account, transactionType: Like("%Bill Payment%") }, 
@@ -218,7 +218,7 @@ export class BillsDAL {
             // transactions.accountNumber = account.account_number;
             return { msg: transactions, status: 200 };
         }
-        return { msg: "no post found", status: 404 };
+        throw new Error("Transaction not found")
     }
 
     static async updateBillDAL(id: number, data: any) {
@@ -232,7 +232,7 @@ export class BillsDAL {
         
 
         if (!bill) {
-            return { msg: "Bill not found", status: 404 };
+           throw new Error("Bill not found")
         }
 
         bill.account = data.accountId.id;
@@ -254,12 +254,14 @@ export class BillsDAL {
         const bill = await billsRepository.findOne({ where: { id: id } });
 
         if (!bill) {
-            return { msg: "Bill not found", status: 404 };
+           throw new Error("Bill not found")
         }
         await billsRepository.delete({ id: id });
 
         return { msg: "Bill deleted successfully", status: 200 };
     }
+
+    
 
 }
 

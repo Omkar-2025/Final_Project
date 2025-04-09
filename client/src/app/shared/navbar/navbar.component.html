@@ -10,7 +10,8 @@
         <a routerLink="/login" *ngIf="!isloggedIn">Login</a>
         <a routerLink="/register" *ngIf="!isloggedIn">register</a>
         <!-- <a routerLink = "logout" *ngIf="isloggedIn"> logout </a> -->
-         <a routerLink="/profile">Profile</a>
+         <a routerLink="/profile"  *ngIf="isloggedIn">Profile</a>
+         <a routerLink="/admin" *ngIf="role =='Admin ' " ></a>
          <p-button (click)="logOutUser()" *ngIf="isloggedIn" >LogOut</p-button>
     </div>
 

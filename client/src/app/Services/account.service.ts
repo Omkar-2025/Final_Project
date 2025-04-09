@@ -62,4 +62,8 @@ export class AccountService {
       return this.http.post(`${this.accountEndPoint}/activateAccount`,{id},{withCredentials:true});
     }
 
+    searchTransaction(id:number,search:string){
+      return this.http.post(`${this.accountEndPoint}/searchTranscation`,{id,search},{withCredentials:true});
+    }
+
 }

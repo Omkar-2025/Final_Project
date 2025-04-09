@@ -1,26 +1,5 @@
-
-    <h1>Expense</h1>
-
-<div class="bar-chart-container">
- 
-    <div>
-        <label for="amount" class="font-semibold w-24">Select The Month </label>
-        <p-select [options]="monthFrequencies"  optionLabel="name" placeholder="Select a Month" class="w-full md:w-56" [(ngModel)]="selectedMonth" (onChange)="selectedMonthOption()"   />
-    </div>
-
-    <div >
-        <label for="amount" class="font-semibold w-24 mb-4">Select The Account </label>
-        <p-select [options]="accounts"  optionLabel="account_number" placeholder="Select a Account" class="w-full md:w-56" [(ngModel)]="selectedAccount" (onChange)="selectedMonthOption()"   />
-
-        <ng-container *ngIf="isSelectAccount ">
-            <p> Account Name :  {{selectedAccount.name}} </p> 
-             <p> Amount :   {{selectedAccount.balance}} </p>
-             <p> Account Type :  {{selectedAccount.account_type}}</p>
-           </ng-container>
-    </div>
+<div class="card">
+    <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
 </div>
 
-<div class="card flex justify-center mt-5">
-    <p-chart type="pie" [data]="data" [options]="options" class="w-full md:w-[30rem]" />
-</div>
 

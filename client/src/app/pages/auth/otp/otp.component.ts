@@ -22,13 +22,10 @@ export class OtpComponent {
     // } 
 
     this.authService.verifyUser({otp:this.value}).subscribe((data:any)=>{
-
       this.messageService.add({severity:'success',summary:'Success',detail:data.msg});
       this.router.navigate(['/login']);
-
     },(error)=>{
-
-      this.messageService.add({severity:'error',summary:'Error',detail:error});
+      this.messageService.add({severity:'error',summary:'Error',detail:error.error.message});
 
     })
   }

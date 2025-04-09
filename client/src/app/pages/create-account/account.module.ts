@@ -17,6 +17,7 @@ import { SelectModule } from 'primeng/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PaginatorModule } from 'primeng/paginator';
 import { SharedModule } from '../../shared/shared.module';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 
@@ -39,7 +40,8 @@ import { SharedModule } from '../../shared/shared.module';
     HomeModule,
     SelectModule,
     PaginatorModule,
-    SharedModule
+    SharedModule,
+    InputTextModule
   ],
   exports: [
     CreateAccountComponent,
