@@ -21,19 +21,32 @@ const authTemplate_1 = require("../utils/authTemplate");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
 const globalErrorHandler_1 = require("../types/globalErrorHandler");
+const user_1 = require("../dto/user");
+const class_validator_1 = require("class-validator");
 const userRepository = db_1.AppDataSource.getRepository(user_entity_1.User);
 class UserDAL {
     static createUserDAl(_a) {
         return __awaiter(this, arguments, void 0, function* ({ name, email, password, phone, role }) {
+            // console.log("create user dal",name, email, password, phone, role);
             const userexist = yield userRepository.find({ where: { email: email } });
             if (userexist.length > 0) {
                 throw new globalErrorHandler_1.GlobalErrorHandler("User already exist", 400);
+            }
+            const userDTO = new user_1.UserDTO();
+            Object.assign(userDTO, { name, email, password, phone, role });
+            // const isValiddata = userDTO.();
+            const errors = yield (0, class_validator_1.validate)(userDTO);
+            // console.log(errors);
+            if (errors.length > 0) {
+                const errorMessages = errors.map((err) => Object.values(err.constraints || {}).join(", ")).join("; ");
+                throw new globalErrorHandler_1.GlobalErrorHandler(errorMessages, 400);
             }
             const hashpassowrd = yield bcryptjs_1.default.hash(password, 10);
             let opt = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false, digits: true });
             const user = userRepository.create({ name, email, password: hashpassowrd, phone, role, isVerified: false, otp: opt });
             yield (0, mailerSender_1.mailerSender)({ email: email, title: "verfication", body: (0, authTemplate_1.otpTemplate)(opt) });
             user.accounts = [];
+            // console.log(user);
             yield userRepository.save(user);
             return { msg: true };
         });
@@ -60,10 +73,16 @@ class UserDAL {
                 throw new Error("User not found");
             }
             if (user) {
-                if (otp == user.otp) {
-                    user.isVerified = true;
-                    yield userRepository.save(user);
-                    return { msg: "User verified successfully", status: 200 };
+                const time = Date.now() - user.createdAt.getTime();
+                if (time / 1000 < 180) {
+                    if (otp == user.otp) {
+                        user.isVerified = true;
+                        yield userRepository.save(user);
+                        return { msg: "User verified successfully", status: 200 };
+                    }
+                    else {
+                        throw new globalErrorHandler_1.GlobalErrorHandler("Invalid OTP", 401);
+                    }
                 }
                 throw new globalErrorHandler_1.GlobalErrorHandler("Invalid OTP", 401);
             }
@@ -112,17 +131,16 @@ class UserDAL {
             throw new Error("Invalid password");
         });
     }
-    static sendforgetPasswordOtpDAL(email) {
+    static sendforgetPasswordOtpDAL(email, otp) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { email: email } });
             if (!user) {
                 throw new Error("User not found");
             }
-            let opt = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false, digits: true });
-            yield (0, mailerSender_1.mailerSender)({ email: email, title: "Forget Password", body: (0, authTemplate_1.otpTemplate)(opt) });
-            user.otp = opt;
-            yield userRepository.save(user);
-            return { msg: "OTP sent successfully", status: 200 };
+            if (user.otp == otp) {
+                yield userRepository.save(user);
+                return { msg: "OTP verfied successfully", status: 200 };
+            }
         });
     }
     static verifyForgetPasswordOtpDAL(email, otp, password) {
@@ -138,6 +156,25 @@ class UserDAL {
             user.password = hashpassowrd;
             yield userRepository.save(user);
             return { msg: "Password updated successfully", status: 200 };
+        });
+    }
+    static generateOtpDAL(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let opt = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false, digits: true });
+                const user = yield userRepository.findOne({ where: { email: email } });
+                if (!user) {
+                    throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
+                }
+                user.otp = opt;
+                yield userRepository.save(user);
+                yield (0, mailerSender_1.mailerSender)({ email: email, title: "Verification", body: (0, authTemplate_1.otpTemplate)(opt) });
+                return { msg: "OTP sent successfully", status: 200 };
+                // return opt;
+            }
+            catch (error) {
+                throw new globalErrorHandler_1.GlobalErrorHandler("Error generating OTP", 404);
+            }
         });
     }
 }

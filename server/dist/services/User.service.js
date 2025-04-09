@@ -34,7 +34,7 @@ class UserService {
             }
             const isValiddata = user_schema_1.userSchema.safeParse(data);
             if (!isValiddata.success) {
-                return { msg: isValiddata.error.issues[0].message, status: 400 };
+                throw new globalErrorHandler_1.GlobalErrorHandler(isValiddata.error.issues[0].message, 400);
             }
             const dalResult = yield user_dal_1.default.createUserDAl({ name, email, password, phone, role: role || "user" });
             if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg) == false) {
@@ -72,7 +72,7 @@ class UserService {
                 }
             }
             catch (error) {
-                throw new Error(error.message);
+                throw new globalErrorHandler_1.GlobalErrorHandler(error.message, 404);
             }
         });
     }
@@ -97,7 +97,7 @@ class UserService {
             try {
                 const { email, otp } = data;
                 if (!email || !otp) {
-                    return { msg: "Please provide all the fields", status: 400 };
+                    throw new globalErrorHandler_1.GlobalErrorHandler("Please provide all the fields", 400);
                 }
                 const dalResult = yield user_dal_1.default.verifyOtpDAL({ email, otp });
                 if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
@@ -106,10 +106,10 @@ class UserService {
                 else if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
                     return { msg: dalResult.msg, status: 404 };
                 }
-                return { msg: dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg, status: 404 };
+                return { msg: dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg, status: 200 };
             }
             catch (error) {
-                return { msg: "Internal server error", status: 500 };
+                throw new globalErrorHandler_1.GlobalErrorHandler(error, 400);
             }
         });
     }
@@ -122,8 +122,11 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const dalResult = yield user_dal_1.default.getUsersDAL(id);
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
+                if (typeof dalResult === 'object' && (dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
                     return { msg: dalResult.msg, status: 404 };
+                }
+                if (typeof dalResult === 'string') {
+                    return { msg: dalResult, status: 200 };
                 }
                 return { msg: dalResult.msg, status: 200 };
             }
@@ -192,10 +195,10 @@ class UserService {
             }
         });
     }
-    static sendforgetPasswordOtp(email) {
+    static sendforgetPasswordOtp(email, otp) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const dalResult = yield user_dal_1.default.sendforgetPasswordOtpDAL(email);
+                const dalResult = yield user_dal_1.default.sendforgetPasswordOtpDAL(email, otp);
                 if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
                     return { msg: dalResult.msg, status: 404 };
                 }
@@ -218,6 +221,18 @@ class UserService {
             }
             catch (error) {
                 throw new Error(error.message);
+            }
+        });
+    }
+    static resendOtp(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const dalResult = yield user_dal_1.default.generateOtpDAL(email);
+                return { msg: dalResult.msg, status: 200 };
+            }
+            catch (error) {
+                // console.log(error);
+                throw new globalErrorHandler_1.GlobalErrorHandler(error, 404);
             }
         });
     }

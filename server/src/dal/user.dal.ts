@@ -8,6 +8,8 @@ import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { UserType } from "../types/interfaces/userType";
 import { GlobalErrorHandler } from "../types/globalErrorHandler";
+import { UserDTO } from "../dto/user";
+import { validate } from "class-validator";
 
 
 
@@ -17,12 +19,29 @@ class UserDAL {
 
     static async createUserDAl({name, email, password, phone, role}:{name:string, email:string, password:string, phone:string, role:string}) {
 
+        // console.log("create user dal",name, email, password, phone, role);
+        
         
         const userexist = await userRepository.find({ where: { email: email } });
 
             if (userexist.length > 0) {
                 throw new GlobalErrorHandler("User already exist",400);
             }
+
+            const userDTO = new UserDTO();
+            Object.assign(userDTO,{name,email,password,phone,role});
+
+            // const isValiddata = userDTO.();
+            const errors = await validate(userDTO);
+
+            // console.log(errors);
+            
+
+            if(errors.length>0){
+                const errorMessages = errors.map((err) => Object.values(err.constraints || {}).join(", ")).join("; ");
+                throw new GlobalErrorHandler(errorMessages ,400);
+            }
+
 
             const hashpassowrd = await bcryptjs.hash(password, 10);
 
@@ -33,6 +52,9 @@ class UserDAL {
             await mailerSender({ email: email, title: "verfication", body: otpTemplate(opt) });
 
             user.accounts = [];
+
+            // console.log(user);
+            
 
             await userRepository.save(user);
 
@@ -66,12 +88,14 @@ class UserDAL {
 
         const user = await userRepository.findOne({ where: { email: email } });
 
+
         if (!user) {
 
            throw new Error("User not found")
         }
         if (user) {
-
+            const time = Date.now()-user.createdAt.getTime();
+           if(time/1000 < 180){
             if (otp == user.otp) {
 
                 user.isVerified = true;
@@ -81,6 +105,10 @@ class UserDAL {
                 return { msg: "User verified successfully", status: 200 };
 
             }
+            else{
+                throw new GlobalErrorHandler("Invalid OTP",401);
+            }
+           }
 
             throw new GlobalErrorHandler("Invalid OTP",401);
         }
@@ -150,7 +178,7 @@ class UserDAL {
         throw new Error("Invalid password");
     }
 
-    static async sendforgetPasswordOtpDAL(email:string){
+    static async sendforgetPasswordOtpDAL(email:string,otp:string){
         const user = await userRepository.findOne({ where: { email: email } });
 
             if (!user) {
@@ -159,14 +187,12 @@ class UserDAL {
 
             }
 
-            let opt =  otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false, digits: true });
+         if(user.otp ==  otp){
+             await userRepository.save(user);
 
-            await mailerSender({ email: email, title: "Forget Password", body: otpTemplate(opt) });
+             return { msg: "OTP verfied successfully", status: 200 };
+         }
 
-            user.otp = opt;
-
-            await userRepository.save(user);
-            return { msg: "OTP sent successfully", status: 200 };
 
     }
 
@@ -192,6 +218,27 @@ class UserDAL {
             await userRepository.save(user);
 
             return  { msg: "Password updated successfully", status: 200 };
+    }
+
+    static async generateOtpDAL(email:string){
+        try {
+            let opt = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false, digits: true });
+            const user = await userRepository.findOne({ where: { email: email } });
+
+            if (!user) {
+                throw new GlobalErrorHandler("User not found",404)
+            }
+
+            user.otp = opt
+
+            await userRepository.save(user);
+
+            await mailerSender({ email: email, title: "Verification", body: otpTemplate(opt) });
+            return { msg: "OTP sent successfully", status: 200 };
+        // return opt;
+        } catch (error) {
+            throw new GlobalErrorHandler("Error generating OTP",404)
+        }
     }
 
 

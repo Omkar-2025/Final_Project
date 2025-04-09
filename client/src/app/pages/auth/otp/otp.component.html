@@ -2,6 +2,8 @@
 <div class="card flex justify-center">
     <p-inputotp [length]="6" [(ngModel)]="value" [mask]="false"></p-inputotp>    
     <p-button severity="success" (click)="validateOtp()" label="Otp" ></p-button>
+    <p>{{otpTime}}s </p>
+    <p-button severity="success" (click)="resendOtp()" label="Resend Otp" ></p-button>
 </div>
 
 <router-outlet></router-outlet>

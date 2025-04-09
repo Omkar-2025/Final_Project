@@ -22,11 +22,6 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
-                // const isvalidUser = userSchema.safeParse(data);
-                // if(!isvalidUser.success){
-                //    res.status(400).json({msg:"please enter valid data"});
-                //    return;
-                // }
                 const result = yield user_service_1.UserService.createUserBLL(data);
                 if (result.status == 400) {
                     res.status(400).json({ msg: result.msg });
@@ -85,7 +80,7 @@ class UserController {
      * @param res
      * @returns message and status
      */
-    verifyUser(req, res) {
+    verifyUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
@@ -93,7 +88,7 @@ class UserController {
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -180,7 +175,8 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body.email;
-                const result = yield user_service_1.UserService.sendforgetPasswordOtp(data);
+                const otp = req.body.otp;
+                const result = yield user_service_1.UserService.sendforgetPasswordOtp(data, otp);
                 if (result.status == 404) {
                     res.status(404).json({ msg: result.msg });
                 }
@@ -204,6 +200,21 @@ class UserController {
                 return;
             }
             catch (error) {
+            }
+        });
+    }
+    generateOtp(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // console.log("hii");
+            try {
+                const email = req.body.email;
+                // console.log(req.body);
+                const result = yield user_service_1.UserService.resendOtp(email);
+                res.status(result.status).json({ msg: result.msg });
+            }
+            catch (error) {
+                // console.log(error);
+                next(error);
             }
         });
     }

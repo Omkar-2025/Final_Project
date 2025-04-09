@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +16,7 @@ import { SupportModule } from './pages/support/support.module';
 import { AdminModule } from './pages/admin/admin.module';
 import { SharedModule } from './shared/shared.module';
 import { ProfileModule } from './pages/profile/profile.module';
+import { globalErrorHandler } from './Services/globalErrorHandler';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,6 +42,10 @@ import { ProfileModule } from './pages/profile/profile.module';
         } 
     }
     }),
+    {
+      provide:ErrorHandler,
+      useClass:globalErrorHandler
+    },
     MessageService,
     ConfirmationService
   ],

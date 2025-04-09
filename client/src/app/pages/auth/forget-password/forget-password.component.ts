@@ -50,7 +50,7 @@ showEmailInput: boolean = true;
 btnName:string = 'forgetPassword';
 
 sendOtp(){
-    this.authService.forgetOtp(this.email).subscribe((res:any)=>{
+    this.authService.resendOtp(this.email).subscribe((res:any)=>{
       this.messageService.add({severity:'success',summary:'Success',detail:res.msg});
       this.showOtpDialog = true;
       this.showEmailInput = false;
@@ -61,13 +61,18 @@ sendOtp(){
 }
 
 verifyOtp() {
-  if (!this.otpValue || this.otpValue.length !== 6) {
-    this.otpError = 'Please enter a valid 6-digit OTP.';
-    return;
-  }
 
+  this.authService.forgetOtp(this.email,this.otpValue).subscribe((res:any) => {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: "Otp verified Sucessfully" });
+    this.showOtpDialog = false;
+    this.showForgetPasswordDialog = true;
+    this.showEmailInput = false;
+  },
+  (error:any)=>{
+    this.messageService.add({severity:'error',summary:'Error',detail:error.error.msg});
+  })
+  
   this.showForgetPasswordDialog=true;
-
 
 }
 

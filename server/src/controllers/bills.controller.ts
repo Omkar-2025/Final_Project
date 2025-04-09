@@ -3,10 +3,10 @@ import { BillsService } from "../services/bills.service";
 import { Request, Response } from "express";
 
 
-cron.schedule("0 * * * *", async () => {
-    console.log("Processing recurring bills...");
-    await BillsService.processRecurringBills();
-});
+// cron.schedule("0 * * * * *", async () => {
+//     console.log("Processing recurring bills ");
+//     await BillsService.processRecurringBills();
+// });
 
 class billsController{
 

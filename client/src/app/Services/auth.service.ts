@@ -58,8 +58,8 @@ export class AuthService {
     return this.http.post(`${this.loginEndPoint}/updatePassword`, { oldPassword, newPassword }, { withCredentials: true });
   }
 
-  forgetOtp(email:string){
-    return this.http.post(`${this.loginEndPoint}/forgetOtp`, { email }, { withCredentials: true });
+  forgetOtp(email:string,otp:string){
+    return this.http.post(`${this.loginEndPoint}/forgetOtp`, { email,otp }, { withCredentials: true });
   }
 
   forgetPassword(data: any) {
@@ -71,7 +71,11 @@ export class AuthService {
     return this.http.get(`${this.loginEndPoint}/logout`, { withCredentials: true });
   }
 
-
+  resendOtp(data:any){
+    // console.log(data);
+    
+    return this.http.post(`${this.loginEndPoint}/generateOtp`, data, { withCredentials: true });  
+  }
 
 
 }

@@ -69,5 +69,11 @@ router.route('/forgetOtp').post(userController.sendForgetPasswordOtp);
  */
 router.route('/verifyForgetOtp').post(userController.verifyForgetPasswordOtp);
 
+/**
+ * 
+ */
+
+router.route('/generateOtp').post(userController.generateOtp);
+
 
 export default router;

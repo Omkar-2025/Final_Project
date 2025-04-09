@@ -63,7 +63,7 @@ export class SignupComponent {
     },(error)=>{
       console.log(error);
 
-      this.messageService.add({severity:'success',summary:'Success',detail:error});
+      this.messageService.add({severity:'success',summary:'Success',detail:error.message});
 
     })
     
