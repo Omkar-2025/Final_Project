@@ -1,8 +1,6 @@
 import { rateLimit  } from 'express-rate-limit'; 
 
-/**
- * This middleware is used to limit the number of requests from a single IP address
- */
+
 
 
 const rateLimiter = rateLimit({

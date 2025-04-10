@@ -85,6 +85,7 @@ export class BillsDAL {
                 bill.nextPaymentDate = this.calculateNextPaymentDate(bill.nextPaymentDate!, bill.frequency!);
 
                 await accountRepository.save(account);
+                
                 await billsRepository.save(bill);
             } else {
                 console.log(`Insufficient balance for bill ID ${bill.id}`);
@@ -205,13 +206,14 @@ export class BillsDAL {
            throw new Error("Account not found")
         }
 
-        const transactions = await transactionRepository.find({ where: { toAccount: account, transactionType: Like("%Bill Payment%") }, 
+        const transactions = await 
+        transactionRepository.find({ where: { toAccount: account, transactionType: Like("% Bill %") }, 
         order: { createdAt: "DESC" } ,
         skip:skip,
         take:limit
-        
     });
   
+    
     //  console.log(transactions)
 
         if (transactions) {

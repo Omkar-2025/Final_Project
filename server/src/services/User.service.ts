@@ -27,7 +27,7 @@ export class UserService {
             const { name, email, password, phone, role } = data;
 
             if(!name || !email || !password || !phone) {
-               throw new Error("Please provide all the fields");
+               throw  new GlobalErrorHandler("Please provide all the fields",401);
             }
 
             const isValiddata = userSchema.safeParse(data);
@@ -39,7 +39,7 @@ export class UserService {
 
             const dalResult = await UserDAL.createUserDAl({ name, email, password, phone, role: role || "user" });
             if(dalResult?.msg == false) {
-                throw new Error("Error while Creating the Account")
+                throw new GlobalErrorHandler("Error while Creating the Account",400)
             }
             return { msg: "User created successfully", status: 201 };
 

@@ -164,7 +164,7 @@ class BillsDAL {
             if (!account) {
                 throw new Error("Account not found");
             }
-            const transactions = yield transactionRepository.find({ where: { toAccount: account, transactionType: (0, typeorm_1.Like)("%Bill Payment%") },
+            const transactions = yield transactionRepository.find({ where: { toAccount: account, transactionType: (0, typeorm_1.Like)("% Bill %") },
                 order: { createdAt: "DESC" },
                 skip: skip,
                 take: limit

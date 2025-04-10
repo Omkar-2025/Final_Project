@@ -23,10 +23,6 @@ class UserController {
             try {
                 const data = req.body;
                 const result = yield user_service_1.UserService.createUserBLL(data);
-                if (result.status == 400) {
-                    res.status(400).json({ msg: result.msg });
-                    return;
-                }
                 res.status(201).json({ msg: result.msg });
             }
             catch (error) {

@@ -10,13 +10,13 @@ const router = express.Router();
  * This route is used to create a new user
  */
 
-router.route('/createuser').post(userController.createUser);
+router.route('/createuser').post(rateLimiter,userController.createUser);
 
 /**
  * This route is used to login a user
  */
 
-router.route('/login').post(userController.Login);
+router.route('/login').post(rateLimiter,userController.Login);
 
 /**
  * This route is used to get all accounts of a user

@@ -30,7 +30,7 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             const { name, email, password, phone, role } = data;
             if (!name || !email || !password || !phone) {
-                throw new Error("Please provide all the fields");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Please provide all the fields", 401);
             }
             const isValiddata = user_schema_1.userSchema.safeParse(data);
             if (!isValiddata.success) {
@@ -38,7 +38,7 @@ class UserService {
             }
             const dalResult = yield user_dal_1.default.createUserDAl({ name, email, password, phone, role: role || "user" });
             if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg) == false) {
-                throw new Error("Error while Creating the Account");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Error while Creating the Account", 400);
             }
             return { msg: "User created successfully", status: 201 };
         });

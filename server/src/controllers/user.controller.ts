@@ -19,15 +19,9 @@ class UserController{
             const data = req.body;
           
             const result:UserResponseType = await UserService.createUserBLL(data);
-
-            if(result.status==400){
-                res.status(400).json({msg:result.msg});
-                return
-            }
             res.status(201).json({msg:result.msg});
         } catch (error) {  
             next(error)
-           
         }
     }
 
