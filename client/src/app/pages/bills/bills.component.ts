@@ -126,7 +126,7 @@ export class BillsComponent {
       this.ngOnInit();
     }, (error) => {
       console.log(error);
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error creating bill' });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg });
       return;
     })
   }

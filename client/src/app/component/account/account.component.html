@@ -3,6 +3,9 @@
     <p-progress-spinner ariaLabel="loading"></p-progress-spinner>
 </ng-container>
 
+<p-progress-spinner *ngIf="isLoading" ariaLabel="loading" class="full-page-spinner" ></p-progress-spinner>
+
+
 <ng-container *ngIf="account">
     <div class="account-detail">
         <h2>Account Details</h2>
@@ -25,8 +28,9 @@
 </ng-container>
 
 
-<input pInputText id="username" [(ngModel)]="search" [formControl]="searchText" autocomplete="off"   />
-<label for="username">Search Transactions</label>
+<!-- <input pInputText id="username" [(ngModel)]="search" [formControl]="searchText" autocomplete="off"   />
+<label for="username">Search Transactions</label> -->
+
 
 
 
@@ -66,32 +70,7 @@
    
          <p-dialog header="Transactions" [modal]="true" [(visible)]="visible" [style]="{ width: '100vw' , height:'100vh' }">
 
-        <!-- <ng-container *ngIf="type == 'transfer'">
-            <span class="p-text-secondary block mb-8">Account Number</span>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="username" class="font-semibold w-24">Account No</label>
-            <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="account_number" />
-        </div>
-        </ng-container>
-
-        <div class="flex items-center gap-4 mb-4">
-            <label for="username" class="font-semibold w-24">Amount</label>
-            <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="amount" />
-        </div>
-
-        <ng-container *ngIf="type == 'transfer'">
-        <div class="flex items-center gap-4 mb-4">
-            <label for="username" class="font-semibold w-24">Description</label>
-            <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="transactionType"  />
-        </div>
-        </ng-container>
-
-        <div class="flex justify-end gap-2">
-            <p-button label="Cancel" severity="secondary" (click)="visible = false" />
-            <p-button label="Deposit" (click)="DepositAmount()" *ngIf="type =='deposit'" />
-            <p-button label="withdraw" severity="warn" (click)="withdrawAmount()"  *ngIf="type == 'withdraw'"/>
-            <p-button label="Transfer" severity="help" (click)="transferAmount()"  *ngIf="type == 'transfer'"/>
-            <p-button label=" '' " ></p-button> -->
+        
 
       <ng-container *ngIf="type == 'deposit'">
         <app-digalog [formGroup]="depositFormGroup" (formSubmit)="DepositAmount($event)" [InputControls]="inputAmount" [btnlabel]="type"  ></app-digalog>    
@@ -106,6 +85,4 @@
       </ng-container>
       
 
-        <!-- </div> -->
-    <!-- </p-dialog> -->
-<!-- </div> -->
+       

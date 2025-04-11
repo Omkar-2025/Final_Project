@@ -21,19 +21,16 @@ class UserController {
      * @param res
      * @returns
      */
-    createBankAccount(req, res) {
+    createBankAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
                 data.id = req.body.user.id;
                 const result = yield account_service_1.AccountService.createAccount(data);
-                if (result.status == 404) {
-                    res.status(404).json({ msg: "User not found" });
-                }
                 res.status(201).json({ msg: result.msg });
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -43,15 +40,15 @@ class UserController {
      * @param res
      * @returns
      */
-    getAccount(req, res) {
+    getAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
                 const result = yield account_service_1.AccountService.getAccount(parseInt(id));
-                res.status(result.status).json(result.msg);
+                res.status(200).json(result.msg);
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -61,17 +58,16 @@ class UserController {
      * @param res
      * @returns
      */
-    createTransaction(req, res) {
+    createTransaction(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
                 //  data.fromAccount=req.body.user.id;
                 const result = yield account_service_1.AccountService.createTranscation(data);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -80,7 +76,7 @@ class UserController {
      * @param req
      * @param res
      */
-    getTransactions(req, res) {
+    getTransactions(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
@@ -89,10 +85,10 @@ class UserController {
                 // console.log(id,page,limit);
                 const result = yield account_service_1.AccountService.getTranscations(parseInt(id), page, limit);
                 // console.log(result);
-                res.status(result.status).json(result.msg);
+                res.status(200).json(result.msg);
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -101,16 +97,15 @@ class UserController {
      * @param req
      * @param res
      */
-    getTransactionsById(req, res) {
+    getTransactionsById(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
                 const result = yield account_service_1.AccountService.getTransactionsById(parseInt(id));
-                res.status(result.status).json(result.msg);
+                res.status(200).json(result.msg);
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -120,17 +115,18 @@ class UserController {
      * @param res
      * @returns
      */
-    withdraw(req, res) {
+    withdraw(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
                 data.amount = parseInt(data.amount);
                 data.fromAccount = parseInt(data.fromAccount);
                 const result = yield account_service_1.AccountService.Withdraw(data);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
+                console.log(error);
+                next(error);
             }
         });
     }
@@ -139,18 +135,18 @@ class UserController {
      * @param req
      * @param res
      */
-    deposit(req, res) {
+    deposit(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
                 data.amount = parseInt(data.amount);
                 data.toAccount = parseInt(data.toAccount);
                 const result = yield account_service_1.AccountService.Deposit(data);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -159,15 +155,15 @@ class UserController {
      * @param req
      * @param res
      */
-    getAllAccounts(req, res) {
+    getAllAccounts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // const id = req.body.user.id;
                 const result = yield account_service_1.AccountService.getAllAccounts();
-                res.status(result.status).json(result.msg);
+                res.status(200).json(result.msg);
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -176,37 +172,37 @@ class UserController {
      * @param req
      * @param res
      */
-    getMonthlyExpenses(req, res) {
+    getMonthlyExpenses(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
                 const currentYear = new Date().getFullYear();
                 const id = parseInt(req.params.id);
                 const result = yield account_service_1.AccountService.getMonthlyTransactionsBLL({ currentMonth, currentYear, id });
-                res.status(result.status).json(result.msg);
+                res.status(200).json(result.msg);
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
-    getMonthlyTranscations(req, res) {
+    getMonthlyTranscations(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = parseInt(req.params.id);
                 const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
                 const currentYear = new Date().getFullYear();
                 const result = yield account_service_1.AccountService.getMonthlyTransactionsBLL({ currentMonth, currentYear, id });
-                res.status(result.status).json(result.msg);
+                res.status(200).json(result.msg);
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                //  res.status(500).json({msg:"Internal server error"});
+                next(error);
             }
         });
     }
-    getMonthlyAllExpenses(req, res) {
+    getMonthlyAllExpenses(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // const id = parseInt(req.params.id);
@@ -215,15 +211,16 @@ class UserController {
                 const currentYear = new Date().getFullYear();
                 const currentDate = new Date().getDate(); // Assuming currentDate refers to the day of the month
                 const result = yield account_service_1.AccountService.getAllMonthlyExpenses({ currentDate, currentYear, id });
-                res.status(result.status).json(result.msg);
+                res.status(200).json(result.msg);
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                // res.status(500).json({msg:"Internal server error"});
+                next(error);
             }
         });
     }
-    getExpensePdf(req, res) {
+    getExpensePdf(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const pdf = fs_1.default.readFileSync('output.pdf');
@@ -238,48 +235,45 @@ class UserController {
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
-    deactiveAccount(req, res) {
+    deactiveAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.id;
                 const result = yield account_service_1.AccountService.deactiveAccountBLL(parseInt(id));
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
-    activateAccount(req, res) {
+    activateAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.id;
                 const result = yield account_service_1.AccountService.activateAccountBLL(parseInt(id));
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
-    searchTransaction(req, res) {
+    searchTransaction(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.id;
                 const search = req.body.search;
                 // console.log(id,search);
                 const result = yield account_service_1.AccountService.searchTranscationBLL(parseInt(id), search);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }

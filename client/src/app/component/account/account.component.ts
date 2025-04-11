@@ -26,6 +26,8 @@ export class AccountComponent {
   isSelectAccount: any = false;
   selectedAccounts:any=''
 
+  isLoading:boolean = false;
+
 
   depositFormGroup = new FormGroup({
     amount:new FormControl(0,[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/),Validators.min(100),Validators.max(10000)]),
@@ -60,13 +62,17 @@ export class AccountComponent {
 
   fetchTranscations(id:number,pageNumber:number=1)
   {
+    
     this.accountService.getaccountById(this.id).subscribe((result:any)=>{
       this.account=result[0];
+    },(error)=>{
+      this.messageService.add({severity:'error', summary:'Error', detail:error.error.msg});
     })
+
     this.accountService.getTransactionsByAccount(this.id,pageNumber).subscribe((result:any)=>{
-      // console.log(result);
-      // console.log(this.id);
       this.transcations=result;
+    },(error)=>{
+      this.messageService.add({severity:'error', summary:'Error', detail:error.error.msg});
     })
   }
 
@@ -76,8 +82,6 @@ export class AccountComponent {
     })
 
     this.fetchTranscations(this.id);
-
-    
   }
 
   // searchValueChanges(val:any){
@@ -102,7 +106,6 @@ export class AccountComponent {
   //       this.messageService.add({severity:'error', summary:'Error', detail:'Error fetching transactions'}); 
   //     }
   //   })
-
   // }
 
 
@@ -123,19 +126,28 @@ export class AccountComponent {
 
   DepositAmount(val:any){
     // console.log(val);
-    this.ngOnInit();
     this.isTranscationCompleted = true;
-
+    this.isLoading=true;
+    this.visible= false;
     this.amount = val.amount;
     if(this.amount <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Please enter a valid amount'});
       this.isTranscationCompleted=false;
+      this.visible = false;
+      this.ngOnInit();
       return;
     }
     this.accountService.depositAmount(this.id,this.amount).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Amount Deposited Successfully'});
       this.visible = false;
-      // this.ngOnInit();
+      this.isTranscationCompleted=false;
+      this.isLoading=false;
+      this.ngOnInit();
+    },(error)=>{
+      this.messageService.add({severity:'error', summary:'Error', detail:error.error.msg});
+      this.isLoading=false;
+      this.visible=false;
+      this.ngOnInit();
     })
   }
 
@@ -144,6 +156,7 @@ export class AccountComponent {
     // this.ngOnInit();
     this.isTranscationCompleted = true;
     this.amount =val.amount
+    this.isLoading=true;
     if(this.amount <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Please enter a valid amount'});
       return;
@@ -155,7 +168,13 @@ export class AccountComponent {
     this.accountService.withdrawAmount(this.id,this.amount).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Amount Withdrawn Successfully'});
       this.visible = false;
-      // this.ngOnInit();
+      this.isLoading=false;
+      this.ngOnInit();
+    },(error)=>{
+      this.messageService.add({severity:'error',summary:'Error',detail:error.error.message})
+      this.isLoading=false;
+      this.visible=false;
+      this.ngOnInit()
     })
     this.visible = false;
   }
@@ -170,7 +189,7 @@ export class AccountComponent {
     this.account_number = val.Account_Number;
     this.transactionType = val.Description;
     this.amount  = val.Amount;
-    
+    this.isLoading=true;
 
     if(this.account_number == this.account.account_number){
       this.messageService.add({severity:'error', summary:'Error', detail:'Cannot transfer to same account'});
@@ -197,26 +216,33 @@ export class AccountComponent {
     this.accountService.transferAmount(this.id,this.account_number,this.amount, this.transactionType).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Amount Transferred Successfully'});
       this.visible = false;
-      // this.ngOnInit();
+      this.isLoading=false;
+      this.ngOnInit();
     },(error)=>{
-      this.messageService.add({severity:'error', summary:'Error', detail:'Invalid Account Number'});
+      // console.log(error);
+      this.isLoading=false;
+      this.messageService.add({severity:'error', summary:'Error', detail:error.error.msg});
     })
     this.visible = false;
   }
 
   deactiveAccount(){
+    this.isLoading=true;
     this.accountService.deactivateAccount(this.id).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Account Deactivated Successfully'});
       this.ngOnInit();
+      this.isLoading=false;
     },(error)=>{
       this.messageService.add({severity:'error', summary:'Error', detail:'Error Deactivating Account'});
     })
   }
 
   activeAccount(){
+    this.isLoading=true;
       this.accountService.activateAccount(this.id).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Account Activated Successfully'});
       this.ngOnInit();
+      this.isLoading=false;
       },( error )=>{
         this.messageService.add({severity:'error', summary:'Error', detail:'Error Activating Account'});
       })
@@ -237,4 +263,7 @@ export class AccountComponent {
   }
 
 
+
+
+ 
   }

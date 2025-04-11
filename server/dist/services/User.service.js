@@ -50,41 +50,23 @@ class UserService {
      */
     static loginBLL(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { email, password } = data;
-                // console.log(email, password);
-                if (!email || !password) {
-                    throw new globalErrorHandler_1.GlobalErrorHandler("Please provide all the fields", 400);
-                }
-                const isvalidUser = user_schema_1.loginSchema.safeParse(data);
-                if (!isvalidUser.success) {
-                    throw new Error(isvalidUser.error.issues[0].message);
-                }
-                const dalResult = yield user_dal_1.default.loginDAL({ email, password });
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
-                    throw new Error(dalResult.msg);
-                }
-                else if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 200) {
-                    return { msg: "Login successfull", role: dalResult.role, token: dalResult.token, status: 200 };
-                }
-                else {
-                    throw new globalErrorHandler_1.GlobalErrorHandler("Invalid password", 404);
-                }
+            const { email, password } = data;
+            // console.log(email, password);
+            if (!email || !password) {
+                throw new globalErrorHandler_1.GlobalErrorHandler("Please provide all the fields", 400);
             }
-            catch (error) {
-                throw new globalErrorHandler_1.GlobalErrorHandler(error.message, 404);
+            const isvalidUser = user_schema_1.loginSchema.safeParse(data);
+            if (!isvalidUser.success) {
+                throw new Error(isvalidUser.error.issues[0].message);
             }
+            const dalResult = yield user_dal_1.default.loginDAL({ email, password });
+            return { msg: "Login successfull", role: dalResult.role, token: dalResult.token, status: 200 };
         });
     }
     static getAccountsBLL(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const users = yield userRepository.find({ where: { id: id }, relations: ['accounts'] });
-                return ({ msg: users, status: 200 });
-            }
-            catch (error) {
-                return { message: "Internal server error", status: 500 };
-            }
+            const users = yield userRepository.find({ where: { id: id }, relations: ['accounts'] });
+            return ({ msg: users, status: 200 });
         });
     }
     /**
@@ -94,23 +76,12 @@ class UserService {
      */
     static verifyUserBLL(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { email, otp } = data;
-                if (!email || !otp) {
-                    throw new globalErrorHandler_1.GlobalErrorHandler("Please provide all the fields", 400);
-                }
-                const dalResult = yield user_dal_1.default.verifyOtpDAL({ email, otp });
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
-                    return { msg: dalResult.msg, status: 400 };
-                }
-                else if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
-                    return { msg: dalResult.msg, status: 404 };
-                }
-                return { msg: dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg, status: 200 };
+            const { email, otp } = data;
+            if (!email || !otp) {
+                throw new globalErrorHandler_1.GlobalErrorHandler("Please provide all the fields", 400);
             }
-            catch (error) {
-                throw new globalErrorHandler_1.GlobalErrorHandler(error, 400);
-            }
+            const dalResult = yield user_dal_1.default.verifyOtpDAL({ email, otp });
+            return { msg: dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg, status: 200 };
         });
     }
     /**
@@ -120,19 +91,8 @@ class UserService {
      */
     static getUsers(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield user_dal_1.default.getUsersDAL(id);
-                if (typeof dalResult === 'object' && (dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
-                    return { msg: dalResult.msg, status: 404 };
-                }
-                if (typeof dalResult === 'string') {
-                    return { msg: dalResult, status: 200 };
-                }
-                return { msg: dalResult.msg, status: 200 };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield user_dal_1.default.getUsersDAL(id);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     /**
@@ -143,24 +103,16 @@ class UserService {
      */
     static updateUser(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { name, email, phone, address } = data;
-                if (!name || !email || !phone) {
-                    return { msg: "Please provide all the fields", status: 400 };
-                }
-                const isValiddata = user_schema_1.updateUserSchema.safeParse(data);
-                if (!isValiddata.success) {
-                    return { msg: isValiddata.error.issues[0].message, status: 400 };
-                }
-                const dalResult = yield user_dal_1.default.updateUserDAL(id, data);
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
-                    return { msg: dalResult.msg, status: 404 };
-                }
-                return { msg: dalResult.msg, status: 200 };
+            const { name, email, phone, address } = data;
+            if (!name || !email || !phone) {
+                throw new globalErrorHandler_1.GlobalErrorHandler("Please provide all the fields", 400);
             }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
+            const isValiddata = user_schema_1.updateUserSchema.safeParse(data);
+            if (!isValiddata.success) {
+                throw new globalErrorHandler_1.GlobalErrorHandler(isValiddata.error.issues[0].message, 400);
             }
+            const dalResult = yield user_dal_1.default.updateUserDAL(id, data);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     /**
@@ -171,69 +123,34 @@ class UserService {
      */
     static updatePassword(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { oldPassword, newPassword } = data;
-                if (!oldPassword || !newPassword) {
-                    return { msg: "Please provide all the fields", status: 400 };
-                }
-                const isValidPassword = user_schema_1.updateUserSchema.safeParse(data);
-                if (!isValidPassword.success) {
-                    return { msg: isValidPassword.error.issues[0].message, status: 400 };
-                }
-                const dalResult = yield user_dal_1.default.updatePasswordDAL(id, data);
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
-                    return { msg: dalResult.msg, status: 404 };
-                }
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 400) {
-                    return { msg: dalResult.msg, status: 400 };
-                }
-                return { msg: dalResult.msg, status: dalResult.status };
+            const { oldPassword, newPassword } = data;
+            if (!oldPassword || !newPassword) {
+                throw new globalErrorHandler_1.GlobalErrorHandler("All fields are required", 402);
             }
-            catch (error) {
-                console.log(error);
-                return { msg: "Internal server error", status: 500 };
+            const isValidPassword = user_schema_1.updateUserSchema.safeParse(data);
+            if (!isValidPassword.success) {
+                throw new globalErrorHandler_1.GlobalErrorHandler(isValidPassword.error.issues[0].message, 400);
             }
+            const dalResult = yield user_dal_1.default.updatePasswordDAL(id, data);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static sendforgetPasswordOtp(email, otp) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield user_dal_1.default.sendforgetPasswordOtpDAL(email, otp);
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
-                    return { msg: dalResult.msg, status: 404 };
-                }
-                return { msg: dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg, status: 200 };
-            }
-            catch (error) {
-                console.log(error);
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield user_dal_1.default.sendforgetPasswordOtpDAL(email, otp);
+            return { msg: dalResult === null || dalResult === void 0 ? void 0 : dalResult.msg, status: dalResult === null || dalResult === void 0 ? void 0 : dalResult.status };
         });
     }
     static verifyForgetPasswordOtp(email, otp, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield user_dal_1.default.verifyForgetPasswordOtpDAL(email, otp, password);
-                if ((dalResult === null || dalResult === void 0 ? void 0 : dalResult.status) == 404) {
-                    return { msg: dalResult.msg, status: 404 };
-                }
-                return { msg: dalResult.msg, status: 200 };
-            }
-            catch (error) {
-                throw new Error(error.message);
-            }
+            const dalResult = yield user_dal_1.default.verifyForgetPasswordOtpDAL(email, otp, password);
+            return { message: dalResult.msg, status: dalResult.status };
         });
     }
     static resendOtp(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield user_dal_1.default.generateOtpDAL(email);
-                return { msg: dalResult.msg, status: 200 };
-            }
-            catch (error) {
-                // console.log(error);
-                throw new globalErrorHandler_1.GlobalErrorHandler(error, 404);
-            }
+            const dalResult = yield user_dal_1.default.generateOtpDAL(email);
+            return { msg: dalResult.msg, status: 200 };
         });
     }
 }

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AccountService } from '../services/account.service';
 import fs from 'fs';
 import { UserResponseType } from '../types/interfaces/userType';
@@ -14,17 +14,14 @@ class UserController{
      * @returns 
      */
 
-    async createBankAccount(req:Request,res:Response){
+    async createBankAccount(req:Request,res:Response,next:NextFunction){
         try {
             const data = req.body;
             data.id = req.body.user.id;
             const result = await AccountService.createAccount(data);
-            if(result.status==404){
-                res.status(404).json({msg:"User not found"});
-            }
             res.status(201).json({msg:result.msg});
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 
@@ -36,13 +33,13 @@ class UserController{
      */
 
 
-    async getAccount(req:Request,res:Response){
+    async getAccount(req:Request,res:Response,next:NextFunction){
         try {
             const id = req.params.id;
             const result = await AccountService.getAccount(parseInt(id));
-            res.status(result.status).json(result.msg);
+            res.status(200).json(result.msg);
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 
@@ -53,15 +50,14 @@ class UserController{
      * @returns 
      */
 
-    async createTransaction(req:Request,res:Response){
+    async createTransaction(req:Request,res:Response,next:NextFunction){
         try {
             const data = req.body;     
           //  data.fromAccount=req.body.user.id;
             const result = await AccountService.createTranscation(data);
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -71,7 +67,7 @@ class UserController{
      * @param res 
      */
 
-    async getTransactions(req:Request,res:Response){
+    async getTransactions(req:Request,res:Response,next:NextFunction){
         try {
             const id = req.params.id;
             const page = req.body.page || 1;
@@ -80,9 +76,9 @@ class UserController{
             
             const result = await AccountService.getTranscations(parseInt(id),page,limit);
             // console.log(result);
-            res.status(result.status).json(result.msg);
+            res.status(200).json(result.msg);
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -93,14 +89,13 @@ class UserController{
      */
 
 
-    async getTransactionsById(req:Request,res:Response){
+    async getTransactionsById(req:Request,res:Response,next:NextFunction){
         try {
             const id = req.params.id;
             const result = await AccountService.getTransactionsById(parseInt(id));
-            res.status(result.status).json(result.msg);
+            res.status(200).json(result.msg);
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -114,15 +109,16 @@ class UserController{
      */
 
 
-    async withdraw(req:Request,res:Response){
+    async withdraw(req:Request,res:Response,next:NextFunction){
         try {
             const data = req.body;
             data.amount = parseInt(data.amount);
             data.fromAccount = parseInt(data.fromAccount);
             const result = await AccountService.Withdraw(data);
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+            console.log(error);
+            next(error)
         }
     }
 
@@ -134,16 +130,17 @@ class UserController{
      */
 
 
-    async deposit(req:Request,res:Response){
+    async deposit(req:Request,res:Response,next:NextFunction){
         try {  
             const data = req.body;
             data.amount = parseInt(data.amount);
             data.toAccount = parseInt(data.toAccount);
             const result = await AccountService.Deposit(data);
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            
+           next(error)
         }
     }
 
@@ -153,13 +150,13 @@ class UserController{
      * @param res 
      */
 
-    async getAllAccounts(req:Request,res:Response){
+    async getAllAccounts(req:Request,res:Response,next:NextFunction){
         try {
             // const id = req.body.user.id;
             const result:UserResponseType = await AccountService.getAllAccounts();
-            res.status(result.status).json(result.msg);
+            res.status(200).json(result.msg);
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }    
 
@@ -171,37 +168,37 @@ class UserController{
      */
 
 
-    async getMonthlyExpenses(req:Request,res:Response){
+    async getMonthlyExpenses(req:Request,res:Response,next:NextFunction){
         try {
             const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
             const currentYear = new Date().getFullYear();
             const id = parseInt(req.params.id);
             const result = await AccountService.getMonthlyTransactionsBLL({currentMonth,currentYear,id});
 
-            res.status(result.status).json(result.msg);
+            res.status(200).json(result.msg);
 
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});   
+           next(error)
         }
     }
 
-   async getMonthlyTranscations(req:Request,res:Response){
+   async getMonthlyTranscations(req:Request,res:Response,next:NextFunction){
     try {
         
         const id = parseInt(req.params.id);
         const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed
         const currentYear = new Date().getFullYear();
         const result = await AccountService.getMonthlyTransactionsBLL({currentMonth,currentYear,id});
-        res.status(result.status).json(result.msg);
+        res.status(200).json(result.msg);
 
     } catch (error) {
         console.log(error);
-         res.status(500).json({msg:"Internal server error"});
+        //  res.status(500).json({msg:"Internal server error"});
+        next(error)
     }
    } 
 
-   async getMonthlyAllExpenses(req:Request,res:Response){
+   async getMonthlyAllExpenses(req:Request,res:Response,next:NextFunction){
     try {
         // const id = parseInt(req.params.id);
         const id = parseInt(req.body.id);
@@ -209,16 +206,17 @@ class UserController{
         const currentYear = new Date().getFullYear();
         const currentDate = new Date().getDate(); // Assuming currentDate refers to the day of the month
         const result = await AccountService.getAllMonthlyExpenses({currentDate, currentYear, id});
-        res.status(result.status).json(result.msg);
+        res.status(200).json(result.msg);
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg:"Internal server error"});
+        // res.status(500).json({msg:"Internal server error"});
+        next(error)
     }
    }
 
 
 
-     async getExpensePdf(req:Request,res:Response){
+     async getExpensePdf(req:Request,res:Response,next:NextFunction){
     try {
     
         const pdf = fs.readFileSync('output.pdf');
@@ -233,45 +231,42 @@ class UserController{
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg:"Internal server error"});
+        next(error)
     }
    }
 
-   async deactiveAccount(req:Request,res:Response){
+   async deactiveAccount(req:Request,res:Response,next:NextFunction){
     try {
         const id = req.body.id;
         const result = await AccountService.deactiveAccountBLL(parseInt(id));
-        res.status(result.status).json({msg:result.msg});
+        res.status(200).json({msg:result.msg});
     } catch (error) {
-        console.log(error);
-        res.status(500).json({msg:"Internal server error"});
+       next(error)
     }
    }
 
-   async activateAccount(req:Request,res:Response){
+   async activateAccount(req:Request,res:Response,next:NextFunction){
     try {
         const id = req.body.id;
         const result = await AccountService.activateAccountBLL(parseInt(id));
-        res.status(result.status).json({msg:result.msg});
+        res.status(200).json({msg:result.msg});
     } catch (error) {
-        console.log(error);
-        res.status(500).json({msg:"Internal server error"});
+       next(error)
     }
    }
 
 
-   async searchTransaction(req:Request,res:Response){
+   async searchTransaction(req:Request,res:Response,next:NextFunction){
     try {
         
         const id= req.body.id;
         const search = req.body.search;
         // console.log(id,search);
         const result = await AccountService.searchTranscationBLL(parseInt(id),search);
-        res.status(result.status).json({msg:result.msg});
+        res.status(200).json({msg:result.msg});
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json({msg:"Internal server error"});
+       next(error)
     }
 
    }

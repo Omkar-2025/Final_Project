@@ -23,14 +23,8 @@ class supportService {
      */
     createSupport(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield support_dal_1.SupportDAL.crateSupportDAL(data);
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                console.log(error);
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield support_dal_1.SupportDAL.crateSupportDAL(data);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     /**
@@ -40,13 +34,8 @@ class supportService {
      */
     getAllSupport(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield support_dal_1.SupportDAL.getAllSupportDAL(id);
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield support_dal_1.SupportDAL.getAllSupportDAL(id);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     /**
@@ -56,13 +45,8 @@ class supportService {
      */
     getSupportById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield support_dal_1.SupportDAL.getSupportByIdDAL(id);
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield support_dal_1.SupportDAL.getSupportByIdDAL(id);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     /**
@@ -72,13 +56,8 @@ class supportService {
      */
     deleteSupport(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield support_dal_1.SupportDAL.deleteSupportByIdDAL(id);
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield support_dal_1.SupportDAL.deleteSupportByIdDAL(id);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
 }

@@ -1,5 +1,10 @@
 <app-navbar></app-navbar>
 <p-toast></p-toast>
+
+<div *ngIf="isloading" class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+
 <form [formGroup]="createAccountForm" (ngSubmit)="createAccount()">
     <div class="form-container">
         <div class="form-group">

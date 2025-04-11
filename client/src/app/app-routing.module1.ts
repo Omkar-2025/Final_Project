@@ -24,7 +24,7 @@ const routes: Routes = [
   {path:'createaccount',component:CreateAccountComponent,canActivate:[AuthguradService]},
   {path:'bills',component:BillsComponent,canActivate:[AuthguradService]},
   {path:'support',component:SupportComponent,canActivate:[AuthguradService]},
-  {path:'admin',component:DashboardComponent},
+  {path:'admin',component:DashboardComponent,canActivate:[AdminguradService]},
   {path:'profile',component:ProfileComponent,canActivate:[AuthguradService]},
   {path:'',redirectTo:'/home',pathMatch:'full'},
   {path:'forget',component:ForgetPasswordComponent}

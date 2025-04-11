@@ -2,6 +2,7 @@
 import { BillsDAL } from "../dal/bills.dal";
 import { billSchema } from "../types/schema/bill.schema";
 import { billPaymentSchema, BillsData, PayBillData } from "../types/interfaces/billsTypes";
+import { GlobalErrorHandler } from "../types/globalErrorHandler";
 
 
 
@@ -15,39 +16,33 @@ export class BillsService {
      * @returns 
      */
     static async createBill(data: BillsData) {
-        try {
+
 
             const { billName, amount, dueDate, accountId, frequency } = data;
 
             if (!billName || !amount || !accountId || !frequency) {
-                return { msg: "All fields are required", status: 400 };
+                throw new GlobalErrorHandler( "All fields are required",  400 );
             }
 
 
 
             if(!billSchema.safeParse(data)){
-                return { msg: "Invalid data", status: 400 };
+                throw new GlobalErrorHandler("Invalid data", 400 );
             }
 
             const dalResult = await BillsDAL.createBillDAL(data);
             
             return { msg: dalResult.msg, status: dalResult.status };
           
-        } catch (error) {
-            console.log(error);
-        }
+       
     }
 
     static async processRecurringBills() {
-        try {
+ 
 
             const dalResult = await BillsDAL.processBillDAL();
             return { msg: dalResult.msg, status: dalResult.status };            
-        } catch (error) {
-            console.log(error);
-            return { msg: "Internal server error", status: 500 };
-
-        }
+       
     }
 
     /**
@@ -65,15 +60,12 @@ export class BillsService {
      */
 
     static async getBill(id: number) {
-            try {
+
 
                 const dalResult = await BillsDAL.getBillByIdDAL(id);
 
                 return { msg: dalResult.msg, status: dalResult.status };
 
-            } catch (error) {
-                
-            }
     }
 
     
@@ -84,12 +76,10 @@ export class BillsService {
      */
 
     static async getBillById(id: number) {
-        try {
+  
             const dalResult  = await BillsDAL.getBillByIdDAL(id);
             return { msg: dalResult.msg, status: dalResult.status };
-        } catch (error) {
-            
-        }
+       
     }
 
     /**
@@ -99,18 +89,15 @@ export class BillsService {
      */
 
     static async payBills(data: PayBillData) {
-        try {
+
             let payBillData:PayBillData = data;
             const isValiddata = billPaymentSchema.safeParse(payBillData);
             if(!isValiddata.success){
-                return { msg: "Invalid data", status: 400 };
+                throw new GlobalErrorHandler("Data is not valid",403);
             }
             const dalResult = await BillsDAL.payBillDAL(data);
             return { msg: dalResult.msg, status: dalResult.status };
-        } catch (error) {
-            console.log(error);
-            return { msg: "Internal server error", status: 500 };
-        }
+        
     }
 
 
@@ -121,18 +108,16 @@ export class BillsService {
      */
 
     static async getBillshistoy(data:any,page:number) {
-        try {
+
 
             // console.log(data);
             let limit = 5;
             const id:number = data.user.id
             // const page = 
             const dalResult = await BillsDAL.getBillHistoryDAL(id,page,limit);
-            return { msg: dalResult.msg, status: dalResult.status };
+            return dalResult;
            
-        } catch (error) {
-
-        }
+       
     }
 
 
@@ -144,14 +129,11 @@ export class BillsService {
      */
 
     static async updateBillBLL(id: number, data: BillsData) {
-        try {
+     
             const dalResult = await BillsDAL.updateBillDAL(id, data);
             return { msg: dalResult.msg, status: dalResult.status };
            
-        } catch (error) {
-            console.log(error);
-            return { msg: "Internal server error", status: 500 };
-        }
+       
     }
 
 
@@ -162,13 +144,10 @@ export class BillsService {
      */
 
     static async deleteBillBLL(id: number) {
-        try {
+    
             const dalResult = await BillsDAL.deleteBillDAL(id);
             return { msg: dalResult.msg, status: dalResult.status };
-        } catch (error) {
-            console.log(error);
-            return { msg: "Internal server error", status: 500 };
-        }
+       
     }
 
 }

@@ -1,4 +1,7 @@
 <p-toast></p-toast>
+
+<p-progress-spinner *ngIf="isLoading" ariaLabel="loading" class="full-page-spinner" ></p-progress-spinner>
+
 <ng-container class="bill-template" *ngIf="bill">
     <div class="bill-card">
         <h3 class="bill-title">{{ bill.billName }}</h3>

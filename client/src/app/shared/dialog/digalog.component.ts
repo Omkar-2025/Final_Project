@@ -15,9 +15,10 @@ export class DigalogComponent {
   @Input() btnlabel!:string;
   @Input() frequency_arr:any=[];
   @Input() accounts:any[]=[];
-  
   @Input() type!:string;
   @Output() formSubmit = new EventEmitter<any>();
+
+  isbtnClicked:boolean = false;
 
 
   selectedAccounts: any = undefined;

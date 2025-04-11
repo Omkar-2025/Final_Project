@@ -46,7 +46,7 @@ export class SupportComponent {
     this.supportService.getSupportRequests().subscribe((result:any)=>{
       this.allSupportQuery=result.msg;
     },(err:any)=>{
-      this.messageService.add({severity:'error', summary:'Error', detail:'Failed to fetch support requests'});
+      this.messageService.add({severity:'error', summary:'Error', detail:err.error.msg});
     })
   }
 
@@ -65,7 +65,7 @@ export class SupportComponent {
         this.fetchingAllQuery()
       },(error:any)=>{
         console.log(error);
-        this.messageService.add({severity:'error', summary:'Error', detail:'Failed to send support request'});
+        this.messageService.add({severity:'error', summary:'Error', detail:error.error.msg});
       })
     } else {
       console.log('Form is invalid');

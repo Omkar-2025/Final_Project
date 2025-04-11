@@ -7,6 +7,7 @@ import { mailerSender } from "../utils/mailerSender";
 import billPaymentTemplate from "../utils/billPaymentTemplate";
 import { Transaction } from "../entitiy/transaction.entity";
 import { BillsData } from "../types/interfaces/billsTypes";
+import { GlobalErrorHandler } from "../types/globalErrorHandler";
 
 
 const billsRepository = AppDataSource.getRepository(Bills);
@@ -25,16 +26,18 @@ export class BillsDAL {
         const account = await accountRepository.findOne({ where: { id: accountId }, lock: { mode: 'dirty_read' } });
 
         if (!account) {
-           throw new Error("Account not found")
+           throw new GlobalErrorHandler("Account not found",404)
         }
 
         if (!data.user) {
-            throw new Error("User not found")
+           throw new GlobalErrorHandler("User not found",404)
+        
         }
+
         const user = await userRepository.findOne({ where: { id: data.user.id } });
 
         if (!user) {
-              throw new Error("User not found")
+             throw new GlobalErrorHandler("User not found",404)
         }
 
 
@@ -80,17 +83,23 @@ export class BillsDAL {
             if (account.balance >= bill.amount) {
                 account.balance -= bill.amount;
 
-                // Update bill status and next payment date
+              
                 bill.status = "Paid";
                 bill.nextPaymentDate = this.calculateNextPaymentDate(bill.nextPaymentDate!, bill.frequency!);
 
+                const transaction = new Transaction(bill.amount,`Bill Payment ${bill.billName}`,bill.account,bill.account)
+
                 await accountRepository.save(account);
                 
+                await transactionRepository.save(transaction);
                 await billsRepository.save(bill);
             } else {
-                console.log(`Insufficient balance for bill ID ${bill.id}`);
+                console.log(`Insufficient balance for bill ID ${bill.billName, bill.amount} ${bill.account.name,bill.account.user}`);
             }
         }
+
+        
+        console.log('Bill processed sucessfully');
 
         return { msg: "Bills processed successfully", status: 201 };
     }
@@ -121,7 +130,7 @@ export class BillsDAL {
         const user = await userRepository.findOne({ where: { id: id } });
 
         if (!user) {
-            throw new Error("User not found")
+           throw new GlobalErrorHandler("Account not found",404)
         }
 
         const bill = await billsRepository.find({ where: { user: user }, relations: ["account"] });
@@ -132,7 +141,7 @@ export class BillsDAL {
             return { msg: bill, status: 200 };
         }
 
-       throw new Error("Bill not found")
+        throw new GlobalErrorHandler("Bill not found",404)
     }
 
 
@@ -142,7 +151,7 @@ export class BillsDAL {
         const user = await userRepository.findOne({ where: { id: id } });
 
         if (!user) {
-           throw new Error("User not found")
+            throw new GlobalErrorHandler("User not found",404)
         }
 
         const bill = await billsRepository.find({ where: { user: user }, relations: ["account"] });
@@ -151,9 +160,8 @@ export class BillsDAL {
         if (bill) {
             return { msg: bill, status: 200 };
         }
-       throw new Error("Bill not found")
+        throw new GlobalErrorHandler("Bill not found",404)
     }
-
 
     static async payBillDAL(data: any) {
 
@@ -164,13 +172,13 @@ export class BillsDAL {
         const bill = await billsRepository.findOne({ where: { id: billId }, relations: ['account'] });
 
         if (!bill) {
-           throw new Error("Bill not found")
+            throw new GlobalErrorHandler("Bill not found",404)
         }
 
         const account = await accountRepository.findOne({ where: { id: accountId } });
 
         if (!account) {
-              throw new Error("Account not found")
+            throw new GlobalErrorHandler("Account not found",404)
         }
 
         if (account.balance >= bill.amount) {
@@ -185,7 +193,7 @@ export class BillsDAL {
             return { msg: "Bill paid successfully", status: 200 };
         }
 
-        return { msg: "Insufficient balance", status: 400 };
+         throw new GlobalErrorHandler("Insufficient balance",400) ;
     }
 
     static async getBillHistoryDAL(id: number,page:number,limit:number) {
@@ -199,28 +207,44 @@ export class BillsDAL {
 
 
         if (!user) {
-          throw new Error("User not found")
+            throw new GlobalErrorHandler("User not found",404)
         }
-        const account = await accountRepository.findOne({ where: { user: user[0] } });
+        const account = await accountRepository.find({ where: { user: user[0] } });
         if (!account) {
-           throw new Error("Account not found")
+            throw new GlobalErrorHandler("Account not found",404)
         }
 
-        const transactions = await 
-        transactionRepository.find({ where: { toAccount: account, transactionType: Like("% Bill %") }, 
-        order: { createdAt: "DESC" } ,
-        skip:skip,
-        take:limit
-    });
-  
+        // const transactions = await 
+        // transactionRepository.find({
+        //     where: [{ toAccount: account}, {fromAccount:account}], 
+        //     order: { createdAt: "DESC" } ,
+            // skip:skip,
+            // take:limit
+        // });
+
+        const billSearch = 'Bill'
+        const account_id = account[0].id
+
+        // console.log(account_id);
+        
+
+        const transaction1 = await transactionRepository.createQueryBuilder('transaction')
+        // .select('*')
+        // .leftJoinAndSelect('transaction.fromAccount', 'fromAccount')
+        .where('transaction.fromAccountId = :id',{id:account_id})
+        .andWhere("transaction.transactionType like '%Bill%'")
+        .orderBy('transaction.createdAt','DESC')
+        .skip(skip)
+        .limit(limit)
+        .getMany();
     
-    //  console.log(transactions)
+    //  console.log(transaction1)
 
-        if (transactions) {
+        if (transaction1) {
             // transactions.accountNumber = account.account_number;
-            return { msg: transactions, status: 200 };
+            return { msg: transaction1, status: 200 };
         }
-        throw new Error("Transaction not found")
+        throw new GlobalErrorHandler("Transcation not found",404)
     }
 
     static async updateBillDAL(id: number, data: any) {
@@ -234,7 +258,7 @@ export class BillsDAL {
         
 
         if (!bill) {
-           throw new Error("Bill not found")
+            throw new GlobalErrorHandler("Bill not found",404)
         }
 
         bill.account = data.accountId.id;
@@ -256,7 +280,7 @@ export class BillsDAL {
         const bill = await billsRepository.findOne({ where: { id: id } });
 
         if (!bill) {
-           throw new Error("Bill not found")
+            throw new GlobalErrorHandler("Bill not found",404)
         }
         await billsRepository.delete({ id: id });
 
@@ -266,4 +290,5 @@ export class BillsDAL {
     
 
 }
+
 

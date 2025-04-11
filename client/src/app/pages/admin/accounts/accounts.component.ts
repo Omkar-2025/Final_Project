@@ -45,9 +45,6 @@ export class AccountsComponent {
     },( err:any )=>{
       console.log(err.error.msg);
     })
-
-
-  
   }
 
 

@@ -54,16 +54,15 @@ export class SignupComponent {
 
     this.authService.signup(registerCredentials).subscribe((data:any)=>{
 
-      this.messageService.add({severity:'success',summary:'Success',detail:data.msg});
+      this.messageService.add({severity:'success',summary:'Success',detail:data.message});
 
       this.authService.userAuthSubject.next(this.registerForm.value.email);
 
       this.router.navigate(['/otp']);
 
     },(error)=>{
-      console.log(error);
 
-      this.messageService.add({severity:'success',summary:'Success',detail:error.message});
+      this.messageService.add({severity:'warn',summary:'Failure',detail:error.error.message});
 
     })
     

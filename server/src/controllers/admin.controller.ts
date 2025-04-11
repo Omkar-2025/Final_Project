@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { AdminService } from "../services/admin.service";
 
@@ -21,18 +21,17 @@ export class AdminController{
      * @param res 
      */
 
-    static async verifyAccount(req:Request,res:Response){
+    static async verifyAccount(req:Request,res:Response,next:NextFunction){
         try {
             const id = parseInt(req.params.id);
             const result = await AdminService.verifyAccountBLL(id);
             if (result) {
-                res.status(result.status).json({msg:result.msg});
+                res.status(200).json({msg:result.msg});
             } else {
                 res.status(500).json({msg: "Unexpected error occurred"});
             }
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -42,22 +41,19 @@ export class AdminController{
      * @param res 
      */
 
-    static async resolveSupport(req:Request,res:Response){
+    static async resolveSupport(req:Request,res:Response,next:NextFunction){
         try {
             // const id = parseInt(req.params.id);
             const data = req.body;
             data.queryId = parseInt(req.params.id);
             data.id = req.body.user.id;
             const result  = await AdminService.resolveQueryBLL(data);
-            if (result) {
-                res.status(result.status).json({msg:result.msg});
-            } else {
-                res.status(500).json({msg: "Unexpected error occurred"});
-            }
-            // res.status(result.status).json({msg:result.msg});
+            
+                res.status(200).json({msg:result.msg});
+           
+            // res.status(200).json({msg:result.msg});
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 
@@ -67,13 +63,12 @@ export class AdminController{
      * @param res 
      */
 
-    static async getAllSupport(req:Request,res:Response){
+    static async getAllSupport(req:Request,res:Response,next:NextFunction){
         try {
             const result = await AdminService.getSupportBLL();
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -82,13 +77,12 @@ export class AdminController{
      * @param req 
      * @param res 
      */
-    static async getAllAccounts(req:Request,res:Response){
+    static async getAllAccounts(req:Request,res:Response,next:NextFunction){
         try {
             const result = await AdminService.getAllAccountsBLL();
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -98,13 +92,12 @@ export class AdminController{
      * @param req 
      * @param res 
      */
-    static async getAllUsers(req:Request,res:Response){
+    static async getAllUsers(req:Request,res:Response,next:NextFunction){
         try {
             const result = await AdminService.getAllUsersBLL();
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 
@@ -115,14 +108,13 @@ export class AdminController{
      */
 
 
-    static async getAccountByUserId(req:Request,res:Response){
+    static async getAccountByUserId(req:Request,res:Response,next:NextFunction){
         try {
             const id = parseInt(req.params.id);
             const result = await AdminService.getAccountsBLL(id);
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -133,25 +125,23 @@ export class AdminController{
      */
 
 
-    static async getQueryById(req:Request,res:Response){
+    static async getQueryById(req:Request,res:Response,next:NextFunction){
         try {
             const id = parseInt(req.params.id);
             const result = await AdminService.getAllSupportBLL(id);
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+          next(error)
         }
     }
 
-  static async getAllExpenses(req:Request,res:Response){
+  static async getAllExpenses(req:Request,res:Response,next:NextFunction){
 
     try {
         const result = await AdminService.getAllExpenseBLL();
-        res.status(result.status).json({msg:result.msg});
+        res.status(200).json({msg:result.msg});
     } catch (error) {
-        console.log(error);
-        res.status(500).json({msg:"Internal server error"});
+       next(error)
     }
 
   }

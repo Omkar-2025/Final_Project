@@ -1,12 +1,12 @@
 import cron from "node-cron";
 import { BillsService } from "../services/bills.service";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 
-cron.schedule("* * * * * *", async () => {
-    console.log("Processing recurring bills ");
-    await BillsService.processRecurringBills();
-});
+// cron.schedule("* * * * * *", async () => {
+//     console.log("Processing recurring bills ");
+//     await BillsService.processRecurringBills();
+// });
 
 class billsController{
 
@@ -17,21 +17,18 @@ class billsController{
      * @returns 
      */
 
-    async createBill(req:Request,res:Response){
+    async createBill(req:Request,res:Response,next:NextFunction){
         try {
             const data = req.body;
             data.amount = parseInt(data.amount);
             data.frequency  = data.frequency.name;
             const result:any = await BillsService.createBill(data);
-            if(result){
-                res.status(result.status).json({msg:result.msg});
-            }
-            else{
-                res.status(404).json({msg:"No Dose not  create bill"});
-            }
+
+                res.status(200).json({msg:result.msg});
+           
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 
@@ -42,7 +39,7 @@ class billsController{
      * @param res 
      */
 
-    async getBill(req:Request,res:Response){
+    async getBill(req:Request,res:Response,next:NextFunction){
         try {
            // const id = req.params.id;
          
@@ -50,17 +47,11 @@ class billsController{
             const result = await BillsService.getBill(id);
             // console.log(result);
             
-            if(result){
-                res.status(result.status).json(result.msg);
+                res.status(200).json(result?.msg);
                 return ;
-            }
-            else{
-                res.status(404).json({msg:"No bills found"});
-                return ;
-            }
+        
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
-            return ;
+           next(error)
         }
     }
 
@@ -71,13 +62,14 @@ class billsController{
      * @param res 
      */
 
-    async ProcessBills(req:Request,res:Response){
+    async ProcessBills(req:Request,res:Response,next:NextFunction){
         try {
             const result = await BillsService.processRecurringBills();
             res.status(result.status).json(result.msg);
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            // console.log(error);
+            // res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 
@@ -88,18 +80,15 @@ class billsController{
      * @param res 
      */
 
-    async getBillById(req:Request,res:Response){
+    async getBillById(req:Request,res:Response,next:NextFunction){
         try {
             const id = req.params.id;
             const result = await BillsService.getBillById(parseInt(id));
-            if(result){
-                res.status(result.status).json(result.msg);
-            }
-            else{
-                res.status(404).json({msg:"Bill not found"});
-            }
+    
+            res.status(200).json(result?.msg);
+
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -110,26 +99,20 @@ class billsController{
      * @param res 
      */
 
-    async payBills(req:Request,res:Response){
+    async payBills(req:Request,res:Response , next:NextFunction){
         try {
             const data = req.body;
-            // console.log(data);
             data.amount = parseInt(data.amount);
             data.billId = parseInt(data.billId);
             const result:any = await BillsService.payBills(data);
-            if(result.status==404){
-                res.status(404).json({msg:"Bill not found"});
-            }
-            else if(result.status==400){
-                res.status(400).json({msg:"Insufficient balance"});
-            }
-            else{
-            console.log("Bill paid successfully");
+          
+            // console.log("Bill paid successfully");
               res.status(200).json({msg:result.msg})
-            }
+            
         } catch (error) {
-            console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            // console.log(error);
+            // res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 
@@ -139,16 +122,17 @@ class billsController{
      * @param res 
      */
 
-    async getBillshistoy(req:Request,res:Response){
+    async getBillshistoy(req:Request,res:Response,next:NextFunction){
         try {
             const data = req.body;
             const page = req.body.page;
         
             const result:any = await BillsService.getBillshistoy(data,page);
-            res.status(result.status).json(result.msg);
+            // console.log(result);
+            res.status(200).json(result?.msg);
         } catch (error) {
-            console.log(error)
-             res.status(500).json({msg:"Internal server error"});
+            // console.log(error)
+             next(error)
         }
     }
 
@@ -159,7 +143,7 @@ class billsController{
      * @param res 
      */
 
-    async updateBill(req:Request,res:Response){
+    async updateBill(req:Request,res:Response,next:NextFunction){
         try {
             const id = req.body.billId;
             const data = req.body;
@@ -168,7 +152,7 @@ class billsController{
             const result:any = await BillsService.updateBillBLL(parseInt(id),data);
             res.status(result.status).json(result.msg);
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+           next(error);
         }
     }
 
@@ -179,13 +163,13 @@ class billsController{
      * @param res 
      */
 
-    async deleteBill(req:Request,res:Response){
+    async deleteBill(req:Request,res:Response,next:NextFunction){
         try {
             const id = req.body.billId;
             const result:any = await BillsService.deleteBillBLL(parseInt(id));
             res.status(result.status).json(result.msg);
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 

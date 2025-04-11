@@ -21,6 +21,7 @@ const user_entity_1 = require("../entitiy/user.entity");
 const mailerSender_1 = require("../utils/mailerSender");
 const billPaymentTemplate_1 = __importDefault(require("../utils/billPaymentTemplate"));
 const transaction_entity_1 = require("../entitiy/transaction.entity");
+const globalErrorHandler_1 = require("../types/globalErrorHandler");
 const billsRepository = db_1.AppDataSource.getRepository(bills_entity_1.Bills);
 const accountRepository = db_1.AppDataSource.getRepository(account_entity_1.Account);
 const userRepository = db_1.AppDataSource.getRepository(user_entity_1.User);
@@ -31,14 +32,14 @@ class BillsDAL {
             let { billName, amount, dueDate, accountId, frequency } = data;
             const account = yield accountRepository.findOne({ where: { id: accountId }, lock: { mode: 'dirty_read' } });
             if (!account) {
-                throw new Error("Account not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Account not found", 404);
             }
             if (!data.user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const user = yield userRepository.findOne({ where: { id: data.user.id } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const date = new Date();
             const nextPaymentDate = this.calculateNextPaymentDate(date, frequency);
@@ -73,16 +74,18 @@ class BillsDAL {
                 const account = bill.account;
                 if (account.balance >= bill.amount) {
                     account.balance -= bill.amount;
-                    // Update bill status and next payment date
                     bill.status = "Paid";
                     bill.nextPaymentDate = this.calculateNextPaymentDate(bill.nextPaymentDate, bill.frequency);
+                    const transaction = new transaction_entity_1.Transaction(bill.amount, `Bill Payment ${bill.billName}`, bill.account, bill.account);
                     yield accountRepository.save(account);
+                    yield transactionRepository.save(transaction);
                     yield billsRepository.save(bill);
                 }
                 else {
-                    console.log(`Insufficient balance for bill ID ${bill.id}`);
+                    console.log(`Insufficient balance for bill ID ${bill.billName, bill.amount} ${bill.account.name, bill.account.user}`);
                 }
             }
+            console.log('Bill processed sucessfully');
             return { msg: "Bills processed successfully", status: 201 };
         });
     }
@@ -105,26 +108,26 @@ class BillsDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { id: id } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Account not found", 404);
             }
             const bill = yield billsRepository.find({ where: { user: user }, relations: ["account"] });
             if (bill) {
                 return { msg: bill, status: 200 };
             }
-            throw new Error("Bill not found");
+            throw new globalErrorHandler_1.GlobalErrorHandler("Bill not found", 404);
         });
     }
     static getBillByIdDAL(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { id: id } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const bill = yield billsRepository.find({ where: { user: user }, relations: ["account"] });
             if (bill) {
                 return { msg: bill, status: 200 };
             }
-            throw new Error("Bill not found");
+            throw new globalErrorHandler_1.GlobalErrorHandler("Bill not found", 404);
         });
     }
     static payBillDAL(data) {
@@ -132,11 +135,11 @@ class BillsDAL {
             let { billId, accountId } = data;
             const bill = yield billsRepository.findOne({ where: { id: billId }, relations: ['account'] });
             if (!bill) {
-                throw new Error("Bill not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Bill not found", 404);
             }
             const account = yield accountRepository.findOne({ where: { id: accountId } });
             if (!account) {
-                throw new Error("Account not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Account not found", 404);
             }
             if (account.balance >= bill.amount) {
                 account.balance -= bill.amount;
@@ -149,7 +152,7 @@ class BillsDAL {
                 yield (0, mailerSender_1.mailerSender)({ email: data.user.email, title: "Bill paid successfully", body: (0, billPaymentTemplate_1.default)(bill.billName, account.name, bill.amount, result.dueDate) });
                 return { msg: "Bill paid successfully", status: 200 };
             }
-            return { msg: "Insufficient balance", status: 400 };
+            throw new globalErrorHandler_1.GlobalErrorHandler("Insufficient balance", 400);
         });
     }
     static getBillHistoryDAL(id, page, limit) {
@@ -158,23 +161,37 @@ class BillsDAL {
             const user = yield userRepository.find({ where: { id: id } });
             const skip = (page - 1) * limit;
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
-            const account = yield accountRepository.findOne({ where: { user: user[0] } });
+            const account = yield accountRepository.find({ where: { user: user[0] } });
             if (!account) {
-                throw new Error("Account not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Account not found", 404);
             }
-            const transactions = yield transactionRepository.find({ where: { toAccount: account, transactionType: (0, typeorm_1.Like)("% Bill %") },
-                order: { createdAt: "DESC" },
-                skip: skip,
-                take: limit
-            });
-            //  console.log(transactions)
-            if (transactions) {
+            // const transactions = await 
+            // transactionRepository.find({
+            //     where: [{ toAccount: account}, {fromAccount:account}], 
+            //     order: { createdAt: "DESC" } ,
+            // skip:skip,
+            // take:limit
+            // });
+            const billSearch = 'Bill';
+            const account_id = account[0].id;
+            // console.log(account_id);
+            const transaction1 = yield transactionRepository.createQueryBuilder('transaction')
+                // .select('*')
+                // .leftJoinAndSelect('transaction.fromAccount', 'fromAccount')
+                .where('transaction.fromAccountId = :id', { id: account_id })
+                .andWhere("transaction.transactionType like '%Bill%'")
+                .orderBy('transaction.createdAt', 'DESC')
+                .skip(skip)
+                .limit(limit)
+                .getMany();
+            //  console.log(transaction1)
+            if (transaction1) {
                 // transactions.accountNumber = account.account_number;
-                return { msg: transactions, status: 200 };
+                return { msg: transaction1, status: 200 };
             }
-            throw new Error("Transaction not found");
+            throw new globalErrorHandler_1.GlobalErrorHandler("Transcation not found", 404);
         });
     }
     static updateBillDAL(id, data) {
@@ -183,7 +200,7 @@ class BillsDAL {
             const bill = yield billsRepository.findOne({ where: { id: id } });
             // console.log(bill);
             if (!bill) {
-                throw new Error("Bill not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Bill not found", 404);
             }
             bill.account = data.accountId.id;
             if (typeof data.frequency === 'object' && data.frequency.name) {
@@ -198,7 +215,7 @@ class BillsDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const bill = yield billsRepository.findOne({ where: { id: id } });
             if (!bill) {
-                throw new Error("Bill not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Bill not found", 404);
             }
             yield billsRepository.delete({ id: id });
             return { msg: "Bill deleted successfully", status: 200 };

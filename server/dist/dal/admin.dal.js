@@ -20,6 +20,7 @@ const mailerSender_1 = require("../utils/mailerSender");
 const queryresolveTemplate_1 = __importDefault(require("../utils/queryresolveTemplate"));
 const support_query_entity_1 = require("../entitiy/support_query.entity");
 const transaction_entity_1 = require("../entitiy/transaction.entity");
+const globalErrorHandler_1 = require("../types/globalErrorHandler");
 const userRepo = db_1.AppDataSource.getRepository(user_entity_1.User);
 const accountRepo = db_1.AppDataSource.getRepository(account_entity_1.Account);
 const supportRepo = db_1.AppDataSource.getRepository(support_query_entity_1.Support);
@@ -35,7 +36,7 @@ class adminDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const account = yield accountRepo.findOne({ where: { id: id }, relations: ["user"] });
             if (!account) {
-                throw new Error("Account not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Account not found", 404);
             }
             account.isVerified = true;
             yield (0, mailerSender_1.mailerSender)({ email: account.user.email, title: "Account Verified", body: `Your account with account number ${account.account_number} has been verified successfully` });
@@ -61,12 +62,12 @@ class adminDAL {
             const support = yield supportRepo.findOne({ where: { id: data.queryId }, relations: ["user"] });
             // console.log(support);
             if (!support) {
-                throw new Error("Query not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Support not found", 404);
             }
             const user = yield userRepo.findOne({ where: { id: support.user.id } });
             // console.log(user);
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             support.resolve = reply;
             support.status = 'Completed';
@@ -79,11 +80,11 @@ class adminDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepo.findOne({ where: { id: id } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const accounts = yield accountRepo.find({ where: { user: user } });
             if (!accounts || accounts.length === 0) {
-                throw new Error("No accounts found for this user");
+                throw new globalErrorHandler_1.GlobalErrorHandler(" no Account found for this user ", 404);
             }
             return { msg: accounts, status: 200 };
         });
@@ -93,7 +94,7 @@ class adminDAL {
             const user = yield userRepo.findOne({ where: { id: id } });
             console.log(user);
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const support = yield supportRepo.find({ where: { user: user }, });
             return { msg: support, status: 200 };
@@ -119,6 +120,7 @@ class adminDAL {
                 .orderBy("YEAR(transaction.createdAt)", "DESC")
                 .addOrderBy("MONTH(transaction.createdAt)", "DESC")
                 .getRawMany();
+            console.log(transaction);
             const groupedTransactions = transaction.reduce((acc, transaction) => {
                 const key = `${transaction.year}-${transaction.month}`;
                 // console.log(key);

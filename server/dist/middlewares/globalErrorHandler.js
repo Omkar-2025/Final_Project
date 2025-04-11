@@ -10,7 +10,7 @@ exports.globalErrorHandler = void 0;
  */
 const globalErrorHandler = (err, req, res, next) => {
     res.status(err.statusCode || 500).json({
-        status: err.status || "error",
+        status: err.status || 400,
         message: err.message || "Internal server error",
     });
 };

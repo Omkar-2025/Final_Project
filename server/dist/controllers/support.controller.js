@@ -20,21 +20,16 @@ class supportController {
      * @param res
      * @returns
      */
-    createSupport(req, res) {
+    createSupport(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
                 const result = yield support_service_1.default.createSupport(data);
-                if (result) {
-                    res.status(result.status).json({ msg: result.msg });
-                }
-                else {
-                    res.status(404).json({ msg: "No support found" });
-                }
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -43,16 +38,16 @@ class supportController {
      * @param req
      * @param res
      */
-    getAllSupport(req, res) {
+    getAllSupport(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.body.user.id;
                 const result = yield support_service_1.default.getAllSupport(id);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -61,16 +56,16 @@ class supportController {
      * @param req
      * @param res
      */
-    getSupportById(req, res) {
+    getSupportById(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = parseInt(req.params.id);
                 const result = yield support_service_1.default.getSupportById(id);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -79,16 +74,16 @@ class supportController {
      * @param req
      * @param res
      */
-    deleteSupport(req, res) {
+    deleteSupport(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = parseInt(req.params.id);
                 const result = yield support_service_1.default.deleteSupport(id);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }

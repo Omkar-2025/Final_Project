@@ -1,6 +1,7 @@
 import { AppDataSource } from "../config/db";
 import { Support } from "../entitiy/support_query.entity";
 import { User } from "../entitiy/user.entity";
+import { GlobalErrorHandler } from "../types/globalErrorHandler";
 import { SupportType } from "../types/interfaces/supportTypes";
 
 const supportRepo = AppDataSource.getRepository(Support);
@@ -17,8 +18,7 @@ export class SupportDAL{
 
         const user:User|null = await userRepo.findOneBy({id:id});
         if(!user){
-
-           throw new Error("User not found");
+           throw new GlobalErrorHandler("User not found",404);
         }
 
         const support = new Support(subject,description,user);
@@ -36,8 +36,7 @@ export class SupportDAL{
         const user:User|null = await userRepo.findOneBy({id:id});
 
         if(!user){
-
-           throw new Error("User not found");
+           throw new GlobalErrorHandler("User not found",404);
         }
 
         const support = await supportRepo.find({where:{user:user}});
@@ -51,7 +50,7 @@ export class SupportDAL{
         const support = await supportRepo.findOne({where:{id:id}});
 
             if(!support){
-               throw new Error("Support not found");
+               throw new GlobalErrorHandler("Support not found",404);
             }
 
             return {msg:support,status:200};
@@ -60,7 +59,7 @@ export class SupportDAL{
     static async deleteSupportByIdDAL(id:number){
         const support = await supportRepo.findOne({where:{id:id}});
             if(!support){
-               throw new Error("Support not found");
+               throw new GlobalErrorHandler("Support not found",404);
             }
             await supportRepo.remove(support);
             return {msg:"Support deleted",status:200};

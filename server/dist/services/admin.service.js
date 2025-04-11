@@ -14,93 +14,50 @@ const admin_dal_1 = require("../dal/admin.dal");
 class AdminService {
     static getAllUsersBLL() {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield admin_dal_1.adminDAL.getAllUsersDAL();
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield admin_dal_1.adminDAL.getAllUsersDAL();
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static verifyAccountBLL(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield admin_dal_1.adminDAL.verifyAccountDAL(id);
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                console.log(error);
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield admin_dal_1.adminDAL.verifyAccountDAL(id);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static getAllAccountsBLL() {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield admin_dal_1.adminDAL.getALLAccountsDAL();
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield admin_dal_1.adminDAL.getALLAccountsDAL();
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static getAllQueryBLL() {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield admin_dal_1.adminDAL.getAllQueryDAL();
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield admin_dal_1.adminDAL.getAllQueryDAL();
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static resolveQueryBLL(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield admin_dal_1.adminDAL.resolveQueryDAL(data);
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                console.log(error);
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield admin_dal_1.adminDAL.resolveQueryDAL(data);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static getAccountsBLL(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                // Fetch the user by ID
-                const dalResult = yield admin_dal_1.adminDAL.getAllAccountsDAL(id);
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                throw new Error(error);
-            }
+            const dalResult = yield admin_dal_1.adminDAL.getAllAccountsDAL(id);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static getAllSupportBLL(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield admin_dal_1.adminDAL.getAllSupportDAL(id);
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield admin_dal_1.adminDAL.getAllSupportDAL(id);
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static getSupportBLL() {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const dalResult = yield admin_dal_1.adminDAL.getSupportDAL();
-                return { msg: dalResult.msg, status: dalResult.status };
-            }
-            catch (error) {
-                return { msg: "Internal server error", status: 500 };
-            }
+            const dalResult = yield admin_dal_1.adminDAL.getSupportDAL();
+            return { msg: dalResult.msg, status: dalResult.status };
         });
     }
     static getAllExpenseBLL() {

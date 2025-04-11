@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../../Services/account.service';
 import { MessageService } from 'primeng/api';
@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
   styleUrl: './create-account.component.css'
 })
 export class CreateAccountComponent {
+
+  @Output() accountCreated = new EventEmitter<any>();
 
   createAccountForm: FormGroup;
   accountTypes = [
@@ -42,23 +44,28 @@ Validators.maxLength(20)]),
   ];
   createBtnName:string='Create Account';
 
-
+  isloading:boolean = false;
 
   createAccount() {
     // console.log(value);
-    
+      console.log(this.createAccountForm.value);
+      
+      this.isloading = true;
       if (!this.createAccountForm.valid) {
            this.messageService.add({severity:'error', summary:'Error', detail:'Please enter all the fields'});
           return;   
       }
-      this.accountService.createAccount(this.createAccountForm.value.name,this.createAccountForm.value.amount,this.createAccountForm.value.accountType,this.createAccountForm.value.aadharCardNumber,this.createAccountForm.value.panCardNumber).subscribe((result:any)=>{
+      this.accountService.createAccount(this.createAccountForm.value.name,this.createAccountForm.value.amount,this.createAccountForm.value.accountType.name,this.createAccountForm.value.aadharCardNumber,this.createAccountForm.value.panCardNumber).subscribe((result:any)=>{
           this.messageService.add({severity:'success', summary:'Success', detail:'Account created successfully'});
           this.createAccountForm.reset();
+          this.accountCreated.emit(result);
+          this.isloading=false;
+          this.router.navigate(['/home']);
       },(error)=>{
-          this.messageService.add({severity:'error', summary:'Error', detail:'Error creating account'});
+          this.messageService.add({severity:'error', summary:'Error', detail:error.error.msg});
           return ;
       })
-      this.router.navigate(['/home']);
+   
   }
 
   

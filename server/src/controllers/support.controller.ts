@@ -1,5 +1,6 @@
 import supportService from "../services/support.service";
-import { Request,Response } from "express";
+import { NextFunction, Request,Response } from "express";
+import { GlobalErrorHandler } from "../types/globalErrorHandler";
 
 class supportController{
 
@@ -10,19 +11,15 @@ class supportController{
      * @returns 
      */
 
-    async createSupport(req:Request,res:Response){
+    async createSupport(req:Request,res:Response,next:NextFunction){
         try {
             const data = req.body;
             const result:any = await supportService.createSupport(data);
-            if(result){
-                res.status(result.status).json({msg:result.msg});
-            }
-            else{
-                res.status(404).json({msg:"No support found"});
-            }
+
+                res.status(200).json({msg:result.msg});
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+           next(error)
         }
     }
 
@@ -33,14 +30,14 @@ class supportController{
      * @param res 
      */
 
-    async getAllSupport(req:Request,res:Response){
+    async getAllSupport(req:Request,res:Response,next:NextFunction){
         try {
             const id = +req.body.user.id;
             const result:any = await supportService.getAllSupport(id);
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 
@@ -51,14 +48,14 @@ class supportController{
      * @param res 
      */
 
-    async getSupportById(req:Request,res:Response){
+    async getSupportById(req:Request,res:Response,next:NextFunction){
         try {
             const id = parseInt(req.params.id);
             const result:any = await supportService.getSupportById(id);
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     } 
 
@@ -69,14 +66,14 @@ class supportController{
      * @param res 
      */
     
-    async deleteSupport(req:Request,res:Response){
+    async deleteSupport(req:Request,res:Response,next:NextFunction){
         try {
             const id = parseInt(req.params.id);
             const result:any = await supportService.deleteSupport(id);
-            res.status(result.status).json({msg:result.msg});
+            res.status(200).json({msg:result.msg});
         } catch (error) {
             console.log(error);
-            res.status(500).json({msg:"Internal server error"});
+            next(error)
         }
     }
 

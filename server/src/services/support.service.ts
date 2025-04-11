@@ -17,14 +17,9 @@ class supportService{
 
     async createSupport(data:SupportType){
 
-        try {
             const dalResult = await SupportDAL.crateSupportDAL(data);
             return {msg:dalResult.msg,status:dalResult.status};
-        } catch (error) {
-            console.log(error);
-            return {msg:"Internal server error",status:500};
-
-        }
+      
     }
 
 
@@ -36,16 +31,11 @@ class supportService{
 
 
     async getAllSupport(id:number){
-        try {
+
 
            const dalResult = await SupportDAL.getAllSupportDAL(id);
            return {msg:dalResult.msg,status:dalResult.status};
 
-        } catch (error) {
-
-            return {msg:"Internal server error",status:500};
-
-        }
     }
 
 
@@ -56,16 +46,12 @@ class supportService{
      */
 
     async getSupportById(id:number){
-        try {
+       
 
            const dalResult = await SupportDAL.getSupportByIdDAL(id);
            return {msg:dalResult.msg,status:dalResult.status};
 
-        } catch (error) {
-
-            return {msg:"Internal server error",status:500};
-
-        }
+      
     }
 
     /**
@@ -76,12 +62,10 @@ class supportService{
 
 
     async deleteSupport(id:number){
-        try {
+    
             const dalResult = await SupportDAL.deleteSupportByIdDAL(id);
             return {msg:dalResult.msg,status:dalResult.status};
-        } catch (error) {
-            return {msg:"Internal server error",status:500};
-        }
+        
     }
 
 

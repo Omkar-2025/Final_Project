@@ -17,6 +17,8 @@ export class BillCardComponent {
   billName: any;
   amount: any
 
+  isLoading: boolean = false; 
+
   // @Input() bill!:any;
 
 
@@ -53,6 +55,9 @@ export class BillCardComponent {
     })
 
 
+
+
+
   }
 
   @Input() bill: any;
@@ -85,6 +90,13 @@ export class BillCardComponent {
     this.frequency = this.bill.frequency;
     this.billName = this.bill.billName;
     this.amount = this.bill.amount;
+
+    this.updateBillFrom.patchValue({
+      billName: this.bill.billName,
+      amount: this.bill.amount,
+      frequency: this.bill.frequency,
+      account: this.bill.account.id
+    })
   }
 
   acc_number: number = 0;
@@ -93,7 +105,7 @@ export class BillCardComponent {
 
     // console.log($event);
     
-
+    this.isLoading = true;
     if (this.selectedAccounts == undefined) {
         this.selectedAccounts = this.bill.account; 
     }
@@ -105,16 +117,19 @@ export class BillCardComponent {
     
     let accountId = parseInt(value.account.id)
     
-    this.visible = true;
+    this.visible = false;
     this.billService.paybills(this.bill.id, accountId).subscribe((result: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill paid successfully' });
       this.visible = false;
       this.isbillPayed = true;
       this.isBillUpdated.emit(this.bill.id);
       this.isBillDeleted.emit(this.bill.id);
+      this.isLoading = false;
+      this.visible=false;
     }, (error) => {
       console.log(error);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg });
+      this.isLoading=false;
       return;
     })
 
@@ -126,13 +141,15 @@ export class BillCardComponent {
 
     // console.log(value);
 
-    
+    this.visible=false;
 
     this.billService.updateBill(this.bill.id, value.billName, value.amount, value.frequency, value.account).subscribe((result: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill updated successfully' });
       this.visible = false;
       this.isBillUpdated.emit(this.bill.id);
       this.isBillDeleted.emit(this.bill.id);
+      this.isLoading=false;
+      
     }, (error: any) => {
       console.log(error);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg });

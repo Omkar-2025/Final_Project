@@ -27,21 +27,20 @@ class AdminController {
      * @param req
      * @param res
      */
-    static verifyAccount(req, res) {
+    static verifyAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = parseInt(req.params.id);
                 const result = yield admin_service_1.AdminService.verifyAccountBLL(id);
                 if (result) {
-                    res.status(result.status).json({ msg: result.msg });
+                    res.status(200).json({ msg: result.msg });
                 }
                 else {
                     res.status(500).json({ msg: "Unexpected error occurred" });
                 }
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -50,7 +49,7 @@ class AdminController {
      * @param req
      * @param res
      */
-    static resolveSupport(req, res) {
+    static resolveSupport(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // const id = parseInt(req.params.id);
@@ -58,17 +57,11 @@ class AdminController {
                 data.queryId = parseInt(req.params.id);
                 data.id = req.body.user.id;
                 const result = yield admin_service_1.AdminService.resolveQueryBLL(data);
-                if (result) {
-                    res.status(result.status).json({ msg: result.msg });
-                }
-                else {
-                    res.status(500).json({ msg: "Unexpected error occurred" });
-                }
-                // res.status(result.status).json({msg:result.msg});
+                res.status(200).json({ msg: result.msg });
+                // res.status(200).json({msg:result.msg});
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -77,15 +70,14 @@ class AdminController {
      * @param req
      * @param res
      */
-    static getAllSupport(req, res) {
+    static getAllSupport(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield admin_service_1.AdminService.getSupportBLL();
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -94,15 +86,14 @@ class AdminController {
      * @param req
      * @param res
      */
-    static getAllAccounts(req, res) {
+    static getAllAccounts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield admin_service_1.AdminService.getAllAccountsBLL();
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -111,15 +102,14 @@ class AdminController {
      * @param req
      * @param res
      */
-    static getAllUsers(req, res) {
+    static getAllUsers(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield admin_service_1.AdminService.getAllUsersBLL();
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -128,16 +118,15 @@ class AdminController {
      * @param req
      * @param res
      */
-    static getAccountByUserId(req, res) {
+    static getAccountByUserId(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = parseInt(req.params.id);
                 const result = yield admin_service_1.AdminService.getAccountsBLL(id);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
@@ -146,28 +135,26 @@ class AdminController {
      * @param req
      * @param res
      */
-    static getQueryById(req, res) {
+    static getQueryById(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = parseInt(req.params.id);
                 const result = yield admin_service_1.AdminService.getAllSupportBLL(id);
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }
-    static getAllExpenses(req, res) {
+    static getAllExpenses(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield admin_service_1.AdminService.getAllExpenseBLL();
-                res.status(result.status).json({ msg: result.msg });
+                res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                console.log(error);
-                res.status(500).json({ msg: "Internal server error" });
+                next(error);
             }
         });
     }

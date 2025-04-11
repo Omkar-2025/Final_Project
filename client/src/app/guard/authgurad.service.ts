@@ -21,7 +21,7 @@ export class AuthguradService implements CanActivate {
 
   canActivate():boolean{
     const role = localStorage.getItem('role');
-    if(role && this.loggedIn){
+    if(role){
       return true;
     }
     // console.log(this.currUser);

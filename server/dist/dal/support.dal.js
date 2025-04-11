@@ -13,6 +13,7 @@ exports.SupportDAL = void 0;
 const db_1 = require("../config/db");
 const support_query_entity_1 = require("../entitiy/support_query.entity");
 const user_entity_1 = require("../entitiy/user.entity");
+const globalErrorHandler_1 = require("../types/globalErrorHandler");
 const supportRepo = db_1.AppDataSource.getRepository(support_query_entity_1.Support);
 const userRepo = db_1.AppDataSource.getRepository(user_entity_1.User);
 class SupportDAL {
@@ -22,7 +23,7 @@ class SupportDAL {
             const id = data.user.id;
             const user = yield userRepo.findOneBy({ id: id });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const support = new support_query_entity_1.Support(subject, description, user);
             support.user = user;
@@ -34,7 +35,7 @@ class SupportDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepo.findOneBy({ id: id });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const support = yield supportRepo.find({ where: { user: user } });
             return { msg: support, status: 200 };
@@ -44,7 +45,7 @@ class SupportDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const support = yield supportRepo.findOne({ where: { id: id } });
             if (!support) {
-                throw new Error("Support not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Support not found", 404);
             }
             return { msg: support, status: 200 };
         });
@@ -53,7 +54,7 @@ class SupportDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const support = yield supportRepo.findOne({ where: { id: id } });
             if (!support) {
-                throw new Error("Support not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Support not found", 404);
             }
             yield supportRepo.remove(support);
             return { msg: "Support deleted", status: 200 };

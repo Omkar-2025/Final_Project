@@ -42,7 +42,7 @@
                 <p-message
                     *ngIf="formGroup.get(controls.name)?.invalid && formGroup.get(controls.name)?.touched"
                     severity="error"
-                    [text]="controls.label + ' is required'"
+                    [text]="controls.label + ' dose not have valid value'"
                 ></p-message>
             </ng-container>
         </ng-container>
@@ -63,7 +63,7 @@
 
         <!-- {{formGroup.invalid || selectedAccounts?.isVerified}} -->
 
-        <p-button pButton type="submit" label="{{ btnlabel }}" [disabled]="formGroup.invalid && selectedAccounts?.isVerified"></p-button>
+        <p-button pButton type="submit" label="{{ btnlabel }}" [disabled]="formGroup.invalid && selectedAccounts?.isVerified" ></p-button>
 
         <a  routerLink ="/forget" *ngIf="type == 'login'" > If you dose not rember password forget the password </a>
 

@@ -16,6 +16,7 @@ email: string = '';
 emailError: string = '';
 otpValue: string = '';
 otpError: string = '';
+otpTime:number = 180;
 
 forgetPasswordForm!:FormGroup;
 
@@ -25,6 +26,15 @@ constructor(private authService:AuthService,private messageService:MessageServic
     confirmPassword:new FormControl('',[Validators.required,Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
   })
 }
+
+ngOninit() {
+  setInterval(()=>{
+    if(this.otpTime > 0){
+      this.otpTime--;
+    }
+  })
+}
+
 
 forgetPasswordInputControls=[
  
@@ -88,7 +98,17 @@ forgetPassword(value:any){
     this.messageService.add({severity:'error',summary:'Error',detail:error.error.msg});
     return;
   })
+}
 
+resendOtp(){
+  this.authService.resendOtp(this.email).subscribe((res:any)=>{
+    this.messageService.add({severity:'success',summary:'Success',detail:res.msg});
+    this.showOtpDialog = true;
+    this.showEmailInput = false;
+  },(error:any)=>{
+    this.messageService.add({severity:'error',summary:'Error',detail:error.error.msg});
+    return;
+  })
 }
 
 }

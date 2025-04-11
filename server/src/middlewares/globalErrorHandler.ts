@@ -13,7 +13,7 @@ import { NextFunction , Request,Response } from "express";
 export const globalErrorHandler=(err:any,req:Request,res:Response,next:NextFunction)=>{
 
     res.status(err.statusCode || 500).json({
-        status:err.status || "error",
+        status:err.status || 400,
         message:err.message || "Internal server error",
     });
 

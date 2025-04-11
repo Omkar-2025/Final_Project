@@ -5,12 +5,11 @@ import { User } from "../entitiy/user.entity";
 import { mailerSender } from "../utils/mailerSender";
 import accountCreationTemplate from "../utils/accountTemplate";
 import transcationVerfication from "../utils/transcationVerfication";
-import { accountSchema, depositWithDrawSchema, transactionSchema } from "../types/schema/account.scehma";
 const pdf = require('pdf-creator-node')
 import fs from 'fs';
 import { AccountType, AmountAccount, TransactionType } from "../types/interfaces/accountType";
-import { number } from "zod";
-import { Like } from "typeorm";
+import { GlobalErrorHandler } from "../types/globalErrorHandler";
+
 const html = fs.readFileSync('src/utils/expense.html', 'utf-8')
 
 
@@ -36,7 +35,7 @@ export class AccountDAL {
         const user = await userRepository.findOne({ where: { id: id } });
 
         if (!user) {
-            return { msg: "User not found", status: 404 };
+            throw new GlobalErrorHandler("User not Founnd",404);
         }
 
         const accountInstance = new Account(name, balance, account_type, user, pan_card_number, aadhar_card_number);
@@ -55,13 +54,17 @@ export class AccountDAL {
         if (account) {
             return { msg: account, status: 200 };
         }
-        return { msg: "Account not found", status: 404 };
+        throw new GlobalErrorHandler("Account not found ", 404)
     }
 
     static async createTranscationDAL(data: TransactionType) {
+
         const queryRunner = AppDataSource.createQueryRunner();
+
         await queryRunner.connect();
+
         await queryRunner.startTransaction();
+
         try {
 
             let { fromAccount, toAccount, amount, transcationType } = data;
@@ -77,21 +80,20 @@ export class AccountDAL {
             });
 
             if (!fromAccountInstance || !toAccountInstance) {
-                return { msg: "Account not found", status: 404 };
+               throw new GlobalErrorHandler("Account not found ", 404)
             }
 
             amount = +amount;
 
             if (fromAccountInstance.balance >= amount) {
-                // Update balances
+
                 fromAccountInstance.balance -= amount;
                 toAccountInstance.balance += amount;
 
-                // Save updated accounts using the QueryRunner
+      
                 await queryRunner.manager.save(fromAccountInstance);
                 await queryRunner.manager.save(toAccountInstance);
 
-                // Create and save the transaction
                 const transactionInstance = new Transaction(
                     amount,
                     transcationType,
@@ -100,10 +102,8 @@ export class AccountDAL {
                 );
                 const result = await queryRunner.manager.save(transactionInstance);
 
-                // Commit the transaction
                 await queryRunner.commitTransaction();
 
-                // Send email notification
                 await mailerSender({
                     email: fromAccountInstance.user.email,
                     title: "Transaction successful",
@@ -120,18 +120,15 @@ export class AccountDAL {
             }
         } catch (error) {
             console.error("Error during transaction:", error);
-
-            // Rollback the transaction in case of an error
             await queryRunner.rollbackTransaction();
-            return { msg: "Internal server error", status: 500 };
+           throw new GlobalErrorHandler("Internal Server Error",401);
         } finally {
-            // Release the QueryRunner connection
             await queryRunner.release();
         }
     }
 
     static async getTranscationsDAL(id: number, page: number, limit: number) {
-        try {
+
             const skip = (page - 1) * limit;
             const transactions = await transactionRepository.find({
                 where: [
@@ -146,30 +143,26 @@ export class AccountDAL {
                 take: limit
             });
             return { msg: transactions, status: 200 };
-        } catch (error) {
-            return { msg: "Internal server error", status: 500 };
-        }
+        
     }
 
     static async getTransactionsByIdDAL(id: number) {
-        try {
+
             const result = await transactionRepository.findOne({ where: { id: id }, relations: ['fromAccount', 'toAccount'] });
             if (result) {
                 return { msg: result, status: 200 };
             }
-            return { msg: "Transaction not found", status: 404 };
-        } catch (error) {
-            return { msg: "Internal server error", status: 500 };
-        }
+           throw new GlobalErrorHandler("Transcation Not found ",404)
+        
     }
 
     static async WithdrawDAL(data: AmountAccount) {
-        try {
+   
             let { amount, accountId } = data;
 
             const account = await accountRepository.findOne({ where: { id: accountId } });
             if (!account) {
-                return { msg: "Account not found", status: 404 }
+                throw new GlobalErrorHandler("Account not Found",404);
             }
 
             const transactionInstance = new Transaction(amount, "withDraw", account, account);
@@ -181,28 +174,24 @@ export class AccountDAL {
                     await mailerSender({ email: data.user.email, title: "Transaction successfull", body: transcationVerfication(result.id, amount, result.createdAt, result.transactionType) });
                     return { msg: "Withdraw successfull", status: 200 };
                 }
-                return { msg: "Insufficient balance", status: 400 };
+                throw new GlobalErrorHandler( "Insufficient balance",  400 );
             }
-            return { msg: "Account not found", status: 404 };
-        } catch (error) {
-            return { msg: "Internal server error", status: 500 };
-        }
     }
 
     static async DepositDAL(data: AmountAccount) {
-        try {
+
             let { amount, accountId } = data;
 
 
             if (!amount || !accountId) {
-                return { msg: "Please provide all the fields", status: 400 };
+                throw new GlobalErrorHandler("Amount and Account Id is required",404);
             }
        
             const account = await accountRepository.findOne({ where: { id: accountId } });
 
 
             if (!account) {
-                return { msg: "Account not found", status: 404 }
+                throw new GlobalErrorHandler("Account not found" ,404 )
             }
 
             const transactionInstance:Transaction = new Transaction(amount, "Deposit", account, account);
@@ -214,24 +203,20 @@ export class AccountDAL {
                 await mailerSender({ email: data.user.email, title: "Transaction successfull", body: transcationVerfication(result.id, amount, result.createdAt, result.transactionType) });
                 return { msg: "Deposit successfull", status: 200 };
             }
-            return { msg: "Account not found", status: 404 };
-        } catch (error) {
-            return { msg: "Internal server error", status: 500 };
-        }
+            
+       
     }
 
 
     static async getAllAccountsDAL() {
-        try {
+
             const accounts = await accountRepository.find({ relations: ['user'] });
             return { msg: accounts, status: 200 };
-        } catch (error) {
-            return { msg: "Internal server error", status: 500 };
-        }
+       
     }
 
     static async getMonthlyExpenseBLLDAL({ currentMonth, currentYear, id }: { currentMonth: number; currentYear: number; id: number }) {
-        try {
+
             const transactions = await transactionRepository
                 .createQueryBuilder("transaction")
                 .select("SUM(transaction.amount)", "totalExpenses")
@@ -243,14 +228,11 @@ export class AccountDAL {
             console.log(transactions);
 
             return { status: 200, msg: transactions };
-        } catch (error) {
-            console.error("Error fetching monthly transactions", error);
-            return { status: 500, msg: "Internal server error" };
-        }
+        
     }
 
     static async getMonthlyTransactionsBLLDAL({ currentMonth, currentYear, id }: { currentMonth: number; currentYear: number; id: number }) {
-        try {
+
             const transactions = await transactionRepository
                 .createQueryBuilder("transaction")
                 .where("transaction.fromAccountId = :id", { id })
@@ -259,14 +241,11 @@ export class AccountDAL {
                 .getMany();
 
             return { status: 200, msg: transactions };
-        } catch (error) {
-            console.error("Error fetching monthly transactions", error);
-            return { status: 500, msg: "Internal server error" };
-        }
+      
     }
 
     static async getAllMonthlyExpensesDAL({ currentDate, currentYear, id }: { currentDate: number, currentYear: number, id: number }) {
-        try {
+
             const transactions = await transactionRepository
                 .createQueryBuilder("transaction")
                 .select([
@@ -282,12 +261,13 @@ export class AccountDAL {
                 .addOrderBy("MONTH(transaction.createdAt)", "DESC")
                 .getRawMany();
 
-            // console.log(transactions);
+            //  console.log(transactions);
 
-
-            // Group transactions by month and categorize them by transactionType
             const groupedTransactions = transactions.reduce((acc, transaction) => {
                 const key = `${transaction.year}-${transaction.month}`;
+
+                // console.log(key);
+                
                 // console.log(key);
 
                 if (!acc[key]) {
@@ -358,37 +338,29 @@ export class AccountDAL {
                 })
 
             return { status: 200, msg: Object.values(groupedTransactions) };
-        } catch (error) {
-            console.error("Error fetching monthly expenses and transactions:", error);
-            return { status: 500, msg: "Internal server error" };
-        }
+      
     }
 
 
     static async deactiveAccountBLLDAL(id: number) {
-        try {
 
             const account = await accountRepository.findOne({ where: { id: id } });
             if (!account) {
-                return { msg: "Account not found", status: 404 };
+                throw new GlobalErrorHandler("Account not found",404);
             }
             account.status = false;
             await accountRepository.save(account);
             return { msg: "Account deactivated successfully", status: 200 };
 
-        } catch (error) {
-            console.log(error)
-            return { msg: "Internal server error", status: 500 };
-        }
     }
 
     static async activateAccountBLLDAL(id: number) {
-        try {
+
 
             const account = await accountRepository.findOne({ where: { id: id } });
 
             if (!account) {
-                return { msg: "Account not found", status: 404 };
+                throw new GlobalErrorHandler("Account not found",404)
             }
 
             account.status = true;
@@ -397,10 +369,7 @@ export class AccountDAL {
 
             return { msg: "Account activated successfully", status: 200 };
 
-        } catch (error) {
-            console.log(error)
-            return { msg: "Internal server error", status: 500 };
-        }
+       
     }
 
 
@@ -418,7 +387,7 @@ export class AccountDAL {
             //     take:limit,
             // });
 
-            console.log(id);
+            // console.log(id);
             
 
             const transactions = await transactionRepository.createQueryBuilder("transaction")
@@ -433,8 +402,7 @@ export class AccountDAL {
                 return {msg:transactions,status:200};
             }
 
-            return {msg:"No transaction found",status:404};
-
+         
        
     }
 

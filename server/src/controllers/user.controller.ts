@@ -16,10 +16,13 @@ class UserController{
 
     async createUser(req:Request,res:Response,next:NextFunction){
         try {
+
             const data = req.body;
-          
+
             const result:UserResponseType = await UserService.createUserBLL(data);
+
             res.status(201).json({msg:result.msg});
+
         } catch (error) {  
             next(error)
         }
@@ -36,12 +39,9 @@ class UserController{
             try {
                 const data = req.body;
                const result:UserResponseType = await UserService.loginBLL(data);
-                if(result.status==404){
-                    res.status(404).json({msg:result.msg});
-                    return;
-                }
+               
                 res.status(200).cookie('token',result.token,{httpOnly:true,secure:true}).json({msg:result.msg,role:result.role});
-            } catch (error:Error | any) {
+            } catch (error) {
                 next(error)
             }
     }
@@ -54,13 +54,14 @@ class UserController{
      * @returns all accounts of a user
      */ 
 
-    async getAllAccounts(req:Request,res:Response){
+    async getAllAccounts(req:Request,res:Response,next:NextFunction){
         try {
             const id = req.body.user.id;
             const result:UserResponseType = await UserService.getAccountsBLL(parseInt(id));
             res.status(result.status).json(result.msg);
         } catch (error) {
-            res.status(500).json({msg:"Internal server error"});
+            // console.log(error);
+            next(error)
         }
     }
 
@@ -85,122 +86,103 @@ class UserController{
      * 
      */
 
-    async logout(req:Request,res:Response){
+    async logout(req:Request,res:Response,next:NextFunction){
         try {
             res.clearCookie('token').status(200).json({msg:"Logout successfull"});
 
         } catch (error) {
-            console.log(error);
+            // console.log(error);
+            next(error)
         }
     }
 
-    async getUser(req:Request,res:Response){
+
+    /**
+     * 
+     * @param req 
+     * @param res 
+     * @param next 
+     */
+
+    async getUser(req:Request,res:Response,next:NextFunction){
         try {
 
             const id = req.body.user.id;
             const result = await UserService.getUsers(id);
-            if(result.status==404){
-                res.status(404).json({msg:result.msg});
-                return;
-            }
             res.status(200).json({msg:result.msg});
         } catch (error) {
-             res.status(500).json({msg:"Internal server error"});
-             return;
+            // console.log(error);
+            next(error)
         }
     }
 
-    async updateUser(req:Request,res:Response){
+    async updateUser(req:Request,res:Response,next:NextFunction){
         try {
 
             const id = req.body.user.id;
             const data = req.body;
-            const isvalidUser = userSchema.safeParse(data);
-            // if(!isvalidUser.success){
-            //     res.status(400).json({msg:"please enter valid data"});
-            //     return;
-            // }
             const result = await UserService.updateUser(id,data);
-            if(result.status==404){
-                res.status(404).json({msg:result.msg});
-                return;
-            }
             res.status(200).json({msg:result.msg});
             return;
         } catch (error) {
-             res.status(500).json({msg:"Internal server error"});
-             return;
+            // console.log(error);
+             next(error);
         }
     }
 
-    async updatePassword(req:Request,res:Response){
+    async updatePassword(req:Request,res:Response,next:NextFunction){
         try {
             const id = req.body.user.id;
             const data = req.body;
             console.log(id);
             
-            const isvalidUser = userSchema.safeParse(data);
-            // if(!isvalidUser.success){
-            //     res.status(400).json({msg:"please enter valid data"});
-            //     return;
-            // }
+            
             const result = await UserService.updatePassword(id,data);
-            if(result.status==404){
-                res.status(404).json({msg:result.msg});
-                return;
-            }
             res.status(200).json({msg:result.msg});
             return;
         } catch (error) {
-             res.status(500).json({msg:"Internal server error"});
-             return;
+            // console.log(error);
+            next(error)
+
         }
     }
 
-    async sendForgetPasswordOtp(req:Request,res:Response){
+    async sendForgetPasswordOtp(req:Request,res:Response , next:NextFunction){
         try {
 
             const data = req.body.email;
             const otp = req.body.otp;
             const result = await UserService.sendforgetPasswordOtp(data,otp);
-            if(result.status==404){
-                res.status(404).json({msg:result.msg});
-            }
-
             res.status(200).json({msg:result.msg});
             return ;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
+            next(error)
         }
     }
 
-    async verifyForgetPasswordOtp(req:Request,res:Response){
+    async verifyForgetPasswordOtp(req:Request,res:Response,next:NextFunction){
         try {
 
             const data = req.body;
             const result = await UserService.verifyForgetPasswordOtp(data.email,data.otp,data.password);
-            if(result.status==404){
-                res.status(404).json({msg:result.msg});
-            }
-            res.status(200).json({msg:result.msg});
+            res.status(200).json({msg:result.message});
             return ;
 
         } catch (error) {
-            
+            // console.log(error);
+            next(error);
         }
     }
 
     async generateOtp(req:Request,res:Response,next:NextFunction){
-        // console.log("hii");
+        
         try {
             const email = req.body.email;
-            // console.log(req.body);
-            
             const result = await UserService.resendOtp(email);
             res.status(result.status).json({msg:result.msg});
         } catch (error) {
-            // console.log(error);
             next(error)
         }
     }

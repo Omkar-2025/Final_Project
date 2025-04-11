@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_service_1 = require("../services/user.service");
-const user_schema_1 = require("../types/schema/user.schema");
 class UserController {
     /**
      * This controller is used to create a new User
@@ -41,10 +40,6 @@ class UserController {
             try {
                 const data = req.body;
                 const result = yield user_service_1.UserService.loginBLL(data);
-                if (result.status == 404) {
-                    res.status(404).json({ msg: result.msg });
-                    return;
-                }
                 res.status(200).cookie('token', result.token, { httpOnly: true, secure: true }).json({ msg: result.msg, role: result.role });
             }
             catch (error) {
@@ -58,7 +53,7 @@ class UserController {
      * @param res
      * @returns all accounts of a user
      */
-    getAllAccounts(req, res) {
+    getAllAccounts(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.user.id;
@@ -66,7 +61,8 @@ class UserController {
                 res.status(result.status).json(result.msg);
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
+                // console.log(error);
+                next(error);
             }
         });
     }
@@ -91,125 +87,104 @@ class UserController {
     /**
      *
      */
-    logout(req, res) {
+    logout(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 res.clearCookie('token').status(200).json({ msg: "Logout successfull" });
             }
             catch (error) {
-                console.log(error);
+                // console.log(error);
+                next(error);
             }
         });
     }
-    getUser(req, res) {
+    /**
+     *
+     * @param req
+     * @param res
+     * @param next
+     */
+    getUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.user.id;
                 const result = yield user_service_1.UserService.getUsers(id);
-                if (result.status == 404) {
-                    res.status(404).json({ msg: result.msg });
-                    return;
-                }
                 res.status(200).json({ msg: result.msg });
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
-                return;
+                // console.log(error);
+                next(error);
             }
         });
     }
-    updateUser(req, res) {
+    updateUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.user.id;
                 const data = req.body;
-                const isvalidUser = user_schema_1.userSchema.safeParse(data);
-                // if(!isvalidUser.success){
-                //     res.status(400).json({msg:"please enter valid data"});
-                //     return;
-                // }
                 const result = yield user_service_1.UserService.updateUser(id, data);
-                if (result.status == 404) {
-                    res.status(404).json({ msg: result.msg });
-                    return;
-                }
                 res.status(200).json({ msg: result.msg });
                 return;
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
-                return;
+                // console.log(error);
+                next(error);
             }
         });
     }
-    updatePassword(req, res) {
+    updatePassword(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.body.user.id;
                 const data = req.body;
                 console.log(id);
-                const isvalidUser = user_schema_1.userSchema.safeParse(data);
-                // if(!isvalidUser.success){
-                //     res.status(400).json({msg:"please enter valid data"});
-                //     return;
-                // }
                 const result = yield user_service_1.UserService.updatePassword(id, data);
-                if (result.status == 404) {
-                    res.status(404).json({ msg: result.msg });
-                    return;
-                }
                 res.status(200).json({ msg: result.msg });
                 return;
             }
             catch (error) {
-                res.status(500).json({ msg: "Internal server error" });
-                return;
+                // console.log(error);
+                next(error);
             }
         });
     }
-    sendForgetPasswordOtp(req, res) {
+    sendForgetPasswordOtp(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body.email;
                 const otp = req.body.otp;
                 const result = yield user_service_1.UserService.sendforgetPasswordOtp(data, otp);
-                if (result.status == 404) {
-                    res.status(404).json({ msg: result.msg });
-                }
                 res.status(200).json({ msg: result.msg });
                 return;
             }
             catch (error) {
-                console.log(error);
+                // console.log(error);
+                next(error);
             }
         });
     }
-    verifyForgetPasswordOtp(req, res) {
+    verifyForgetPasswordOtp(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
                 const result = yield user_service_1.UserService.verifyForgetPasswordOtp(data.email, data.otp, data.password);
-                if (result.status == 404) {
-                    res.status(404).json({ msg: result.msg });
-                }
-                res.status(200).json({ msg: result.msg });
+                res.status(200).json({ msg: result.message });
                 return;
             }
             catch (error) {
+                // console.log(error);
+                next(error);
             }
         });
     }
     generateOtp(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log("hii");
             try {
                 const email = req.body.email;
-                // console.log(req.body);
                 const result = yield user_service_1.UserService.resendOtp(email);
                 res.status(result.status).json({ msg: result.msg });
             }
             catch (error) {
-                // console.log(error);
                 next(error);
             }
         });

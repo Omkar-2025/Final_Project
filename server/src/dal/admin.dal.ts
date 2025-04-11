@@ -8,6 +8,7 @@ import queryResolverTemplate from "../utils/queryresolveTemplate";
 import { Support } from "../entitiy/support_query.entity";
 import { ResolveQueryType } from "../types/schema/admin.schema";
 import { Transaction } from "../entitiy/transaction.entity";
+import { GlobalErrorHandler } from "../types/globalErrorHandler";
 
 
 const userRepo= AppDataSource.getRepository(User);
@@ -27,7 +28,7 @@ export class adminDAL{
     static async verifyAccountDAL(id:number){
         const account = await accountRepo.findOne({where:{id:id},relations:["user"]});
                     if(!account){
-                        throw new Error("Account not found");
+                        throw new GlobalErrorHandler("Account not found",404);
                     }
                     account.isVerified=true;
                     await mailerSender({email:account.user.email,title:"Account Verified",body:`Your account with account number ${account.account_number} has been verified successfully`});
@@ -51,12 +52,14 @@ export class adminDAL{
         const support = await supportRepo.findOne({where:{id:data.queryId},relations:["user"]}); 
         // console.log(support);
         if(!support){
-            throw new Error("Query not found");
+            throw new GlobalErrorHandler("Support not found",404);
+
         }
         const user = await userRepo.findOne({where:{id:support.user.id}});
         // console.log(user);
         if(!user){
-           throw new Error("User not found");
+            throw new GlobalErrorHandler("User not found",404);
+
         }
         support.resolve=reply;
         support.status='Completed';
@@ -68,11 +71,12 @@ export class adminDAL{
     static async getAllAccountsDAL(id:number){
         const user = await userRepo.findOne({ where: { id: id } });
         if (!user) {
-           throw new Error("User not found")
+            throw new GlobalErrorHandler("User not found",404);
+
         }
         const accounts = await accountRepo.find({ where: { user: user } });
         if (!accounts || accounts.length === 0) {
-            throw new Error("No accounts found for this user")
+            throw new GlobalErrorHandler(" no Account found for this user ",404);
         }
 
         return { msg: accounts, status: 200 };
@@ -82,7 +86,8 @@ export class adminDAL{
         const user= await userRepo.findOne({where:{id:id}});
         console.log(user);
         if(!user){
-           throw new Error("User not found")
+            throw new GlobalErrorHandler("User not found",404);
+
         }
         const support = await supportRepo.find({where:{user:user},});
         return {msg:support,status:200};
@@ -109,6 +114,9 @@ export class adminDAL{
             .orderBy("YEAR(transaction.createdAt)", "DESC")
             .addOrderBy("MONTH(transaction.createdAt)", "DESC")
             .getRawMany();
+
+            console.log(transaction);
+            
 
             const groupedTransactions = transaction.reduce((acc, transaction) => {
                 const key = `${transaction.year}-${transaction.month}`;

@@ -86,6 +86,7 @@ export class ProfileComponent {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Expense PDF Downloaded' })
     }, (err: any) => {
       console.log(err);
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.msg })
     })
   }
 

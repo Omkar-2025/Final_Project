@@ -55,8 +55,7 @@ export class UserService {
 
 
     static async loginBLL(data: LoginType) {
-        try {
-
+     
             const { email, password } = data;
 
             // console.log(email, password);
@@ -76,33 +75,22 @@ export class UserService {
        
             const dalResult = await UserDAL.loginDAL({ email, password });
 
-            if(dalResult?.status == 400) {
-               throw new Error(dalResult.msg);
-            }
-            else if(dalResult?.status == 200) {
-                return { msg: "Login successfull", role: dalResult.role, token: dalResult.token, status: 200 };
-            }
-            else{
-                throw new GlobalErrorHandler("Invalid password",404);
-            }
             
-        } catch (error:any) {
-           throw new GlobalErrorHandler(error.message,404)
-        }
+             
+                return { msg: "Login successfull", role: dalResult.role, token: dalResult.token, status: 200 };
+           
+            
+       
     }
 
     static async getAccountsBLL(id: number) {
-        try {
+
 
             const users = await userRepository.find({ where: { id: id }, relations: ['accounts'] });
 
             return ({ msg: users, status: 200 });
 
-        } catch (error) {
-
-            return { message: "Internal server error", status: 500 };
-
-        }
+       
     }
 
     /**
@@ -113,7 +101,7 @@ export class UserService {
 
 
     static async verifyUserBLL(data: VerifyType) {
-        try {
+
 
             const { email, otp } = data;
 
@@ -123,19 +111,9 @@ export class UserService {
 
             const dalResult = await UserDAL.verifyOtpDAL({ email, otp });
 
-            if(dalResult?.status == 400) {
-                return { msg: dalResult.msg, status: 400 };
-            }
-            else if(dalResult?.status == 404){
-                return { msg: dalResult.msg, status: 404 };
-            } 
             return { msg: dalResult?.msg, status: 200 };
 
-        } catch (error:any) {
 
-            throw new GlobalErrorHandler(error,400);
-
-        }
     }
 
     /**
@@ -146,25 +124,13 @@ export class UserService {
 
 
     static async getUsers(id: number) {
-        try {
+    
 
             const dalResult = await UserDAL.getUsersDAL(id);
 
-            if (typeof dalResult === 'object' && dalResult?.status == 404) {
-                return { msg: dalResult.msg, status: 404 };
-            }
-           
-                if (typeof dalResult === 'string') {
-                    return { msg: dalResult, status: 200 };
-                }
-                return { msg: dalResult.msg, status: 200 };
+                return { msg: dalResult.msg, status: dalResult.status };
 
 
-        } catch (error) {
-
-            return { msg: "Internal server error", status: 500 };
-
-        }
     }
 
     /**
@@ -177,34 +143,24 @@ export class UserService {
 
     static async updateUser(id: number, data: UserType) {
 
-        try {
 
             const {name, email, phone, address} = data;
 
             if(!name || !email || !phone){
-                return { msg: "Please provide all the fields", status: 400 };
+                throw new GlobalErrorHandler ("Please provide all the fields",  400);
             }
 
             const isValiddata = updateUserSchema.safeParse(data);
 
 
             if(!isValiddata.success){
-                return { msg: isValiddata.error.issues[0].message, status: 400 };
+                throw new GlobalErrorHandler(isValiddata.error.issues[0].message, 400);
             }
 
            const dalResult = await UserDAL.updateUserDAL(id, data);
 
-           if(dalResult?.status == 404) {
-                return { msg: dalResult.msg, status: 404 };
-           }
+            return { msg: dalResult.msg, status: dalResult.status };
 
-            return { msg: dalResult.msg, status: 200 };
-
-        } catch (error) {
-
-            return { msg: "Internal server error", status: 500 };
-
-        }
     }
 
     /**
@@ -215,89 +171,47 @@ export class UserService {
      */
 
     static async updatePassword(id: any, data: {oldPassword: string, newPassword: string }) {
-        try {
-
+ 
 
             const { oldPassword, newPassword } = data;
             if(!oldPassword || !newPassword) {
-                return { msg: "Please provide all the fields", status: 400 };
+                throw new GlobalErrorHandler("All fields are required",402)
             }
 
             const isValidPassword = updateUserSchema.safeParse(data);
             if(!isValidPassword.success){
-                return { msg: isValidPassword.error.issues[0].message, status: 400 };
+                throw new GlobalErrorHandler(isValidPassword.error.issues[0].message, 400);
             }
 
 
             const dalResult = await UserDAL.updatePasswordDAL(id, data);
 
-
-
-            if(dalResult?.status == 404) {
-                return { msg: dalResult.msg, status: 404 };
-            }
-            if(dalResult?.status == 400) {
-                return { msg: dalResult.msg, status: 400 };
-            }
-
             return { msg: dalResult.msg, status: dalResult.status };
 
-        } catch (error) {
-
-            console.log(error);
-
-            return { msg: "Internal server error", status: 500 };
-
-        }
     }
 
 
     static async sendforgetPasswordOtp(email:string,otp:string){
-        try {
-
 
             const dalResult = await UserDAL.sendforgetPasswordOtpDAL(email,otp);
-
-            if(dalResult?.status == 404) {
-                return { msg: dalResult.msg, status: 404 };
-            }
-
         
-            return { msg: dalResult?.msg, status: 200 };
+            return { msg: dalResult?.msg, status: dalResult?.status };
 
-        } catch (error) {
-            console.log(error);
-            return { msg: "Internal server error", status: 500 };
-        }
     }
 
     static async verifyForgetPasswordOtp(email:string,otp:string,password:string){
-        try {
-
+    
             const dalResult = await UserDAL.verifyForgetPasswordOtpDAL(email, otp, password);
 
-            if(dalResult?.status == 404) {
-                return { msg: dalResult.msg, status: 404 };
-            }
+            return {message:dalResult.msg , status:dalResult.status}
             
-            return { msg: dalResult.msg, status: 200 };
-            
-        } catch (error:Error|any) {
-           throw new Error(error.message);
-        }
     }
 
     static async resendOtp(email:string){
-        try {
 
             const dalResult = await UserDAL.generateOtpDAL(email);
 
             return {msg:dalResult.msg,status:200};
-
-        } catch (error:any) {
-            // console.log(error);
-           throw new GlobalErrorHandler(error,404)
-        }
     }
 
 

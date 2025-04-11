@@ -19,8 +19,7 @@ class UserDAL {
 
     static async createUserDAl({name, email, password, phone, role}:{name:string, email:string, password:string, phone:string, role:string}) {
 
-        // console.log("create user dal",name, email, password, phone, role);
-        
+
         
         const userexist = await userRepository.find({ where: { email: email } });
 
@@ -109,8 +108,6 @@ class UserDAL {
                 throw new GlobalErrorHandler("Invalid OTP",401);
             }
            }
-
-            throw new GlobalErrorHandler("Invalid OTP",401);
         }
     }
 
@@ -118,7 +115,6 @@ class UserDAL {
         const user = await userRepository.findOne({ where: { id: id } });
 
             if (!user) {
-
                throw new Error("User not found")
             }
 
@@ -192,7 +188,7 @@ class UserDAL {
 
              return { msg: "OTP verfied successfully", status: 200 };
          }
-
+         throw new GlobalErrorHandler("Otp is not match",400)
 
     }
 
@@ -221,7 +217,7 @@ class UserDAL {
     }
 
     static async generateOtpDAL(email:string){
-        try {
+
             let opt = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false, digits: true });
             const user = await userRepository.findOne({ where: { email: email } });
 
@@ -235,10 +231,8 @@ class UserDAL {
 
             await mailerSender({ email: email, title: "Verification", body: otpTemplate(opt) });
             return { msg: "OTP sent successfully", status: 200 };
-        // return opt;
-        } catch (error) {
-            throw new GlobalErrorHandler("Error generating OTP",404)
-        }
+
+       
     }
 
 

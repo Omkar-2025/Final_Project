@@ -27,7 +27,6 @@ const userRepository = db_1.AppDataSource.getRepository(user_entity_1.User);
 class UserDAL {
     static createUserDAl(_a) {
         return __awaiter(this, arguments, void 0, function* ({ name, email, password, phone, role }) {
-            // console.log("create user dal",name, email, password, phone, role);
             const userexist = yield userRepository.find({ where: { email: email } });
             if (userexist.length > 0) {
                 throw new globalErrorHandler_1.GlobalErrorHandler("User already exist", 400);
@@ -84,7 +83,6 @@ class UserDAL {
                         throw new globalErrorHandler_1.GlobalErrorHandler("Invalid OTP", 401);
                     }
                 }
-                throw new globalErrorHandler_1.GlobalErrorHandler("Invalid OTP", 401);
             }
         });
     }
@@ -141,6 +139,7 @@ class UserDAL {
                 yield userRepository.save(user);
                 return { msg: "OTP verfied successfully", status: 200 };
             }
+            throw new globalErrorHandler_1.GlobalErrorHandler("Otp is not match", 400);
         });
     }
     static verifyForgetPasswordOtpDAL(email, otp, password) {
@@ -160,21 +159,15 @@ class UserDAL {
     }
     static generateOtpDAL(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                let opt = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false, digits: true });
-                const user = yield userRepository.findOne({ where: { email: email } });
-                if (!user) {
-                    throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
-                }
-                user.otp = opt;
-                yield userRepository.save(user);
-                yield (0, mailerSender_1.mailerSender)({ email: email, title: "Verification", body: (0, authTemplate_1.otpTemplate)(opt) });
-                return { msg: "OTP sent successfully", status: 200 };
-                // return opt;
+            let opt = otp_generator_1.default.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false, digits: true });
+            const user = yield userRepository.findOne({ where: { email: email } });
+            if (!user) {
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
-            catch (error) {
-                throw new globalErrorHandler_1.GlobalErrorHandler("Error generating OTP", 404);
-            }
+            user.otp = opt;
+            yield userRepository.save(user);
+            yield (0, mailerSender_1.mailerSender)({ email: email, title: "Verification", body: (0, authTemplate_1.otpTemplate)(opt) });
+            return { msg: "OTP sent successfully", status: 200 };
         });
     }
 }
