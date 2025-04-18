@@ -90,7 +90,7 @@ class UserDAL {
 
         if (!user) {
 
-           throw new Error("User not found")
+            throw new GlobalErrorHandler("User not found",404);
         }
         if (user) {
             const time = Date.now()-user.createdAt.getTime();
@@ -115,7 +115,7 @@ class UserDAL {
         const user = await userRepository.findOne({ where: { id: id } });
 
             if (!user) {
-               throw new Error("User not found")
+                throw new GlobalErrorHandler("User not found",404);
             }
 
             user.password = "";
@@ -131,7 +131,7 @@ class UserDAL {
 
         if (!user) {
 
-           throw new Error("User not found")
+            throw new GlobalErrorHandler("User not found",404);
         }
 
         const { name, email, phone, address } = data;
@@ -155,7 +155,7 @@ class UserDAL {
 
         if (!user) {
 
-            throw new Error("User not found")
+            throw new GlobalErrorHandler("User not found",404);
 
         }
 
@@ -171,7 +171,7 @@ class UserDAL {
 
             return { msg: "Password updated successfully", status: 200 };
         }
-        throw new Error("Invalid password");
+        throw new GlobalErrorHandler("Invalid password",400);
     }
 
     static async sendforgetPasswordOtpDAL(email:string,otp:string){
@@ -179,7 +179,7 @@ class UserDAL {
 
             if (!user) {
 
-              throw new Error("User not found")
+                throw new GlobalErrorHandler("User not found",404);
 
             }
 
@@ -198,13 +198,13 @@ class UserDAL {
 
             if (!user) {
 
-               throw new Error("User not found")
+                throw new GlobalErrorHandler("User not found",404);
 
             }
 
             if (otp !== user.otp) {
 
-                throw new Error("Invalid OTP")  
+                throw new GlobalErrorHandler("Otp is not valid",404);
             }
             
             const hashpassowrd = await bcryptjs.hash(password, 10);

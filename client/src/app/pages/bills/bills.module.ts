@@ -14,6 +14,7 @@ import { MessageModule } from 'primeng/message';
 import { HomeModule } from "../home/home.module";
 import { SharedModule } from "../../shared/shared.module";
 import { PaginatorModule } from 'primeng/paginator';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { PaginatorModule } from 'primeng/paginator';
     MessageModule,
     HomeModule,
     SharedModule,
-    PaginatorModule
+    PaginatorModule,
+    DropdownModule
 ],
   providers: [
     MessageService,

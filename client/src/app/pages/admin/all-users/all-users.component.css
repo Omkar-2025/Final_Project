@@ -1,0 +1,33 @@
+
+.dashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .user-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .user-info p,
+  .account-info p {
+    margin: 4px 0;
+  }
+  
+  .account-info ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .account-info li {
+    border-top: 1px solid #ddd;
+    padding: 8px 0;
+  }
+  
+  .no-accounts {
+    color: #999;
+    font-style: italic;
+  }

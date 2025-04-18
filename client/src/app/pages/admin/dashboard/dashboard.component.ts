@@ -33,8 +33,6 @@ visible: any;
   ngOnInit(){
     this.fetchAllQuerys();
     this.fetchAllAccounts();
-    // console.log(this.allUsers);
-    
   }
   
   ngAfterViewInit(){
@@ -51,8 +49,9 @@ visible: any;
   }
 
   verifyAccount(accountId:number){
-    console.log(accountId);
+    //console.log(accountId);
     this.adminService.verifyAccount(accountId).subscribe((res:any)=>{
+
       this.messageService.add({severity:'success', summary: 'Success', detail: res.msg, life: 3000});
       this.fetchAllAccounts();
     }
@@ -109,5 +108,14 @@ visible: any;
       })  
   }
   
+
+  navigateToAllUsers(){
+    this.router.navigate(['admin/allUsers'])
+  }
+
+  navigateToAllQuery(){
+    this.router.navigate(['admin/support'])
+  }
+
 
 }

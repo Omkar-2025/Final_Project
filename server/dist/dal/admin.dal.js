@@ -102,7 +102,9 @@ class adminDAL {
     }
     static getSupportDAL() {
         return __awaiter(this, void 0, void 0, function* () {
-            const support = yield supportRepo.find({ relations: ["user"] });
+            // console.log("hii")
+            const support = yield supportRepo.find({ relations: { user: true } });
+            // console.log(support);
             return { msg: support, status: 200 };
         });
     }

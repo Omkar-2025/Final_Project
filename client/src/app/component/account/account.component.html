@@ -1,40 +1,50 @@
 <p-toast></p-toast>
-<ng-container *ngIf="!account" class="spinner">
-    <p-progress-spinner ariaLabel="loading"></p-progress-spinner>
-</ng-container>
 
-<p-progress-spinner *ngIf="isLoading" ariaLabel="loading" class="full-page-spinner" ></p-progress-spinner>
+
+<app-spinner [condition]="!account || isLoading"></app-spinner>
 
 
 <ng-container *ngIf="account">
+
     <div class="account-detail">
+
         <h2>Account Details</h2>
+
         <div class="account-info">
+
             <p><strong>Name:</strong> {{account.name}}</p>
+
             <p><strong>Balance:</strong> {{account.balance}}</p>
+
             <p><strong>Account Type:</strong> {{account.account_type}}</p>
+
             <p><strong>Account Number:</strong> {{account.account_number}}</p>
+
         </div>
 
-
         <div class="account-actions"  *ngIf="account.status == '1' ">  
+            
         <p-button (click)="showDialog('deposit')" label="Deposit" *ngIf="transcations" />
         <p-button label="WithDraw" severity="warn" (click)="showDialog('withdraw')"  />
         <p-button label="Transfer Money " severity="help" (click)="showDialog('transfer')"  />
-        <p-button label="Deactivate Account " severity="danger" (click)="deactiveAccount()"  />
+        <p-button label="Deactivate Account " severity="danger" (click)="deactiveAccount($event)"  />
     </div>
-    <p-button label="Activate Account " severity="success" (click)="activeAccount()"  *ngIf="account.status == '0' "/>
+    <p-button label="Activate Account " severity="success" (click)="activeAccount($event)"  *ngIf="account.status == '0' "/>
         </div>
 </ng-container>
 
 
-<!-- <input pInputText id="username" [(ngModel)]="search" [formControl]="searchText" autocomplete="off"   />
-<label for="username">Search Transactions</label> -->
+    
+<ng-container *ngIf="transcations && account">
+    <input pInputText id="username" [(ngModel)]="search" autocomplete="off"  (keyup.enter)="searchText()"  />
+<label for="username" id="search-label">Search Transactions</label>
+</ng-container>
 
 
 
 
-<div class="transactions" *ngIf="transcations">
+
+<div class="transactions" *ngIf="transcations && account">
     <h3>Transactions</h3>
     <ul>
         <li *ngFor="let transaction of transcations">
@@ -45,19 +55,7 @@
     <div class="card flex justify-center">
         <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="120"  />
     </div>
-    
 
-    
-   
-
-    <!-- <h3>Transactions To</h3>
-    <ul>
-        <li *ngFor="let transaction of transcations.transactionsTo">
-            <p><strong>Date:</strong> {{transaction.createdAt | date:'full'}}</p>
-            <p><strong>Amount:</strong> {{transaction.amount}}</p>
-            <p><strong>Description:</strong> {{transaction.transactionType}}</p>
-        </li>
-    </ul> -->
 </div>
 
 
@@ -68,9 +66,7 @@
 
 <div class="card flex justify-center">
    
-         <p-dialog header="Transactions" [modal]="true" [(visible)]="visible" [style]="{ width: '100vw' , height:'100vh' }">
-
-        
+         <p-dialog header="Transactions" [modal]="true" [(visible)]="visible"  [style]="{height:'35rem',width:'30rem'}"  >
 
       <ng-container *ngIf="type == 'deposit'">
         <app-digalog [formGroup]="depositFormGroup" (formSubmit)="DepositAmount($event)" [InputControls]="inputAmount" [btnlabel]="type"  ></app-digalog>    
@@ -84,5 +80,7 @@
         <app-digalog [formGroup]="transferFromgroup" (formSubmit)="transferAmount($event)" [InputControls]="transferFromInputControl" [btnlabel]="type"  ></app-digalog>    
       </ng-container>
       
+</p-dialog>
 
+</div>
        

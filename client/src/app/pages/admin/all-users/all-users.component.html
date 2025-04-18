@@ -1,12 +1,8 @@
-<p-toast></p-toast>
-<app-navbar></app-navbar>
-
-<p-button label="Get the All Users" severity="info" (click)="navigateToAllUsers()"  ></p-button>
-<p-button label="All Querys"  severity="warn"  (click)="navigateToAllQuery()" > </p-button>
-<app-barchart1 ></app-barchart1>
-
-<!-- <div class="dashboard">
+<div class="dashboard">
     <h2>All Users</h2>
+
+    <!-- {{allUsers.length}} -->
+
     <div *ngFor="let user of allUsers" class="user-card">
       <div class="user-info"  (click)="selectUser(user)">
         <p><strong>Name:</strong> {{ user.name }}</p>
@@ -20,15 +16,4 @@
         <p>No accounts available for this user.</p>
       </div>
     </div>
-  </div> -->
-
-
-
-
-
-
-
-
-
-
-
+  </div>

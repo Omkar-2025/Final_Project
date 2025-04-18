@@ -2,9 +2,11 @@ export interface AccountType {
     id?: number;
     userId: number;
     accountNumber: string;
-    accountType: string;
+    account_type: string;
     balance: number;
     createdAt?: Date;
+    name:string
+    isVerified:boolean
     // updatedAt?: Date;
 }
 

@@ -1,21 +1,36 @@
 <p-toast></p-toast>
 
-<p-progress-spinner *ngIf="isLoading" ariaLabel="loading" class="full-page-spinner" ></p-progress-spinner>
+
+<app-spinner [condition]="isLoading || !bill" ></app-spinner>
 
 <ng-container class="bill-template" *ngIf="bill">
-    <div class="bill-card">
+
+    <div class="bill-card" [ngStyle]="{'background-color':nextPaymentDatePassed ? '#756e6d' : '#ffff' }" >
         <h3 class="bill-title">{{ bill.billName }}</h3>
+
         <p class="bill-amount">Amount: {{ bill.amount }}</p>
+
         <p class="bill-due-date">next Payment Date : {{bill.nextPaymentDate | date}}</p>
+
         <p class="bill-frequency">Frequency: {{ bill.frequency }}</p>
+
         <p class="bill-frequency">Account Number: {{ bill.account.account_type }}</p>
+
         <p class="bill-frequency">Account Type: {{ bill.account.account_number }}</p>
+
         <p-button (click)="showDialog('payBills')" label="Pay bills" />
+
         <i class="pi pi-pencil" style="font-size: 1rem" (click)="showDialog('isupdateBill')"></i>
+
         <p-toast />
+
         <p-confirmdialog />
+
         <p-button (click)="confirm2($event)" label="Delete" severity="danger" [outlined]="true" />
+
+        <!-- <p-button label="pay with the default account " severity="warn"></p-button> -->
     </div>
+
 </ng-container>
 
 
@@ -25,14 +40,23 @@
      <p-dialog header="Pay bills" [modal]="true" [(visible)]="visible" [style]="{ width: '35rem', height:'35rem' }">
         
         <ng-container *ngIf=" dialogtype == 'isupdateBill' ">
+
             <app-digalog [formGroup]="updateBillFrom" [InputControls]="billFormInputControls" [frequency_arr]="frequency_arr" [accounts]="accounts" [btnlabel]="dialogtype" (formSubmit)="updateBill($event)"   ></app-digalog>
+
         </ng-container>
  
        <ng-container  *ngIf="dialogtype == 'payBills'" >
+
         <app-digalog [formGroup]="payBillFormGroup" [InputControls]="payBillInputControls" [accounts]="accounts" [btnlabel]="payBillBtn" (formSubmit)="payBill($event)" ></app-digalog>
+        
        </ng-container>
 
     </p-dialog>
+
+   
+
+   
+
 </div>
 
 

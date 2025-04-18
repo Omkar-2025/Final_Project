@@ -73,6 +73,7 @@ class AdminController {
     static getAllSupport(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                // console.log("hii ");
                 const result = yield admin_service_1.AdminService.getSupportBLL();
                 res.status(200).json({ msg: result.msg });
             }

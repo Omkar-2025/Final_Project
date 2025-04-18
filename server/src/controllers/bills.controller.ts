@@ -126,8 +126,8 @@ class billsController{
         try {
             const data = req.body;
             const page = req.body.page;
-        
-            const result:any = await BillsService.getBillshistoy(data,page);
+            const acc_id=req.body.acc_id;
+            const result:any = await BillsService.getBillshistoy(data,page,acc_id);
             // console.log(result);
             res.status(200).json(result?.msg);
         } catch (error) {

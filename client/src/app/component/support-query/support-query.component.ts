@@ -73,6 +73,7 @@ export class SupportQueryComponent {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Support query deleted successfully' });
           this.issupportQueryDeleted.emit(this.supportQuery.id);
           this.issupportQueryUpdated.emit(this.supportQuery.id);
+          this.visible = false;
         }, (error: any) => {
           console.log(error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting support query' });

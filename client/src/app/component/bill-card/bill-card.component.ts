@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { BillsService } from '../../Services/bills.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AccountService } from '../../Services/account.service';
@@ -18,6 +18,8 @@ export class BillCardComponent {
   amount: any
 
   isLoading: boolean = false; 
+
+  currentDate:Date=new Date();
 
   // @Input() bill!:any;
 
@@ -39,58 +41,79 @@ export class BillCardComponent {
 
   payBillFormGroup!:FormGroup;
 
-  payBillInputControls=[{name:'account',label:'accounts',type:'select'}]
+  payBillInputControls:{name:string,label:string,type:string}[]=[{name:'account',label:'accounts',type:'select'}]
 
+  @Input() bill: any;
+
+  @Output() isBillUpdated = new EventEmitter<any>();
+
+  @Output() isBillDeleted = new EventEmitter<any>();
+
+ 
+  selectedAccounts: any = undefined;
+
+  isSelectAccount: boolean = false;
+
+  isbillPayed: boolean = false;
+
+  dialogtype: string = 'Update the bill';
+
+  nextPaymentDatePassed!:boolean
+  
   constructor(private billService: BillsService, private messageService: MessageService, private accountService: AccountService, private confirmationService: ConfirmationService) { 
-
+    
     this.updateBillFrom = new FormGroup({
       billName:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
       amount:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
       frequency:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
       account:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
     })
-
+    
     this.payBillFormGroup = new FormGroup({
       account:new FormControl('',[Validators.required , Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
     })
-
-
-
-
-
+    
   }
-
-  @Input() bill: any;
-
-  @Output() isBillUpdated = new EventEmitter<any>();
-  @Output() isBillDeleted = new EventEmitter<any>();
-
- 
-  selectedAccounts: any = undefined;
-  isSelectAccount: boolean = false;
-  isbillPayed: boolean = false;
-  dialogtype: string = 'Update the bill';
   
-
-
+  
+  
+  ngOnInit(){
+    console.log(this.currentDate);
+  }
+  
+  ngOnChanges(changes:SimpleChanges){
+    if(changes['bill']){
+      if(this.bill!==undefined){
+        this.nextPaymentDatePassed = new Date(this.bill.nextPaymentDate).getTime() < (this.currentDate as Date).getTime();
+      }
+    }
+  }
+  
+  
   selectAccount() {
     this.isSelectAccount = true;
-  
+    
   }
-
+  
   showDialog(type: string) {
     this.dialogtype = type;
-    console.log(type);
+    // console.log(type);
     
- 
+    console.log(this.bill.account.account_number);
+    
+    this.payBillFormGroup.patchValue({
+      account: this.bill.account.account_number
+    })
+    
+    
     this.visible = true;
     this.visible = true;
-   
-   
+    
+    
     this.frequency = this.bill.frequency;
     this.billName = this.bill.billName;
     this.amount = this.bill.amount;
-
+    
     this.updateBillFrom.patchValue({
       billName: this.bill.billName,
       amount: this.bill.amount,
@@ -98,16 +121,19 @@ export class BillCardComponent {
       account: this.bill.account.id
     })
   }
-
+  
   acc_number: number = 0;
-
+  
   payBill(value: any) {
-
+    
     // console.log($event);
+    
+    // console.log(this.bill);
+    
     
     this.isLoading = true;
     if (this.selectedAccounts == undefined) {
-        this.selectedAccounts = this.bill.account; 
+      this.selectedAccounts = this.bill.account; 
     }
     // console.log(value.account);
     // console.log(this.bill);
@@ -127,22 +153,23 @@ export class BillCardComponent {
       this.isLoading = false;
       this.visible=false;
     }, (error) => {
-      console.log(error);
+      // console.log(error);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg });
       this.isLoading=false;
       return;
     })
-
+    
     //this.isbillPayed=false
   }
-
-
+  
+  
+  
   updateBill(value: any) {
-
+    
     // console.log(value);
-
+    
     this.visible=false;
-
+    
     this.billService.updateBill(this.bill.id, value.billName, value.amount, value.frequency, value.account).subscribe((result: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill updated successfully' });
       this.visible = false;
@@ -151,7 +178,7 @@ export class BillCardComponent {
       this.isLoading=false;
       
     }, (error: any) => {
-      console.log(error);
+      // console.log(error);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.msg });
     })
   }

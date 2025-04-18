@@ -310,21 +310,13 @@ class AccountDAL {
     static searchTransactionDAL(id, search) {
         return __awaiter(this, void 0, void 0, function* () {
             let limit = 10;
-            // console.log(search);
-            // const transactions = await transactionRepository.find({where:[
-            //     { fromAccount: { id: id } },
-            //     { toAccount: { id: id } },
-            //     {transactionType:Like(`%${search}%`)}],
-            //     relations:['fromAccount','toAccount'],
-            //     take:limit,
-            // });
             // console.log(id);
+            // console.log(search);
             const transactions = yield transactionRepository.createQueryBuilder("transaction")
-                .where("transaction.fromAccountId = :id or transaction.toAccountId=:id", { id })
+                .where("transaction.fromAccountId = :id", { id })
                 .andWhere("transaction.transactionType LIKE :search", { search: `%${search}%` })
                 .limit(limit)
                 .getMany();
-            // console.log(transactions);
             if (transactions.length > 0) {
                 return { msg: transactions, status: 200 };
             }

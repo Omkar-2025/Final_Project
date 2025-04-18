@@ -20,12 +20,12 @@ const routes: Routes = [
   {path:'home',component:HomeComponent},
   {path:'register',component:SignupComponent},
   {path:'otp',component:OtpComponent},
-  {path:'account/:id',component:AccountComponent,canActivate:[AuthguradService]},
-  {path:'createaccount',component:CreateAccountComponent,canActivate:[AuthguradService]},
-  {path:'bills',component:BillsComponent,canActivate:[AuthguradService]},
-  {path:'support',component:SupportComponent,canActivate:[AuthguradService]},
+  {path:'account/:id',component:AccountComponent},
+  {path:'createaccount',component:CreateAccountComponent},
+  {path:'bills',component:BillsComponent},
+  {path:'support',component:SupportComponent},
   {path:'admin',component:DashboardComponent},
-  {path:'profile',component:ProfileComponent,canActivate:[AuthguradService]},
+  {path:'profile',component:ProfileComponent},
   {path:'',redirectTo:'/home',pathMatch:'full'},
   {path:'forget',component:ForgetPasswordComponent}
   

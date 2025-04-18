@@ -155,27 +155,39 @@ class BillsDAL {
             throw new globalErrorHandler_1.GlobalErrorHandler("Insufficient balance", 400);
         });
     }
-    static getBillHistoryDAL(id, page, limit) {
-        return __awaiter(this, void 0, void 0, function* () {
+    static getBillHistoryDAL(id_1, page_1, limit_1) {
+        return __awaiter(this, arguments, void 0, function* (id, page, limit, acc_id = 0) {
             // console.log(id,page,limit);
+            // console.log(acc_id);
             const user = yield userRepository.find({ where: { id: id } });
             const skip = (page - 1) * limit;
-            if (!user) {
-                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
+            let account_id = 0;
+            if (acc_id == 0) {
+                // console.log("hii");
+                if (!user) {
+                    throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
+                }
+                const account = yield accountRepository.find({ where: { user: user[0] } });
+                if (!account) {
+                    throw new globalErrorHandler_1.GlobalErrorHandler("Account not found", 404);
+                }
+                account_id = account[0].id;
             }
-            const account = yield accountRepository.find({ where: { user: user[0] } });
-            if (!account) {
-                throw new globalErrorHandler_1.GlobalErrorHandler("Account not found", 404);
+            else {
+                account_id = acc_id;
             }
-            // const transactions = await 
-            // transactionRepository.find({
-            //     where: [{ toAccount: account}, {fromAccount:account}], 
-            //     order: { createdAt: "DESC" } ,
-            // skip:skip,
-            // take:limit
-            // });
+            // const getTranscation2 = await userRepository.createQueryBuilder('user')
+            // .leftJoinAndSelect('user.accounts','accounts')
+            // .leftJoinAndSelect('accounts.transactionsFrom','transactionsFrom')
+            // .where('user.id=:id',{id})
+            // .andWhere('transaction.fromAccountId =: id ',{id:account_id})
+            // .andWhere("transaction.transactionType like '%Bill%'")
+            // .orderBy('transaction.createdAt','DESC')
+            // .skip(skip)
+            // .limit(limit)
+            // .getRawMany()
+            // console.log(getTranscation2);
             const billSearch = 'Bill';
-            const account_id = account[0].id;
             // console.log(account_id);
             const transaction1 = yield transactionRepository.createQueryBuilder('transaction')
                 // .select('*')

@@ -17,7 +17,7 @@ export class BillsComponent {
 
   visible: boolean=false;
 
-  selectedAccounts!: AccountType;
+  selectedAccounts!: any;
 
   bills: any;
 
@@ -46,6 +46,8 @@ export class BillsComponent {
 
   btnName:string = 'createBill'
 
+
+  dateToday = new Date();
 
   // createBillForm: FormGroup;
 
@@ -98,7 +100,10 @@ export class BillsComponent {
   }
 
  
-  selectAccount() {
+  selectAccount(account_id:number) {
+
+    this.fetchTranscations(this.pageNumber,account_id)
+
     this.isSelectAccount = true;
   }
 
@@ -116,9 +121,9 @@ export class BillsComponent {
     // console.log("event called");
     
     // console.log(this.createBillForm.value);
-    console.log(value.account_id.id);
+    // console.log(value.account_id.id);
     
-    console.log(value.account);
+    // console.log(value.account);
     
     this.billService.createBill(value.billName,value.amount, value.frequency, value.account_id.id).subscribe((result: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Bill created successfully' });
@@ -140,25 +145,28 @@ export class BillsComponent {
     this.fetchBills();
   }
 
-  fetchTranscations(pageNumber: number = 1) {
-  this.billService.getbillshistory(pageNumber).subscribe((result:any)=>{
-    this.billsTranscation = result;
-  },(error:any)=>{
-    console.log(error);
-  })  
+
+
+  fetchTranscations(pageNumber: number = 1, acc_id = 0) {
+    this.billService.getbillshistory(pageNumber, acc_id).subscribe((result: any) => {
+      this.billsTranscation = result;
+    }, (error: any) => {
+      console.log(error);
+    })
   }
 
   first: number = 0;
   
+  
     rows: number = 10;
+
+    pageNumber = 1;
   
     onPageChange(event: PaginatorState) {
         this.first = event.first ?? 0;
         this.rows = event.rows ?? 10;
-        // console.log(event.first, event.rows);
-      // console.log(event.first!/10);
-        const pageNumber = event.first!/10 + 1;
-        this.fetchTranscations(pageNumber) 
+         this.pageNumber = event.first!/10 + 1;
+        this.fetchTranscations(this.pageNumber,0) 
     }
 
 }

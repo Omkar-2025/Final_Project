@@ -94,7 +94,9 @@ export class adminDAL{
     }
 
     static async getSupportDAL(){
-        const support = await supportRepo.find({relations:["user"]});
+        // console.log("hii")
+        const support = await supportRepo.find({relations:{user:true}});
+        // console.log(support);
         return {msg:support,status:200};
     }
 
@@ -161,9 +163,6 @@ export class adminDAL{
 
             return { status: 200, msg: Object.values(groupedTransactions) };
 
-        
-
     }
-   
 
 }

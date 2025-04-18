@@ -69,7 +69,7 @@ class UserDAL {
         return __awaiter(this, arguments, void 0, function* ({ email, otp }) {
             const user = yield userRepository.findOne({ where: { email: email } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             if (user) {
                 const time = Date.now() - user.createdAt.getTime();
@@ -90,7 +90,7 @@ class UserDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { id: id } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             user.password = "";
             user.otp = "";
@@ -101,7 +101,7 @@ class UserDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { id: id } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const { name, email, phone, address } = data;
             user.name = name;
@@ -116,7 +116,7 @@ class UserDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { id: id } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             const { oldPassword, newPassword } = data;
             // console.log(oldPassword,newPassword);
@@ -126,14 +126,14 @@ class UserDAL {
                 yield userRepository.save(user);
                 return { msg: "Password updated successfully", status: 200 };
             }
-            throw new Error("Invalid password");
+            throw new globalErrorHandler_1.GlobalErrorHandler("Invalid password", 400);
         });
     }
     static sendforgetPasswordOtpDAL(email, otp) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { email: email } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             if (user.otp == otp) {
                 yield userRepository.save(user);
@@ -146,10 +146,10 @@ class UserDAL {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userRepository.findOne({ where: { email: email } });
             if (!user) {
-                throw new Error("User not found");
+                throw new globalErrorHandler_1.GlobalErrorHandler("User not found", 404);
             }
             if (otp !== user.otp) {
-                throw new Error("Invalid OTP");
+                throw new globalErrorHandler_1.GlobalErrorHandler("Otp is not valid", 404);
             }
             const hashpassowrd = yield bcryptjs_1.default.hash(password, 10);
             user.password = hashpassowrd;

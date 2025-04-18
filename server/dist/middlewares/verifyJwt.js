@@ -17,8 +17,10 @@ const verifyJwt = (req, res, next) => {
     try {
         // console.log(process.env.JWT_SECRET);
         const token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.token;
-        if (!token)
+        if (!token) {
             res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         req.body.user = decoded;
         next();

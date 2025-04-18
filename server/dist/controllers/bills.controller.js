@@ -123,7 +123,8 @@ class billsController {
             try {
                 const data = req.body;
                 const page = req.body.page;
-                const result = yield bills_service_1.BillsService.getBillshistoy(data, page);
+                const acc_id = req.body.acc_id;
+                const result = yield bills_service_1.BillsService.getBillshistoy(data, page, acc_id);
                 // console.log(result);
                 res.status(200).json(result === null || result === void 0 ? void 0 : result.msg);
             }

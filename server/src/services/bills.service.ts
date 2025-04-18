@@ -107,14 +107,14 @@ export class BillsService {
      * @returns 
      */
 
-    static async getBillshistoy(data:any,page:number) {
+    static async getBillshistoy(data:any,page:number,acc_id:number) {
 
 
             // console.log(data);
             let limit = 5;
             const id:number = data.user.id
             // const page = 
-            const dalResult = await BillsDAL.getBillHistoryDAL(id,page,limit);
+            const dalResult = await BillsDAL.getBillHistoryDAL(id,page,limit,acc_id);
             return dalResult;
            
        

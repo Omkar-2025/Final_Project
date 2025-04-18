@@ -88,13 +88,13 @@ class BillsService {
      * @param data
      * @returns
      */
-    static getBillshistoy(data, page) {
+    static getBillshistoy(data, page, acc_id) {
         return __awaiter(this, void 0, void 0, function* () {
             // console.log(data);
             let limit = 5;
             const id = data.user.id;
             // const page = 
-            const dalResult = yield bills_dal_1.BillsDAL.getBillHistoryDAL(id, page, limit);
+            const dalResult = yield bills_dal_1.BillsDAL.getBillHistoryDAL(id, page, limit, acc_id);
             return dalResult;
         });
     }

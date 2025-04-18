@@ -13,6 +13,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessageModule } from 'primeng/message';
 import { RouterModule } from '@angular/router';
 import { BarchartComponent1 } from './barchart/barchart.component';
+import { AllAccountsComponent } from './all-accounts/all-accounts.component';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 
@@ -21,7 +24,9 @@ import { BarchartComponent1 } from './barchart/barchart.component';
     GenericDisplayTranscationComponent,
     DigalogComponent,
     BarchartComponent,
-    BarchartComponent1
+    BarchartComponent1,
+    AllAccountsComponent,
+    SpinnerComponent
   ],
   imports: [
     CommonModule,
@@ -33,14 +38,17 @@ import { BarchartComponent1 } from './barchart/barchart.component';
     ButtonModule,
     MessageModule,
     RouterModule,
-    ChartModule
+    ChartModule,
+    ProgressSpinnerModule
 ],
   exports:[
     BarchartComponent,
     GenericDisplayTranscationComponent,
     DigalogComponent,
     ButtonModule,
-    BarchartComponent1
+    BarchartComponent1,
+    AllAccountsComponent,
+    SpinnerComponent
   ],
   providers:[
     MessageService

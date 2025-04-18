@@ -44,14 +44,6 @@
     font-size: 14px;
 }
 
-.spinner{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    height: 100vh;
-    width: 100vw;
-}
 
 .account-actions{
     gap: 10px;
@@ -91,20 +83,15 @@ label {
 }
 
 
-.full-page-spinner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; 
+
+  input[pInputText]{
+    margin-top: 2.1rem;
+    width: 30%;
+    margin-left: 36%;
+    /* margin-right: 0; */
   }
-  
-p-progress-spinner {
-    width: 50px;
-    height: 50px;
+
+  #search-label{
+    text-align: center;
+    margin-top: .5rem;
   }

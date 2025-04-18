@@ -14,11 +14,13 @@ import { HomeModule } from '../home/home.module';
 import { SupportModule } from '../support/support.module';
 import { SupportAdminComponent } from './support-admin/support-admin.component';
 import { SharedModule } from "../../shared/shared.module";
+import { AllUsersComponent } from './all-users/all-users.component';
 @NgModule({
   declarations: [
     DashboardComponent,
     AccountsComponent,
-    SupportAdminComponent
+    SupportAdminComponent,
+    AllUsersComponent
   ],
   imports: [
     CommonModule,

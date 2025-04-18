@@ -21,6 +21,8 @@ export class NavbarComponent {
       this.isloggedIn=result;
     })
     this.role = localStorage.getItem('role') || '';
+    console.log(this.role);
+    
   }
   userLogout() {
     localStorage.removeItem('token');  

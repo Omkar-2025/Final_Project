@@ -16,6 +16,9 @@ const userRepository = AppDataSource.getRepository(User);
 const transactionRepository = AppDataSource.getRepository(Transaction);
 
 
+
+
+
 export class BillsDAL {
 
 
@@ -29,6 +32,7 @@ export class BillsDAL {
            throw new GlobalErrorHandler("Account not found",404)
         }
 
+        
         if (!data.user) {
            throw new GlobalErrorHandler("User not found",404)
         
@@ -92,6 +96,7 @@ export class BillsDAL {
                 await accountRepository.save(account);
                 
                 await transactionRepository.save(transaction);
+                
                 await billsRepository.save(bill);
             } else {
                 console.log(`Insufficient balance for bill ID ${bill.billName, bill.amount} ${bill.account.name,bill.account.user}`);
@@ -196,36 +201,54 @@ export class BillsDAL {
          throw new GlobalErrorHandler("Insufficient balance",400) ;
     }
 
-    static async getBillHistoryDAL(id: number,page:number,limit:number) {
+    static async getBillHistoryDAL(id: number,page:number,limit:number,acc_id:number=0) {
 
         // console.log(id,page,limit);
+        // console.log(acc_id);
         
 
         const user = await userRepository.find({ where: { id: id } });
 
         const skip = (page - 1) * limit;
 
-
-        if (!user) {
-            throw new GlobalErrorHandler("User not found",404)
+        let account_id = 0
+        if(acc_id == 0){
+            // console.log("hii");
+            
+            if (!user) {
+                throw new GlobalErrorHandler("User not found",404)
+            }
+            const account = await accountRepository.find({ where: { user: user[0] } });
+            if (!account) {
+                throw new GlobalErrorHandler("Account not found",404)
+            }
+    
+            account_id = account[0].id
         }
-        const account = await accountRepository.find({ where: { user: user[0] } });
-        if (!account) {
-            throw new GlobalErrorHandler("Account not found",404)
-        }
+        else{
+         account_id = acc_id
+        }   
+        // const getTranscation2 = await userRepository.createQueryBuilder('user')
 
-        // const transactions = await 
-        // transactionRepository.find({
-        //     where: [{ toAccount: account}, {fromAccount:account}], 
-        //     order: { createdAt: "DESC" } ,
-            // skip:skip,
-            // take:limit
-        // });
+        // .leftJoinAndSelect('user.accounts','accounts')
+        // .leftJoinAndSelect('accounts.transactionsFrom','transactionsFrom')
+        // .where('user.id=:id',{id})
+        // .andWhere('transaction.fromAccountId =: id ',{id:account_id})
+        // .andWhere("transaction.transactionType like '%Bill%'")
+        // .orderBy('transaction.createdAt','DESC')
+        // .skip(skip)
+        // .limit(limit)
+        // .getRawMany()
+        
+        // console.log(getTranscation2);
+        
+        
+
 
         const billSearch = 'Bill'
-        const account_id = account[0].id
 
         // console.log(account_id);
+        
         
 
         const transaction1 = await transactionRepository.createQueryBuilder('transaction')

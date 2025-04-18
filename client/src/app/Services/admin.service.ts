@@ -13,6 +13,7 @@ export class AdminService {
     adminEndPoint:string= 'http://localhost:4000/api/admin/'
 
      getAllSupports(){
+        // console.log("hii");
         return this.http.get(`${this.adminEndPoint}/getAllSupport`,{withCredentials:true});
     }
 

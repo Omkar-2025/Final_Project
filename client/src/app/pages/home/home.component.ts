@@ -18,6 +18,8 @@ export class HomeComponent {
    this.fetchUserAccounts();
   }
 
+
+  // this function is used to fetch the all records of users 
   fetchUserAccounts(){
     this.accountService.getAllaccounts().subscribe((result:any)=>{
       this.accounts=result;
@@ -25,6 +27,7 @@ export class HomeComponent {
       console.log(err.error.msg);
     })
   }
+
 
   getStartedbtn(){
     this.router.navigate(['/createaccount']);

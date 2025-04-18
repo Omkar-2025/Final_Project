@@ -26,6 +26,25 @@
 </ng-container>
 
 
+<!-- <ng-container>
+    <p>Select the Accounts</p>
+    <p-dropdown
+    [options]="accounts"
+    optionLabel="account_number"
+    (onChange)="selectAccount($event)"
+    placeholder="Select Account"
+></p-dropdown>
+
+</ng-container>
+
+<ng-container *ngIf="isSelectAccount">
+    <p>Account Name: {{ selectedAccounts.name }}</p>
+    <p>Amount: {{ selectedAccounts.balance }}</p>
+    <p>Account Type: {{ selectedAccounts.account_type }}</p>
+</ng-container> -->
+
+<app-all-accounts (selectedAccountEmit)="selectAccount($event)" ></app-all-accounts>
+
 <ng-container>
     <ng-container *ngIf="bills">
         <div class="bills-container">

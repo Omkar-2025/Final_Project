@@ -33,16 +33,16 @@ showDialog() {
 
   ngOnInit(){
     this.role = localStorage.getItem('role')!;
-    console.log(this.role); 
+    // console.log(this.role); 
   }
 
   viewFullaccountInfo(id:number){
-    console.log(id);
+    // console.log(id);
     this.router.navigate(['/account',id]);
   }
 
   verifyAccount(accountId:number){
-    console.log(accountId);
+    // console.log(accountId);
     this.adminService.verifyAccount(accountId).subscribe((res:any)=>{
       this.messageService.add({severity:'success', summary: 'Success', detail: res.msg, life: 3000});
       // this.fetchAllAccounts();

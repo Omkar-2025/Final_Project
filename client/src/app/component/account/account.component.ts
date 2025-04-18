@@ -42,8 +42,8 @@ export class AccountComponent {
 
   transferFromgroup!:FormGroup;
 
-  search = ''
-  searchText = new FormControl('');
+  search:string = ''
+
 
 
   transferFromInputControl = [{name:'Account_Number',label:'Account_Number',type:'text'},{name:'Amount',label:'Amount',type:'number'},{name:'Description',label:'Description',type:'text'}]
@@ -84,31 +84,6 @@ export class AccountComponent {
     this.fetchTranscations(this.id);
   }
 
-  // searchValueChanges(val:any){
-  //     // console.log(val);
-  //   this.searchTransaction();
-    
-  // }
-
-
-  // searchTransaction(){
-
-  //   this.searchText.valueChanges.pipe(debounceTime(1000)).subscribe((value:any)=>{
-  //     // console.log(value);
-      
-  //     this.accountService.searchTransaction(this.id,value).subscribe((result:any)=>{
-  //       // console.log(result);
-  //       this.transcations=result.msg;
-  //       // console.log(result.msg.length);
-        
-  //     })
-  //     ,( error:any )=>{
-  //       this.messageService.add({severity:'error', summary:'Error', detail:'Error fetching transactions'}); 
-  //     }
-  //   })
-  // }
-
-
   showDialog(type:string) {
     this.type = type;
     this.visible = true;
@@ -143,6 +118,7 @@ export class AccountComponent {
       this.isTranscationCompleted=false;
       this.isLoading=false;
       this.ngOnInit();
+      // val.target.disabled = true;
     },(error)=>{
       this.messageService.add({severity:'error', summary:'Error', detail:error.error.msg});
       this.isLoading=false;
@@ -152,8 +128,7 @@ export class AccountComponent {
   }
 
   withdrawAmount(val:any){ 
-    // console.log(val);
-    // this.ngOnInit();
+ 
     this.isTranscationCompleted = true;
     this.amount =val.amount
     this.isLoading=true;
@@ -226,8 +201,9 @@ export class AccountComponent {
     this.visible = false;
   }
 
-  deactiveAccount(){
+  deactiveAccount(event:any){
     this.isLoading=true;
+    event.target.disabled = true;
     this.accountService.deactivateAccount(this.id).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Account Deactivated Successfully'});
       this.ngOnInit();
@@ -237,7 +213,8 @@ export class AccountComponent {
     })
   }
 
-  activeAccount(){
+  activeAccount(event:any){
+    event.target.disabled =true;
     this.isLoading=true;
       this.accountService.activateAccount(this.id).subscribe((result:any)=>{
       this.messageService.add({severity:'success', summary:'Success', detail:'Account Activated Successfully'});
@@ -262,8 +239,21 @@ export class AccountComponent {
       this.fetchTranscations(this.id,pageNumber) 
   }
 
+  searchText(){
+      this.accountService.searchTransaction(this.id,this.search).subscribe((result:any)=>{
+        this.transcations = result.msg
+        
+      },
+    (error)=>{
+      this.messageService.add({severity:'error',summary:'error',detail:'Bill payment not fonud '})
+    })
 
 
+   if(!this.search){
+    // console.log(this.search); 
+    this.fetchTranscations(this.id,0);
+   }
 
- 
+  }
+
   }

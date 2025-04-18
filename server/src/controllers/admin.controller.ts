@@ -65,6 +65,8 @@ export class AdminController{
 
     static async getAllSupport(req:Request,res:Response,next:NextFunction){
         try {
+            // console.log("hii ");
+            
             const result = await AdminService.getSupportBLL();
             res.status(200).json({msg:result.msg});
         } catch (error) {
