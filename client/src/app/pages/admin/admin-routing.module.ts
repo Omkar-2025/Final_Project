@@ -8,7 +8,7 @@ import { SupportAdminComponent } from "./support-admin/support-admin.component";
 
 const routes:Routes = [
     {path:'dashboard/userAccounts/:id',component:AccountsComponent},
-    {path:'admin/support',component:SupportAdminComponent},
+    {path:'admin/support',component:SupportComponent},
     {path:'admin/allUsers',component:AllUsersComponent}
 ]
 
